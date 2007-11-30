@@ -14,12 +14,14 @@ import javax.swing.JTextField;
 public class TextView extends AbstractWidget {
 	String text;
 	int fontSize = 14;
+	int width;
 	boolean isBold;
 	boolean isItalic;
 	String fontFace;
 	
 	JTextField textField;
 	JTextField sizeField;
+	JTextField widthField;
 	JCheckBox bold;
 	JCheckBox italic;
 	JComboBox face;
@@ -32,6 +34,7 @@ public class TextView extends AbstractWidget {
 		text = str;
 		buildFont();
 		fontFace="plain";	
+		width = -1;
 	}
 	
 	protected void buildFont() {
@@ -59,6 +62,12 @@ public class TextView extends AbstractWidget {
 			jp = new JPanel();
 			jp.add(sizeField);
 			p.add(jp);
+			
+			p.add(new JLabel("Width"));
+			widthField = new JTextField("default", 10);
+			jp = new JPanel();
+			jp.add(widthField);
+			p.add(jp);
 		
 			face = new JComboBox(new String[] {"plain","sans","serif","monospace"});
 			p.add(new JLabel("Font Face"));
@@ -78,11 +87,17 @@ public class TextView extends AbstractWidget {
 		isItalic = italic.isSelected();
 		fontFace = (String)face.getSelectedItem();
 		fontSize = Integer.parseInt(sizeField.getText());
+		width = Integer.parseInt(widthField.getText());
 		buildFont();
 	}
 	
 	public void paint(Graphics g) {
-		setSize(g.getFontMetrics(f).stringWidth(text)+5, fontSize+3);
+		int w;
+		if (width < 0)
+			w = g.getFontMetrics(f).stringWidth(text);
+		else
+			w = width;
+		setSize(w+5, fontSize+3);
 
 		g.setColor(Color.black);
 		g.setFont(f);
@@ -91,16 +106,23 @@ public class TextView extends AbstractWidget {
 	
 
 	public void generate(PrintWriter pw) {
-		properties.put("android:layout_width", "wrap_content");
 		properties.put("android:layout_height", "wrap_content");
-		properties.put("android:layout_x", getX()+"px");
-		properties.put("android:layout_y", getY()+"px");
-		properties.put("android:typeface", fontFace);
-		String style = "plain";
+		properties.put("android:layout_x", (getX()-AndroidEditor.OFFSET_X)+"px");
+		properties.put("android:layout_y", (getY()-AndroidEditor.OFFSET_Y)+"px");
+		if (width > -1) {
+			properties.put("android:layout_width", width+"px");
+		}
+		else {
+			properties.put("android:layout_width", "wrap_content");	
+		}
+		if (!fontFace.equals("plain"))
+			properties.put("android:typeface", fontFace);
+		String style = null;
 		if (isItalic && isBold) style = "bold_italic";
 		else if (isBold) style = "bold";
 		else if (isItalic) style = "italic";
-		properties.put("android:textStyle", style);
+		if (style != null)
+			properties.put("android:textStyle", style);
 		properties.put("android:text", text);
 		super.generate(pw);
 	}

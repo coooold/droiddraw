@@ -7,18 +7,21 @@ import java.awt.MenuShortcut;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
@@ -27,6 +30,9 @@ public class AndroidEditor {
 	protected Vector<Widget> widgets;
 	Widget selected;
 	Viewer viewer;
+	
+	public static int OFFSET_X = 0;
+	public static int OFFSET_Y = 48;
 	
 	public AndroidEditor() {
 		widgets = new Vector<Widget>();
@@ -112,7 +118,15 @@ public class AndroidEditor {
 		JFrame jf = new JFrame("Android Editor");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final AndroidEditor ae = new AndroidEditor();
-		final Viewer viewer = new Viewer(ae);
+		
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File("src/emu1.png"));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		final Viewer viewer = new Viewer(ae, img);
 		ae.setViewer(viewer);
 		
 		MenuBar mb = new MenuBar();
@@ -171,19 +185,13 @@ public class AndroidEditor {
 		tb.add(butt);
 
 		tb.addSeparator();
-		ButtonGroup bg = new ButtonGroup();
-		JToggleButton jtb = new JToggleButton("Select");
-		jtb.addActionListener(viewer.getListener());
-		bg.add(jtb);
-		tb.add(jtb);
-		tb.addSeparator();
-
-		jtb = new JToggleButton("Add");
-		jtb.addActionListener(viewer.getListener());
-		bg.add(jtb);
-		tb.add(jtb);
-
-		bg.setSelected(jtb.getModel(), true);
+		
+		ButtonGroup bg = viewer.getListener().getInterfaceStateGroup();
+		Enumeration<AbstractButton> buttons = bg.getElements();
+		while (buttons.hasMoreElements()) {
+			tb.add(buttons.nextElement());
+			tb.addSeparator();
+		}
 
 		tb.add(viewer.getListener().getWidgetSelector());
 
