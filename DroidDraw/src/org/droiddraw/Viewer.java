@@ -2,6 +2,7 @@ package org.droiddraw;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -11,14 +12,16 @@ public class Viewer extends JPanel {
 	Dimension d;
 	AndroidEditor app;
 	ViewerListener vl;
+	Image img;
 	
-	public Viewer(AndroidEditor app) {
+	public Viewer(AndroidEditor app, Image img) {
 		this.app = app;
 		this.d = new Dimension(320,240);
 		vl = new ViewerListener(app, this);
 		addMouseListener(vl);
 		addMouseMotionListener(vl);
 		addKeyListener(vl);
+		this.img = img;
 	}
 	
 	ViewerListener getListener() {
@@ -34,8 +37,10 @@ public class Viewer extends JPanel {
 	}
 
 	public void paint(Graphics g) {
-		g.setColor(Color.white);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		if (img != null)
+			g.drawImage(img, 0, 0, this);
+		//g.setColor(Color.white);
+		//g.fillRect(0, 0, getWidth(), getHeight());
 		Vector<Widget> widgets = app.getWidgets();
 		for (Widget w : widgets) {
 			w.paint(g);

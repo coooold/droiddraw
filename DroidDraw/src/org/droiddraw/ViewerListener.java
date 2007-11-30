@@ -7,7 +7,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
+import javax.swing.JToggleButton;
 
 
 public class ViewerListener implements MouseListener, MouseMotionListener, ActionListener, KeyListener {
@@ -15,19 +17,33 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	int off_y;
 	int grid_x = 10;
 	int grid_y = 10;
+	boolean grid;
 	boolean add;
 	boolean select;
-	boolean grid;
 	
 	Viewer viewer;
 	AndroidEditor app;
-	JComboBox widgetType = new JComboBox(new String[] {"Button", "CheckBox", "EditView", "TextView"});
+	JComboBox widgetType = new JComboBox(new String[] {"Button", "CheckBox", "EditText", "TextView"});
+	JToggleButton addButton;
+	JToggleButton selectButton;
+	ButtonGroup bg;
 	
 	public ViewerListener(AndroidEditor app, Viewer viewer) {
 		this.app = app;
 		this.viewer = viewer;
-		this.add = true;
 		this.grid = true;
+		this.addButton = new JToggleButton("Add");
+		this.selectButton = new JToggleButton("Select");
+		this.addButton.addActionListener(this);
+		this.selectButton.addActionListener(this);
+		bg = new ButtonGroup();
+		bg.add(addButton);
+		bg.add(selectButton);
+		bg.setSelected(addButton.getModel(), true);
+	}
+	
+	public ButtonGroup getInterfaceStateGroup() {
+		return bg;
 	}
 	
 	public JComboBox getWidgetSelector() {
@@ -40,8 +56,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return new Button("Button");
 		else if (str.equals("CheckBox"))
 			return new CheckBox("CheckBox");
-		else if (str.equals("EditView"))
-			return new EditView("EditView");
+		else if (str.equals("EditText"))
+			return new EditView("EditText");
 		else if (str.equals("TextView"))
 			return new TextView("TextView");
 		else
@@ -70,6 +86,10 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			Widget w = createWidget();
 			w.setPosition((ev.getX()/grid_x)*grid_x, (ev.getY()/grid_y)*grid_y);
 			app.addWidget(w);
+			app.select(w);
+			bg.setSelected(addButton.getModel(), false);
+			bg.setSelected(selectButton.getModel(), true);
+			select = true;
 		}
 		viewer.requestFocus();
 		viewer.repaint();
