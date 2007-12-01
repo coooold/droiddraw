@@ -1,6 +1,8 @@
 package org.droiddraw;
 
 import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
@@ -14,6 +16,8 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JApplet;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
@@ -52,9 +56,24 @@ public class DroidDraw extends JApplet {
 			}
 		});
 
+		JButton delete = new JButton("Delete");
+		delete.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				ae.removeWidget(ae.getSelected());
+			}
+		});
+		
+		
 		ButtonGroup bg = viewer.getListener().getInterfaceStateGroup();
 
-		JToolBar tb = new JToolBar();		
+
+		FlowLayout fl = new FlowLayout();
+		fl.setAlignment(FlowLayout.RIGHT);
+		
+		JPanel bp = new JPanel();
+		bp.setLayout(new GridLayout(0,1));
+		JToolBar tb = new JToolBar();
+		
 		Enumeration<AbstractButton> buttons = bg.getElements();
 		while (buttons.hasMoreElements()) {
 			tb.add(buttons.nextElement());
@@ -62,16 +81,46 @@ public class DroidDraw extends JApplet {
 		}
 
 		tb.add(viewer.getListener().getWidgetSelector());
-
 		tb.addSeparator();
 		tb.add(edit);
-
 		tb.addSeparator();
-		tb.add(gen);
-
+		tb.add(delete);
+		//bp.add(tb);
+		tb.setFloatable(false);
+		
+		JPanel p = new JPanel();
+		p.setLayout(fl);
+		
+		p.add(new JLabel("Layout:"));
+		JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout"});
+		layout.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("comboBoxChanged")) {
+					String select = (String)((JComboBox)e.getSource()).getSelectedItem();
+					if (select.equals("AbsoluteLayout")) {
+						ae.setLayout(new AbsoluteLayout());
+						viewer.repaint();
+					}
+					else if (select.equals("LinearLayout")) {
+						ae.setLayout(new LinearLayout());
+						viewer.repaint();
+					}
+				}
+			}
+		});
+		p.add(layout);
+		bp.add(p);
+		bp.add(tb);
+		
+		p = new JPanel();
+		p.add(gen);
+		bp.add(p);
+		
+		//layout.setBorder(BorderFactory.createTitledBorder("Layout"));
 		jp.setLayout(new BorderLayout());
+		
 		jp.add(viewer, BorderLayout.CENTER);
-		jp.add(tb, BorderLayout.SOUTH);
+		jp.add(bp, BorderLayout.SOUTH);
 		jp.setBorder(BorderFactory.createTitledBorder("Screen"));
 		
 		setLayout(new BorderLayout());
