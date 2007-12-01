@@ -41,7 +41,7 @@ public class Viewer extends JPanel {
 			g.drawImage(img, 0, 0, this);
 		//g.setColor(Color.white);
 		//g.fillRect(0, 0, getWidth(), getHeight());
-		Vector<Widget> widgets = app.getWidgets();
+		Vector<Widget> widgets = app.getLayout().getWidgets();
 		for (Widget w : widgets) {
 			w.paint(g);
 		}

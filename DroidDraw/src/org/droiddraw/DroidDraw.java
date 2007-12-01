@@ -2,6 +2,7 @@ package org.droiddraw;
 
 import java.awt.BorderLayout;
 import java.awt.Image;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
@@ -14,9 +15,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
@@ -35,11 +33,8 @@ public class DroidDraw extends JApplet {
 		
 		JButton gen;
 		JButton edit;
-		JToggleButton select;
-		JToggleButton add;
 		
-		
-		final JTextArea text = new JTextArea(3,80);
+		final TextArea text = new TextArea(3,80);
 		
 		gen = new JButton("Generate");
 		gen.addActionListener(new ActionListener() {
@@ -86,7 +81,7 @@ public class DroidDraw extends JApplet {
 		
 		jp = new JPanel();
 		jp.setLayout(new BorderLayout());
-		jp.add(new JScrollPane(text), BorderLayout.CENTER);
+		jp.add(text, BorderLayout.CENTER);
 
 		TitledBorder border = BorderFactory.createTitledBorder("Output");
 		

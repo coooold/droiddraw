@@ -18,7 +18,7 @@ public class TextView extends AbstractWidget {
 	boolean isBold;
 	boolean isItalic;
 	String fontFace;
-	
+
 	JTextField textField;
 	JTextField sizeField;
 	JTextField widthField;
@@ -26,9 +26,9 @@ public class TextView extends AbstractWidget {
 	JCheckBox italic;
 	JComboBox face;
 	JPanel p;
-	
+
 	Font f;
-	
+
 	public TextView(String str) {
 		super("TextView");
 		text = str;
@@ -36,7 +36,7 @@ public class TextView extends AbstractWidget {
 		fontFace="plain";	
 		width = -1;
 	}
-	
+
 	protected void buildFont() {
 		f = new Font(fontFace,Font.PLAIN,fontSize);
 		if (isBold) {
@@ -46,7 +46,7 @@ public class TextView extends AbstractWidget {
 			f = f.deriveFont(f.getStyle() | Font.ITALIC);
 		}
 	}
-	
+
 	public JPanel getEditorPanel() {
 		if (p == null) {
 			p = new JPanel();
@@ -56,23 +56,23 @@ public class TextView extends AbstractWidget {
 			textField = new JTextField(text, 10);
 			jp.add(textField);
 			p.add(jp);
-			
+
 			p.add(new JLabel("Font Size"));
 			sizeField = new JTextField(fontSize+"", 10);
 			jp = new JPanel();
 			jp.add(sizeField);
 			p.add(jp);
-			
+
 			p.add(new JLabel("Width"));
 			widthField = new JTextField("default", 10);
 			jp = new JPanel();
 			jp.add(widthField);
 			p.add(jp);
-		
+
 			face = new JComboBox(new String[] {"plain","sans","serif","monospace"});
 			p.add(new JLabel("Font Face"));
 			p.add(face);
-			
+
 			bold = new JCheckBox("Bold");
 			italic = new JCheckBox("Italic");
 			p.add(bold);
@@ -87,10 +87,19 @@ public class TextView extends AbstractWidget {
 		isItalic = italic.isSelected();
 		fontFace = (String)face.getSelectedItem();
 		fontSize = Integer.parseInt(sizeField.getText());
-		width = Integer.parseInt(widthField.getText());
+		if (widthField.getText().equals("default")) {
+			width = -1;
+		}
+		else {
+			try {
+				width = Integer.parseInt(widthField.getText());
+			} catch (NumberFormatException ex) {
+				width = -1;
+			}
+		}
 		buildFont();
 	}
-	
+
 	public void paint(Graphics g) {
 		int w;
 		if (width < 0)
@@ -103,7 +112,7 @@ public class TextView extends AbstractWidget {
 		g.setFont(f);
 		g.drawString(text, getX()+2, getY()+fontSize);
 	}
-	
+
 
 	public void generate(PrintWriter pw) {
 		properties.put("android:layout_height", "wrap_content");
