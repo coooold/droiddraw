@@ -1,16 +1,19 @@
 package org.droiddraw;
 
+import java.io.PrintWriter;
+import java.util.Hashtable;
 import java.util.Vector;
 
 public class LinearLayout extends AbstractLayout {
 	boolean vertical;
-	public static int VERTICAL_PADDING = 2;
+	public static int VERTICAL_PADDING = 4;
 	
 	public LinearLayout() {
 		this(true);
 	}
 	
 	public LinearLayout(boolean vertical) {
+		super("LinearLayout");
 		this.vertical = vertical;
 	}
 	
@@ -37,4 +40,12 @@ public class LinearLayout extends AbstractLayout {
 		}
 	}
 
+	public void printStartTag(PrintWriter pw) {
+		Hashtable<String,String> atts = new Hashtable<String,String>();
+		atts.put("xmlns:android", "http://schemas.android.com/apk/res/android");
+		atts.put("android:orientation", vertical?"vertical":"horizontal");
+		atts.put("android:layout_width", "fill_parent");
+		atts.put("android:layout_height", "fill_parent");
+		printStartTag(atts, pw);
+	}
 }

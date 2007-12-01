@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
@@ -42,7 +43,11 @@ public class AndroidEditor {
 	}
 	
 	public void setLayout(Layout l) {
+		Vector<Widget> widgets = layout.getWidgets();
 		this.layout = l;
+		for (Widget w : widgets) {
+			l.addWidget(w);
+		}
 	}
 	
 	public Layout getLayout() {
@@ -113,11 +118,11 @@ public class AndroidEditor {
 
 	public void generate(PrintWriter pw) {
 		pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		pw.println("<AbsoluteLayout xmlns:android=\"http://schemas.android.com/apk/res/android\" android:orientation=\"vertical\" android:layout_width=\"fill_parent\" android:layout_height=\"fill_parent\">");
+		layout.printStartTag(pw);
 		for (Widget w : layout.getWidgets()) {
 			w.generate(pw);
 		}
-		pw.println("</AbsoluteLayout>");
+		layout.printEndTag(pw);
 		pw.flush();
 	}
 

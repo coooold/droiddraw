@@ -1,12 +1,15 @@
 package org.droiddraw;
 
+import java.io.PrintWriter;
 import java.util.Vector;
 
 public abstract class AbstractLayout implements Layout {
 	protected Vector<Widget> widgets;
+	protected String tagName;
 	
-	public AbstractLayout() {
-		widgets = new Vector<Widget>();
+	public AbstractLayout(String tagName) {
+		this.widgets = new Vector<Widget>();
+		this.tagName = tagName;
 	}
 	
 	public void addWidget(Widget w) {
@@ -23,6 +26,19 @@ public abstract class AbstractLayout implements Layout {
 		repositionAllWidgets(widgets);
 	}
 
+	protected void printStartTag(java.util.Hashtable<String,String> atts, PrintWriter pw) 
+	{
+		pw.println("<"+tagName);
+		for (String key : atts.keySet()) {
+			pw.println(key+"=\""+atts.get(key)+"\"");
+		}
+		pw.println(">");
+	}
+
+	public void printEndTag(PrintWriter pw) {
+		pw.println("</"+tagName+">");
+	}
+	
 	public abstract void positionWidget(Widget w);
 	protected abstract void repositionAllWidgets(Vector<Widget> widgets);
 }
