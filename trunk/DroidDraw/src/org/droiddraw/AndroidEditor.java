@@ -77,19 +77,9 @@ public class AndroidEditor {
 		final Widget select = getSelected();
 		if (select!=null) {
 			JFrame f = new JFrame("Edit");
-			f.getContentPane().setLayout(new BorderLayout());
 			JPanel editor = select.getEditorPanel();
-			f.getContentPane().add(editor, BorderLayout.CENTER);
-
-			JButton apply = new JButton("Apply");
-			apply.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					select.apply();
-					viewer.repaint();
-				}
-			});
-
-			f.getContentPane().add(apply, BorderLayout.SOUTH);
+			((PropertiesPanel)editor).setViewer(viewer);
+			f.getContentPane().add(editor);
 			f.pack();
 			f.setVisible(true);
 		}
@@ -116,11 +106,19 @@ public class AndroidEditor {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void generate(PrintWriter pw) {
 		pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 		layout.printStartTag(pw);
 		for (Widget w : layout.getWidgets()) {
-			w.generate(pw);
+			pw.println("<"+w.getTagName());
+			Vector<Property> props = (Vector<Property>)w.getProperties().clone();
+			layout.addProperties(w, props);
+			for (Property prop : props) {
+				pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
+			}
+			pw.println(">");
+			pw.println("</"+w.getTagName()+">");
 		}
 		layout.printEndTag(pw);
 		pw.flush();

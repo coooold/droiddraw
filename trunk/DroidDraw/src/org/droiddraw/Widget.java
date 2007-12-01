@@ -1,6 +1,6 @@
 package org.droiddraw;
 import java.awt.Graphics;
-import java.io.PrintWriter;
+import java.util.Vector;
 
 import javax.swing.JPanel;
 
@@ -13,7 +13,8 @@ public interface Widget {
 	public void setPosition(int x, int y);
 	public void move(int dx, int dy);
 	public void paint(Graphics g);
-	public void generate(PrintWriter pw);
 	public JPanel getEditorPanel();
 	public void apply();
+	public Vector<Property> getProperties();
+	public String getTagName();
 }
