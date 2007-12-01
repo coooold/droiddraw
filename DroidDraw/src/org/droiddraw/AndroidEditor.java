@@ -35,7 +35,7 @@ public class AndroidEditor {
 	public static int OFFSET_Y = 48;
 	
 	public AndroidEditor() {
-		layout = new LinearLayout();
+		layout = new AbsoluteLayout();
 	}
 
 	public void setViewer(Viewer v) {
