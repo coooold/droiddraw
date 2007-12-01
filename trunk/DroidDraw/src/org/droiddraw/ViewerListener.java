@@ -91,7 +91,10 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		}
 		else {
 			Widget w = createWidget();
-			w.setPosition((ev.getX()/grid_x)*grid_x, (ev.getY()/grid_y)*grid_y);
+			if (app.getLayout() instanceof AbsoluteLayout)
+				w.setPosition((ev.getX()/grid_x)*grid_x, (ev.getY()/grid_y)*grid_y);
+			else
+				w.setPosition(ev.getX(), ev.getY());
 			app.addWidget(w);
 			app.select(w);
 			bg.setSelected(addButton.getModel(), false);
