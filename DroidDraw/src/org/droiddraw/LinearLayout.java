@@ -48,4 +48,6 @@ public class LinearLayout extends AbstractLayout {
 		atts.put("android:layout_height", "fill_parent");
 		printStartTag(atts, pw);
 	}
+
+	public void addProperties(Widget w, Vector<Property> properties) {}
 }

@@ -1,19 +1,22 @@
 package org.droiddraw;
-import java.io.PrintWriter;
-import java.util.Hashtable;
+import java.util.Vector;
 
 
 public abstract class AbstractWidget implements Widget {
 	int x, y;
 	int width, height;
-	Hashtable<String,String> properties;
 	String tagName;
-
+	Vector<Property> props;
+	
 	public AbstractWidget(String tagName) {
 		this.tagName = tagName;
-		this.properties = new Hashtable<String,String>();
+		this.props = new Vector<Property>();
 	}
 
+	public Vector<Property> getProperties() {
+		return props;
+	}
+	
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;
@@ -47,20 +50,8 @@ public abstract class AbstractWidget implements Widget {
 	public void move(int dx, int dy) {
 		setPosition(this.x+dx, this.y+dy);
 	}
-
-	public void generate(PrintWriter pw) {
-		printStartTag(pw);
-		printTagBody(pw);
-		pw.println("</"+tagName+">");
-	}
-
-	protected void printStartTag(PrintWriter pw) {
-		pw.println("<"+tagName); 
-		for (String key : properties.keySet()) {
-			pw.println("\t"+key+"=\""+properties.get(key)+"\"");
-		}
-		pw.println(">");
-	}
 	
-	protected void printTagBody(PrintWriter pw) {}
+	public String getTagName() {
+		return tagName;
+	}
 }
