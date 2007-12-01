@@ -13,7 +13,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
@@ -27,7 +26,7 @@ import javax.swing.filechooser.FileFilter;
 
 
 public class AndroidEditor {
-	protected Vector<Widget> widgets;
+	Layout layout;
 	Widget selected;
 	Viewer viewer;
 	
@@ -35,15 +34,23 @@ public class AndroidEditor {
 	public static int OFFSET_Y = 48;
 	
 	public AndroidEditor() {
-		widgets = new Vector<Widget>();
+		layout = new LinearLayout();
 	}
 
 	public void setViewer(Viewer v) {
 		this.viewer = v;
 	}
 	
+	public void setLayout(Layout l) {
+		this.layout = l;
+	}
+	
+	public Layout getLayout() {
+		return layout;
+	}
+	
 	public void addWidget(Widget w) {
-		widgets.add(w);
+		layout.addWidget(w);
 	}
 
 	public Widget getSelected() {
@@ -55,7 +62,7 @@ public class AndroidEditor {
 	}
 
 	public void removeWidget(Widget w) {
-		widgets.remove(w);
+		layout.removeWidget(w);
 		if (selected == w) {
 			selected = null;
 		}
@@ -83,31 +90,31 @@ public class AndroidEditor {
 		}
 	}
 
-	public Widget selectWidget(int x, int y) {
+	public Widget findWidget(int x, int y) {
 		Widget res = null;
-		for (Widget w : widgets) {
+		for (Widget w : layout.getWidgets()) {
 			if (w.clickedOn(x, y)) {
 				res = w;
-				if (w == selected) {
-					selected = null;
-				}
-				else {
-					selected = w;
-				}
 				break;
 			}
 		}
 		return res;
 	}
-
-	public Vector<Widget> getWidgets() {
-		return widgets;
+	
+	public void selectWidget(int x, int y) {
+		Widget res = findWidget(x, y);
+		if (res == selected) {
+			selected = null;
+		}
+		else {
+			selected = res;
+		}
 	}
 
 	public void generate(PrintWriter pw) {
 		pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 		pw.println("<AbsoluteLayout xmlns:android=\"http://schemas.android.com/apk/res/android\" android:orientation=\"vertical\" android:layout_width=\"fill_parent\" android:layout_height=\"fill_parent\">");
-		for (Widget w : widgets) {
+		for (Widget w : layout.getWidgets()) {
 			w.generate(pw);
 		}
 		pw.println("</AbsoluteLayout>");

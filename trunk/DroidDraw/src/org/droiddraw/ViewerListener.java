@@ -37,8 +37,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		this.addButton.addActionListener(this);
 		this.selectButton.addActionListener(this);
 		bg = new ButtonGroup();
-		bg.add(addButton);
 		bg.add(selectButton);
+		bg.add(addButton);
 		bg.setSelected(addButton.getModel(), true);
 	}
 	
@@ -72,10 +72,17 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	public void mousePressed(MouseEvent ev) { 
 		if (select) {
 			if (ev.getClickCount() > 1) {
-				app.editSelected();
+				Widget w = app.findWidget(ev.getX(),ev.getY());
+				if (w != null) {
+					if (w != app.getSelected()) {
+						app.select(w);
+					}
+					app.editSelected();
+				}
 			}
 			else {
-				Widget w = app.selectWidget(ev.getX(), ev.getY());
+				app.selectWidget(ev.getX(), ev.getY());
+				Widget w = app.getSelected();
 				if (w != null) {
 					off_x = w.getX()-ev.getX();
 					off_y = w.getY()-ev.getY();
@@ -112,6 +119,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				ny = ny/grid_y*grid_y;
 			}
 			selected.setPosition(nx,ny);
+			app.getLayout().positionWidget(selected);
 			viewer.repaint();
 		}
 	}
