@@ -23,12 +23,15 @@ public class EditView extends TextView {
 		// This is a hack and bad oo, I know...
 		this.tagName="EditText";
 		
+
+		setSize(text.length()*8+12, fontSize+6);
+		
 		password = new JCheckBox("Password");
 		capitalize = new JComboBox(new String[] {"Sentences", "Words"});
 		numeric = new JCheckBox("Numeric");
 		phone = new JCheckBox("Phone Number");
 		autoText = new JCheckBox("Correct Spelling");
-		digits = new JTextField("0123456789");
+		digits = new JTextField("");
 	}
 	
 	

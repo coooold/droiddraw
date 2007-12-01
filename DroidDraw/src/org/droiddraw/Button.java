@@ -8,6 +8,7 @@ public class Button extends TextView {
 		super(txt);
 		// This is a hack and bad oo, I know...
 		this.tagName = "Button";
+		setSize(text.length()*8+16, fontSize+6);
 	}
 
 	public void paint(Graphics g) {

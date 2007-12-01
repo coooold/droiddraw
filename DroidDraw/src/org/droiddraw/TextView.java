@@ -35,6 +35,8 @@ public class TextView extends AbstractWidget {
 		buildFont();
 		fontFace="plain";	
 		width = -1;
+		// Heuristic until we get a graphics object...
+		setSize(str.length()*8+5, fontSize+3);
 	}
 
 	protected void buildFont() {

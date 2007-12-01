@@ -7,6 +7,8 @@ public class CheckBox extends Button {
 	public CheckBox(String text) {
 		super(text);
 		this.tagName = "CheckBox";
+
+		setSize(text.length()*8+24, fontSize+6);
 	}
 	
 	public void paint(Graphics g) {
