@@ -56,6 +56,7 @@ public class AndroidEditor {
 	
 	public void addWidget(Widget w) {
 		layout.addWidget(w);
+		layout.addEditableProperties(w, w.getProperties());
 	}
 
 	public Widget getSelected() {
@@ -113,7 +114,7 @@ public class AndroidEditor {
 		for (Widget w : layout.getWidgets()) {
 			pw.println("<"+w.getTagName());
 			Vector<Property> props = (Vector<Property>)w.getProperties().clone();
-			layout.addProperties(w, props);
+			layout.addOutputProperties(w, props);
 			for (Property prop : props) {
 				pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
 			}

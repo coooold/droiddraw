@@ -10,5 +10,6 @@ public interface Layout {
 	public void positionWidget(Widget w);
 	public void printStartTag(PrintWriter pw);
 	public void printEndTag(PrintWriter pw);
-	public void addProperties(Widget w, Vector<Property> properties);
+	public void addOutputProperties(Widget w, Vector<Property> properties);
+	public void addEditableProperties(Widget w, Vector<Property> properties);
 }

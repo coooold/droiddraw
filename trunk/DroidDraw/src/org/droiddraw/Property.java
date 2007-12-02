@@ -19,4 +19,12 @@ public abstract class Property {
 	}
 	
 	public abstract Object getValue();
+	
+	public boolean equals(Object o) {
+		if (o instanceof Property) {
+			Property prop = (Property)o;
+			return prop.getAtttributeName().equals(this.getAtttributeName());
+		}
+		return false;
+	}
 }

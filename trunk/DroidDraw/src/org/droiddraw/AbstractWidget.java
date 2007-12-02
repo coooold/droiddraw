@@ -7,10 +7,14 @@ public abstract class AbstractWidget implements Widget {
 	int width, height;
 	String tagName;
 	Vector<Property> props;
+	protected StringProperty id;
+	protected static int widget_num = 0;
 	
 	public AbstractWidget(String tagName) {
 		this.tagName = tagName;
 		this.props = new Vector<Property>();
+		this.id = new StringProperty("Id", "id", "@+id/widget"+(widget_num++));
+		this.props.add(id);
 	}
 
 	public Vector<Property> getProperties() {

@@ -23,11 +23,11 @@ public class TextView extends AbstractWidget {
 		super("TextView");
 		
 		text = new StringProperty("Text", "android:text", str);
-		fontSz = new StringProperty("Font Size", "android:fontSize", fontSize+"");
+		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"");
 		width = new StringProperty("Width", "android:layout_width", "wrap_content");
 		height = new StringProperty("Height", "android:layout_height", "wrap_content");
-		face = new SelectProperty("Font Face", "android:fontFace", new String[] {"plain","sans","serif","monospace"}, 0);
-		style = new SelectProperty("Font Style", "android:fontStyle", new String[] {"plain", "bold", "italic", "bold_italic"}, 0);
+		face = new SelectProperty("Font Face", "android:typeface", new String[] {"plain","sans","serif","monospace"}, 0);
+		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"plain", "bold", "italic", "bold_italic"}, 0);
 		
 		props.add(text);
 		//props.add(fontSz);
@@ -60,16 +60,30 @@ public class TextView extends AbstractWidget {
 
 	public void apply() {
 		fontSize = Integer.parseInt(fontSz.getStringValue());
+		readWidth();
 		buildFont();
 	}
 
+	protected void readWidth() {
+		String w = width.getStringValue();
+		if (w.endsWith("px")) {
+			try {
+				int width = Integer.parseInt(w.substring(0, w.length()-2));
+				setSize(width, fontSize+3);
+			} 
+			catch (NumberFormatException ex) {}
+		}
+	}
+	
 	public void paint(Graphics g) {
-		int w;
-		if (width.getStringValue().equals("wrap_content"))
+		if (width.getStringValue().equals("wrap_content")) {
+			int w;
 			w = g.getFontMetrics(f).stringWidth(text.getStringValue());
-		else
-			w = Integer.parseInt(width.getStringValue());
-		setSize(w+5, fontSize+3);
+			setSize(w+5, fontSize+3);
+		}
+		else {
+			readWidth();
+		}
 
 		g.setColor(Color.black);
 		g.setFont(f);
