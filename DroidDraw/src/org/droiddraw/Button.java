@@ -12,7 +12,8 @@ public class Button extends TextView {
 	}
 
 	public void paint(Graphics g) {
-		setSize(g.getFontMetrics(f).stringWidth(text.getStringValue())+16, fontSize+6);
+		if (width.getStringValue().equals("wrap_content"))
+			setSize(g.getFontMetrics(f).stringWidth(text.getStringValue())+16, fontSize+6);
 
 		g.setColor(Color.white);
 		g.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);

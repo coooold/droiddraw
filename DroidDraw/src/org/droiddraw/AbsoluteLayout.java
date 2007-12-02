@@ -24,8 +24,11 @@ public class AbsoluteLayout extends AbstractLayout {
 	}
 	
 
-	public void addProperties(Widget w, Vector<Property> properties) {
+	public void addOutputProperties(Widget w, Vector<Property> properties) {
 		properties.add(new StringProperty("X Position","android:layout_x", (w.getX()-AndroidEditor.OFFSET_X)+"px"));
 		properties.add(new StringProperty("Y Position","android:layout_y", (w.getY()-AndroidEditor.OFFSET_Y)+"px"));
+	}
+	
+	public void addEditableProperties(Widget w, Vector<Property> properties) {
 	}
 }

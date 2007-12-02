@@ -49,5 +49,15 @@ public class LinearLayout extends AbstractLayout {
 		printStartTag(atts, pw);
 	}
 
-	public void addProperties(Widget w, Vector<Property> properties) {}
+	public void addOutputProperties(Widget w, Vector<Property> properties) {}
+
+	public void addEditableProperties(Widget w, Vector<Property> properties) {
+		properties.add(new StringProperty("Linear Layout Weight", "android:layout_weight", "0"));
+		properties.add(new SelectProperty("Layout Gravity", "android:layout_gravity", new String[] {"top", "bottom", "right", "left", "center_vertical", "fill_vertical", "center_horizontal", "fill_horizontal", "center", "fill"}, 3));
+	}
+	
+	public void removeEditableProperties(Widget w, Vector<Property> properties) {
+		properties.remove(new StringProperty("", "android:layout_weight", ""));
+		properties.remove(new SelectProperty("", "android:layout_graivity", new String[] {""}, 0));
+	}
 }
