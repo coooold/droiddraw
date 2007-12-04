@@ -16,6 +16,10 @@ public abstract class AbstractWidget implements Widget {
 		this.id = new StringProperty("Id", "id", "@+id/widget"+(widget_num++));
 		this.props.add(id);
 	}
+	
+	public String getId() {
+		return id.getStringValue();
+	}
 
 	public Vector<Property> getProperties() {
 		return props;

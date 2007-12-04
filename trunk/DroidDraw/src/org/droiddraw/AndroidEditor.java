@@ -27,17 +27,58 @@ import javax.swing.filechooser.FileFilter;
 
 
 public class AndroidEditor {
+	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT};
+
 	Layout layout;
 	Widget selected;
 	Viewer viewer;
+	ScreenMode screen;
+	int sx, sy;
 	
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
 	
 	public AndroidEditor() {
+		this(ScreenMode.QVGA_LANDSCAPE);
+	}
+	
+	public AndroidEditor(ScreenMode mode) {
 		layout = new AbsoluteLayout();
+		setScreenMode(mode);
 	}
 
+	public ScreenMode getScreenMode() {
+		return screen;
+	}
+	
+	public void setScreenMode(ScreenMode mode) {
+		this.screen = mode;
+		if (screen == ScreenMode.QVGA_LANDSCAPE) {
+			sx = 320;
+			sy = 240;
+		}
+		else if (screen == ScreenMode.QVGA_PORTRAIT) {
+			sx = 240;
+			sy = 320;
+		}
+		else if (screen == ScreenMode.HVGA_LANDSCAPE) {
+			sx = 480;
+			sy = 320;
+		}
+		else if (screen == ScreenMode.HVGA_PORTRAIT) {
+			sx = 320;
+			sy = 480;
+		}
+	}
+	
+	public int getScreenX() {
+		return sx;
+	}
+	
+	public int getScreenY() {
+		return sy;
+	}
+	
 	public void setViewer(Viewer v) {
 		this.viewer = v;
 	}

@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 public class Viewer extends JPanel {
 	private static final long serialVersionUID = 1L;
+	
 	Dimension d;
 	AndroidEditor app;
 	ViewerListener vl;
@@ -16,7 +17,7 @@ public class Viewer extends JPanel {
 	
 	public Viewer(AndroidEditor app, Image img) {
 		this.app = app;
-		this.d = new Dimension(320,240);
+		this.d = new Dimension(app.getScreenX(),app.getScreenY());
 		vl = new ViewerListener(app, this);
 		addMouseListener(vl);
 		addMouseMotionListener(vl);

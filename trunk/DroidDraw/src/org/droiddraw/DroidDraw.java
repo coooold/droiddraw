@@ -29,7 +29,23 @@ public class DroidDraw extends JApplet {
 	public void init() {
 		super.init();
 		final AndroidEditor ae = new AndroidEditor();
-		Image img = getImage(getCodeBase(), "emu1.png");
+		String screen = this.getParameter("Screen");
+		Image img;
+		if ("qvgap".equals(screen)) {
+			ae.setScreenMode(AndroidEditor.ScreenMode.QVGA_PORTRAIT);
+			img = getImage(getCodeBase(), "emu2.png");
+		}
+		else if ("hvgal".equals(screen)) {
+			ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_LANDSCAPE);
+			img = getImage(getCodeBase(), "emu3.png");
+		}
+		else if ("hvgap".equals(screen)) {
+			ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_PORTRAIT);
+			img = getImage(getCodeBase(), "emu4.png");
+		}
+		else {
+			img = getImage(getCodeBase(), "emu1.png");
+		}
 		final Viewer viewer = new Viewer(ae, img);
 		JPanel jp = new JPanel();
 		
@@ -92,7 +108,7 @@ public class DroidDraw extends JApplet {
 		p.setLayout(fl);
 		
 		p.add(new JLabel("Layout:"));
-		JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout"});
+		JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout"});
 		layout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("comboBoxChanged")) {
@@ -103,6 +119,10 @@ public class DroidDraw extends JApplet {
 					}
 					else if (select.equals("LinearLayout")) {
 						ae.setLayout(new LinearLayout());
+						viewer.repaint();
+					}
+					else if (select.equals("RelativeLayout")) {
+						ae.setLayout(new RelativeLayout());
 						viewer.repaint();
 					}
 				}

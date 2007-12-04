@@ -17,4 +17,5 @@ public interface Widget {
 	public void apply();
 	public Vector<Property> getProperties();
 	public String getTagName();
+	public String getId();
 }
