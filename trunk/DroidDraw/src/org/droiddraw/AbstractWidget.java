@@ -25,6 +25,31 @@ public abstract class AbstractWidget implements Widget {
 		return props;
 	}
 	
+
+	public void removeProperty(Property p) {
+		props.remove(p);
+	}
+	
+	public Property getPropertyByAttName(String attName) {
+		for (Property prop : props) {
+			if (prop.getAtttributeName().equals(attName)) {
+				return prop;
+			}
+		}
+		return null;
+	}
+	
+
+	public void setPropertyByAttName(String attName, String value) {
+		Property p = getPropertyByAttName(attName);
+		if (p != null) {
+			p.setValue(value);
+		}
+		else {
+			props.add(new StringProperty(attName, attName, value));
+		}
+	}
+	
 	public void setPosition(int x, int y) {
 		this.x = x;
 		this.y = y;

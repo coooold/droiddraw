@@ -20,4 +20,9 @@ public class StringProperty extends Property {
 	public void setStringValue(String value) {
 		this.value = value;
 	}
+
+	@Override
+	public void setValue(String value) {
+		setStringValue(value);
+	}
 }

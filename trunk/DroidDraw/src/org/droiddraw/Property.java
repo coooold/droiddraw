@@ -19,6 +19,7 @@ public abstract class Property {
 	}
 	
 	public abstract Object getValue();
+	public abstract void setValue(String value);
 	
 	public boolean equals(Object o) {
 		if (o instanceof Property) {

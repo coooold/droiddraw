@@ -12,4 +12,5 @@ public interface Layout {
 	public void printEndTag(PrintWriter pw);
 	public void addOutputProperties(Widget w, Vector<Property> properties);
 	public void addEditableProperties(Widget w, Vector<Property> properties);
+	public void removeAllWidgets();
 }

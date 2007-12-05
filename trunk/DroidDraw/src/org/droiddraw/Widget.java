@@ -16,6 +16,9 @@ public interface Widget {
 	public JPanel getEditorPanel();
 	public void apply();
 	public Vector<Property> getProperties();
+	public void setPropertyByAttName(String attName, String value);
+	public Property getPropertyByAttName(String attName);
+	public void removeProperty(Property p);
 	public String getTagName();
 	public String getId();
 }

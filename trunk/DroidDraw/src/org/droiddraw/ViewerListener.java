@@ -69,10 +69,13 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	
 	public void mouseEntered(MouseEvent arg0) { }
 	public void mouseExited(MouseEvent arg0) { }
-	public void mousePressed(MouseEvent ev) { 
+	public void mousePressed(MouseEvent e) { 
+		int x = e.getX()-viewer.getOffX();
+		int y = e.getY()-viewer.getOffY();
+		
 		if (select) {
-			if (ev.getClickCount() > 1) {
-				Widget w = app.findWidget(ev.getX(),ev.getY());
+			if (e.getClickCount() > 1) {
+				Widget w = app.findWidget(x, y);
 				if (w != null) {
 					if (w != app.getSelected()) {
 						app.select(w);
@@ -81,20 +84,20 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				}
 			}
 			else {
-				app.selectWidget(ev.getX(), ev.getY());
+				app.selectWidget(x, y);
 				Widget w = app.getSelected();
 				if (w != null) {
-					off_x = w.getX()-ev.getX();
-					off_y = w.getY()-ev.getY();
+					off_x = w.getX()-x;
+					off_y = w.getY()-y;
 				}
 			}
 		}
 		else {
 			Widget w = createWidget();
 			if (app.getLayout() instanceof AbsoluteLayout)
-				w.setPosition((ev.getX()/grid_x)*grid_x, (ev.getY()/grid_y)*grid_y);
+				w.setPosition((x/grid_x)*grid_x, (y/grid_y)*grid_y);
 			else
-				w.setPosition(ev.getX(), ev.getY());
+				w.setPosition(x, y);
 			app.addWidget(w);
 			app.select(w);
 			bg.setSelected(addButton.getModel(), false);
@@ -108,15 +111,18 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	public void mouseReleased(MouseEvent ev) {
 	}
 
-	public void mouseDragged(MouseEvent ev) {
+	public void mouseDragged(MouseEvent e) {
+		int x = e.getX()-viewer.getOffX();
+		int y = e.getY()-viewer.getOffY();
+		
 		Widget selected = app.getSelected();
 		if (selected == null) {
-			app.selectWidget(ev.getX(), ev.getY());
+			app.selectWidget(x, y);
 			selected = app.getSelected();
 		}
 		if (selected != null) {
-			int nx = (ev.getX()+off_x);
-			int ny = (ev.getY()+off_y);
+			int nx = (x+off_x);
+			int ny = (y+off_y);
 			if (grid) {
 				nx = nx/grid_x*grid_x;
 				ny = ny/grid_y*grid_y;
