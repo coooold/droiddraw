@@ -35,9 +35,18 @@ public class RelativeLayout extends AbstractLayout {
 		relations = new Hashtable<Widget, Vector<Relation>>();
 	}
 	
+	protected static final String strip(String id) {
+		int ix = id.indexOf("@");
+		int ix2 = id.indexOf("+", ix);
+		if (ix2 > ix) {
+			return id.substring(ix2+1);
+		}
+		return id.substring(ix+1);
+	}
+	
 	public Widget findById(String id) {
 		for (Widget w : widgets) {
-			if (w.getId().equals(id)) {
+			if (strip(w.getId()).equals(strip(id))) {
 				return w;
 			}
 		}
@@ -89,10 +98,12 @@ public class RelativeLayout extends AbstractLayout {
 				StringProperty p = (StringProperty)w.getPropertyByAttName(propNames[i]);
 				String id = p.getStringValue();
 				Widget parent = findById(id);
-				v.add(new Relation(w, parent, rts[i]));
-				applyRelation(rts[i], w, parent);
-				w.removeProperty(p);
-				positioned = true;
+				if (parent != null) {
+					v.add(new Relation(w, parent, rts[i]));
+					applyRelation(rts[i], w, parent);
+					w.removeProperty(p);
+					positioned = true;
+				}
 			}
 		}
 		if (positioned)
