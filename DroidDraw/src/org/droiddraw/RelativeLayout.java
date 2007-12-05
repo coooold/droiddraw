@@ -8,11 +8,72 @@ public class RelativeLayout extends AbstractLayout {
 	Hashtable<Widget, Vector<Relation>> relations;
 	public static final int PADDING = 4;
 	
+	public static final String[] propNames = 
+		new String[] {
+		"android:layout_toRight",
+		"android:layout_toLeft",
+		"android:layout_above",
+		"android:layout_below",
+		"android:layout_alignRight",
+		"android:layout_alignLeft",
+		"android:layout_alignTop",
+		"android:layout_alignBottom"};
+	
+	public static final RelationType[] rts = {
+		RelationType.TO_RIGHT,
+		RelationType.TO_LEFT,
+		RelationType.ABOVE,
+		RelationType.BELOW,
+		RelationType.RIGHT,
+		RelationType.LEFT,
+		RelationType.TOP,
+		RelationType.BOTTOM
+	};
+	
 	public RelativeLayout() {
 		super("RelativeLayout");
 		relations = new Hashtable<Widget, Vector<Relation>>();
 	}
+	
+	public Widget findById(String id) {
+		for (Widget w : widgets) {
+			if (w.getId().equals(id)) {
+				return w;
+			}
+		}
+		return null;
+	}
 
+	public void applyRelation(RelationType r, Widget w, Widget parent) {
+		int x = w.getX();
+		int y = w.getY();
+		if (r == RelationType.ABOVE) {
+			y = parent.getY()-PADDING-w.getHeight();
+		}
+		if (r == RelationType.BELOW) {
+			y = parent.getY()+parent.getHeight()+PADDING;
+		}
+		if (r == RelationType.BOTTOM) {
+			y = parent.getY()+parent.getHeight()-w.getHeight();
+		}
+		if (r == RelationType.TOP) {
+			y = parent.getY();
+		}
+		if (r == RelationType.LEFT) {
+			x = parent.getX();
+		}
+		if (r == RelationType.RIGHT) {
+			x = parent.getX()+parent.getWidth()-w.getWidth();
+		}
+		if (r == RelationType.TO_LEFT) {
+			x = parent.getX()-PADDING-w.getWidth();
+		}
+		if (r == RelationType.TO_RIGHT) {
+			x = parent.getX()+parent.getWidth()+PADDING;
+		}
+		w.setPosition(x,y);
+	}
+	
 	@Override
 	public void positionWidget(Widget w) {
 		Vector<Relation> v = relations.get(w);
@@ -21,7 +82,22 @@ public class RelativeLayout extends AbstractLayout {
 			relations.put(w, v);
 		}
 		v.clear();
-
+		boolean positioned = false;
+		
+		for (int i=0;i<propNames.length;i++) {
+			if (w.getPropertyByAttName(propNames[i]) != null) {
+				StringProperty p = (StringProperty)w.getPropertyByAttName(propNames[i]);
+				String id = p.getStringValue();
+				Widget parent = findById(id);
+				v.add(new Relation(w, parent, rts[i]));
+				applyRelation(rts[i], w, parent);
+				w.removeProperty(p);
+				positioned = true;
+			}
+		}
+		if (positioned)
+			return;
+		
 		if (widgets.size() == 1) {
 			w.setPosition(AndroidEditor.OFFSET_X,AndroidEditor.OFFSET_Y);
 			return;

@@ -38,15 +38,23 @@ public class AndroidEditor {
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
 	
-	public AndroidEditor() {
+	private static AndroidEditor inst;
+	
+	private AndroidEditor() {
 		this(ScreenMode.QVGA_LANDSCAPE);
 	}
 	
-	public AndroidEditor(ScreenMode mode) {
+	private AndroidEditor(ScreenMode mode) {
 		layout = new AbsoluteLayout();
 		setScreenMode(mode);
 	}
 
+	public static AndroidEditor instance() {
+		if (inst == null)
+			inst = new AndroidEditor();
+		return inst;
+	}
+	
 	public ScreenMode getScreenMode() {
 		return screen;
 	}
@@ -68,6 +76,9 @@ public class AndroidEditor {
 		else if (screen == ScreenMode.HVGA_PORTRAIT) {
 			sx = 320;
 			sy = 480;
+		}
+		for (Widget w : this.getLayout().getWidgets()) {
+			w.apply();
 		}
 	}
 	
@@ -115,6 +126,11 @@ public class AndroidEditor {
 		}
 	}
 	
+	public void removeAllWidgets() {
+		layout.removeAllWidgets();
+		selected = null;
+	}
+	
 	public void editSelected() {
 		final Widget select = getSelected();
 		if (select!=null) {
@@ -157,7 +173,9 @@ public class AndroidEditor {
 			Vector<Property> props = (Vector<Property>)w.getProperties().clone();
 			layout.addOutputProperties(w, props);
 			for (Property prop : props) {
-				pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
+				if (prop.getValue() != null) {
+					pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
+				}
 			}
 			pw.println(">");
 			pw.println("</"+w.getTagName()+">");

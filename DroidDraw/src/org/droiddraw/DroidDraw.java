@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.MediaTracker;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.border.TitledBorder;
 
@@ -28,23 +30,36 @@ public class DroidDraw extends JApplet {
 	@Override
 	public void init() {
 		super.init();
-		final AndroidEditor ae = new AndroidEditor();
+		final AndroidEditor ae = AndroidEditor.instance();
 		String screen = this.getParameter("Screen");
 		Image img;
+		MediaTracker md = new MediaTracker(this);
+		final Image[] images = new Image[4];
+		images[0] = getImage(getCodeBase(), "emu1.png");
+		for (int i=1;i<5;i++) {
+			images[i-1] = getImage(getCodeBase(), "emu"+i+".png");
+			md.addImage(images[i-1], i);
+		}
+		for (int i=1;i<5;i++) {
+			try {
+				md.waitForID(i);
+			} catch (InterruptedException ex) {}
+		}
+
 		if ("qvgap".equals(screen)) {
 			ae.setScreenMode(AndroidEditor.ScreenMode.QVGA_PORTRAIT);
-			img = getImage(getCodeBase(), "emu2.png");
+			img = images[1];
 		}
 		else if ("hvgal".equals(screen)) {
 			ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_LANDSCAPE);
-			img = getImage(getCodeBase(), "emu3.png");
+			img = images[2];
 		}
 		else if ("hvgap".equals(screen)) {
 			ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_PORTRAIT);
-			img = getImage(getCodeBase(), "emu4.png");
+			img = images[3];
 		}
 		else {
-			img = getImage(getCodeBase(), "emu1.png");
+			img = images[0];
 		}
 		final Viewer viewer = new Viewer(ae, img);
 		JPanel jp = new JPanel();
@@ -54,7 +69,7 @@ public class DroidDraw extends JApplet {
 		JButton gen;
 		JButton edit;
 		
-		final TextArea text = new TextArea(3,80);
+		final TextArea text = new TextArea(5,50);
 		
 		gen = new JButton("Generate");
 		gen.addActionListener(new ActionListener() {
@@ -86,6 +101,9 @@ public class DroidDraw extends JApplet {
 		FlowLayout fl = new FlowLayout();
 		fl.setAlignment(FlowLayout.RIGHT);
 		
+		FlowLayout f2 = new FlowLayout();
+		f2.setAlignment(FlowLayout.LEFT);
+		
 		JPanel bp = new JPanel();
 		bp.setLayout(new GridLayout(0,1));
 		JToolBar tb = new JToolBar();
@@ -108,7 +126,7 @@ public class DroidDraw extends JApplet {
 		p.setLayout(fl);
 		
 		p.add(new JLabel("Layout:"));
-		JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout"});
+		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout"});
 		layout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("comboBoxChanged")) {
@@ -130,32 +148,99 @@ public class DroidDraw extends JApplet {
 		});
 		p.add(layout);
 		bp.add(p);
-		bp.add(tb);
+		JPanel tbp = new JPanel();
+		tbp.setLayout(fl);
+		tbp.add(tb);
+		bp.add(tbp);
 		
 		p = new JPanel();
 		p.add(gen);
+		
+		JButton load = new JButton("Load");
+		load.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					ae.removeAllWidgets();
+					DroidDrawHandler.loadFromString(text.getText());
+					layout.setSelectedItem(ae.getLayout().toString());
+					viewer.repaint();
+				} 
+				catch (Exception ex) {
+					ex.printStackTrace();
+				}
+			}
+		});
+		p.add(load);
+		
 		bp.add(p);
 		
 		//layout.setBorder(BorderFactory.createTitledBorder("Layout"));
 		jp.setLayout(new BorderLayout());
 		
+		JComboBox screen_size = new JComboBox(new String[] {"QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait"});
+		JPanel top = new JPanel();
+		top.setLayout(fl);
+		top.add(new JLabel("Screen Size:"));
+		top.add(screen_size);
+		
+		jp.add(top, BorderLayout.NORTH);
 		jp.add(viewer, BorderLayout.CENTER);
 		jp.add(bp, BorderLayout.SOUTH);
 		jp.setBorder(BorderFactory.createTitledBorder("Screen"));
 		
-		setLayout(new BorderLayout());
+		//setLayout(new BorderLayout());
 		
 		
-		add(jp, BorderLayout.WEST);
+		//add(jp, BorderLayout.WEST);
 		
-		jp = new JPanel();
-		jp.setLayout(new BorderLayout());
-		jp.add(text, BorderLayout.CENTER);
+		JPanel out = new JPanel();
+		out.setLayout(new BorderLayout());
+		out.add(text, BorderLayout.CENTER);
 
 		TitledBorder border = BorderFactory.createTitledBorder("Output");
 		
-		jp.setBorder(border);
+		out.setBorder(border);
+		JPanel jp2 = new JPanel();
+		//jp2.setLayout(f2);
+		jp2.add(bp);
+		jp2.setBorder(BorderFactory.createTitledBorder("Tools"));
 		
-		add(jp, BorderLayout.CENTER);
+		//add(out, BorderLayout.CENTER);
+		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jp2, out);
+		final JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jp, ctl);
+		add(jsp);
+		screen_size.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JComboBox jcb = (JComboBox)e.getSource();
+				int ix = jcb.getSelectedIndex();
+				switch (ix) {
+				case 0:
+					ae.setScreenMode(AndroidEditor.ScreenMode.QVGA_LANDSCAPE);
+					viewer.resetScreen(images[0]);
+					setSize(1000,450);
+					break;
+				case 1:
+					ae.setScreenMode(AndroidEditor.ScreenMode.QVGA_PORTRAIT);
+					viewer.resetScreen(images[1]);
+					setSize(1000,550);
+					
+					break;
+				case 2:
+					ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_LANDSCAPE);
+					viewer.resetScreen(images[2]);
+					setSize(1100,550);
+					
+					break;
+				case 3:
+					ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_PORTRAIT);
+					viewer.resetScreen(images[3]);
+					setSize(1000,750);
+					
+					break;
+				}
+				jsp.validate();
+				viewer.repaint();
+			}
+		});
 	}
 }

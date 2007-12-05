@@ -20,4 +20,14 @@ public class BooleanProperty extends Property {
 	public void setBooleanValue(boolean b) {
 		this.value = b;
 	}
+
+	@Override
+	public void setValue(String value) {
+		if ("true".equals(value)) {
+			this.value = true;
+		}
+		else if ("false".equals(value)) {
+			this.value = false;
+		}
+	}
 }

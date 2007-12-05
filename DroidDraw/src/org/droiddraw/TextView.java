@@ -2,6 +2,7 @@ package org.droiddraw;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.image.BufferedImage;
 import java.util.Vector;
 
 import javax.swing.JPanel;
@@ -16,8 +17,15 @@ public class TextView extends AbstractWidget {
 	SelectProperty face;
 	SelectProperty style;
 	
+	int pad_x = 5;
+	int pad_y = 3;
+	
 	PropertiesPanel p;
 	Font f;
+	BufferedImage bg;
+	
+	protected static final String[] propertyNames = 
+		new String[] {"android:textSize", "android:textStyle", "android:typeface"};
 	
 	public TextView(String str) {
 		super("TextView");
@@ -37,16 +45,17 @@ public class TextView extends AbstractWidget {
 		props.add(style);
 		buildFont();
 
-		// Heuristic until we get a graphics object...
-		setSize(str.length()*8+5, fontSize+3);
+		bg = new BufferedImage(1,1,BufferedImage.TYPE_BYTE_GRAY);
+		int w = bg.getGraphics().getFontMetrics(f).stringWidth(text.getStringValue());
+		setSize(w+5, fontSize+3);
 	}
 
 	protected void buildFont() {
 		f = new Font(face.getStringValue(),Font.PLAIN,fontSize);
-		if (style.getStringValue().contains("bold")) {
+		if (style.getStringValue() != null && style.getStringValue().contains("bold")) {
 			f = f.deriveFont(f.getStyle() | Font.BOLD);
 		}
-		if (style.getStringValue().contains("italic")) {
+		if (style.getStringValue() != null && style.getStringValue().contains("italic")) {
 			f = f.deriveFont(f.getStyle() | Font.ITALIC);
 		}
 	}
@@ -60,31 +69,54 @@ public class TextView extends AbstractWidget {
 
 	public void apply() {
 		fontSize = Integer.parseInt(fontSz.getStringValue());
-		readWidth();
+		readWidthHeight();
 		buildFont();
 	}
+	
+	protected int stringLength(String str) {
+		return bg.getGraphics().getFontMetrics(f).stringWidth(str);
+	}
+	
+	protected void readWidthHeight() {
+		int w = readSize(width);
+		int h = readSize(height);
+		if (w < 0) {
+			w = getWidth();
+		}
+		if (h < 0) {
+			h = getHeight();
+		}
+		
+		if (width.getStringValue().equals("wrap_content"))
+			w = stringLength(text.getStringValue())+pad_x;
 
-	protected void readWidth() {
-		String w = width.getStringValue();
+		if (height.getStringValue().equals("wrap_content"))
+			h = fontSize+pad_y;
+		
+		if (width.getStringValue().equals("fill_parent")) 
+			w = AndroidEditor.instance().getScreenX()-AndroidEditor.OFFSET_X;
+		if (height.getStringValue().equals("fill_parent"))
+			h = AndroidEditor.instance().getScreenY()-AndroidEditor.OFFSET_Y;
+		
+		setSize(w, h);
+	}
+
+	protected int readSize(StringProperty prop) 
+	{
+		int size = -1;
+		String w = prop.getStringValue();
 		if (w.endsWith("px")) {
 			try {
-				int width = Integer.parseInt(w.substring(0, w.length()-2));
-				setSize(width, fontSize+3);
+				size = Integer.parseInt(w.substring(0, w.length()-2));
 			} 
 			catch (NumberFormatException ex) {}
 		}
+		return size;
 	}
 	
+	
+	
 	public void paint(Graphics g) {
-		if (width.getStringValue().equals("wrap_content")) {
-			int w;
-			w = g.getFontMetrics(f).stringWidth(text.getStringValue());
-			setSize(w+5, fontSize+3);
-		}
-		else {
-			readWidth();
-		}
-
 		g.setColor(Color.black);
 		g.setFont(f);
 		g.drawString(text.getStringValue(), getX()+2, getY()+fontSize);
@@ -93,9 +125,9 @@ public class TextView extends AbstractWidget {
 	@SuppressWarnings("unchecked")
 	public Vector<Property> getProperties() {
 		Vector<Property> ret = (Vector<Property>)props.clone();
-		if (face.getStringValue().equals("plain"))
+		if (face.getStringValue() != null && face.getStringValue().equals("plain"))
 			ret.remove(face);
-		if (style.getStringValue().equals("plain"))
+		if (style.getStringValue() != null && style.getStringValue().equals("plain"))
 			ret.remove(style);
 		return ret;
 	}

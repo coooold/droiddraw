@@ -8,20 +8,20 @@ public class Button extends TextView {
 		super(txt);
 		// This is a hack and bad oo, I know...
 		this.tagName = "Button";
-		setSize(txt.length()*8+16, fontSize+6);
+		setSize(stringLength(txt)+16, fontSize+6);
+		
+		pad_x = 16;
+		pad_y = 6;
 	}
 
 	public void paint(Graphics g) {
-		if (width.getStringValue().equals("wrap_content"))
-			setSize(g.getFontMetrics(f).stringWidth(text.getStringValue())+16, fontSize+6);
-		else
-			setSize(getWidth(), fontSize+6);
 		g.setColor(Color.white);
 		g.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);
 		
 		g.setColor(Color.black);
 		g.drawRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);
 		g.setFont(f);
-		g.drawString(text.getStringValue(), getX()+8, getY()+fontSize+2);
+		int w = g.getFontMetrics(f).stringWidth(text.getStringValue());
+		g.drawString(text.getStringValue(), getX()+getWidth()/2-w/2, getY()+fontSize+2);
 	}
 }

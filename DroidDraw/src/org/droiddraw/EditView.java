@@ -11,12 +11,18 @@ public class EditView extends TextView {
 	SelectProperty capitalize;
 	StringProperty digits;
 	
+	public static final String[] propertyNames = 
+		new String[] {"android:password", "android:capitalize", "android:numeric", "android:phoneNumber","android:autoText","android:digits"};
+	
 	public EditView(String txt) {
 		super(txt);
 		// This is a hack and bad oo, I know...
 		this.tagName="EditText";
 		
-		setSize(txt.length()*8+12, fontSize+6);
+		setSize(stringLength(txt)+12, fontSize+6);
+		
+		pad_x = 12;
+		pad_y = 6;
 		
 		password = new BooleanProperty("Password", "android:password", false);
 		capitalize = new SelectProperty("Capitalize", "android:capitalize", new String[] {"sentences", "words"}, 0);
@@ -37,16 +43,12 @@ public class EditView extends TextView {
 	@SuppressWarnings("unchecked")
 	public Vector<Property> getProperties() {
 		Vector<Property> ret = super.getProperties();
-		if (digits.getStringValue().length() < 1)
+		if (digits.getStringValue() == null || digits.getStringValue().length() < 1)
 			ret.remove(digits);
 		return ret;
 	}
 	
 	public void paint(Graphics g) {
-		if (width.getStringValue().equals("wrap_content"))
-			setSize(g.getFontMetrics(f).stringWidth(text.getStringValue())+12, fontSize+6);
-		else
-			setSize(getWidth(), fontSize+6);
 		g.setColor(Color.white);
 		g.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);
 		

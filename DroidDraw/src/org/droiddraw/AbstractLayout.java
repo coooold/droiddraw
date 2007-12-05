@@ -12,6 +12,10 @@ public abstract class AbstractLayout implements Layout {
 		this.tagName = tagName;
 	}
 	
+	public String toString() {
+		return tagName;
+	}
+	
 	public void addWidget(Widget w) {
 		widgets.add(w);
 		positionWidget(w);
@@ -24,6 +28,10 @@ public abstract class AbstractLayout implements Layout {
 	public void removeWidget(Widget w) {
 		widgets.remove(w);
 		repositionAllWidgets(widgets);
+	}
+	
+	public void removeAllWidgets() {
+		widgets.clear();
 	}
 
 	protected void printStartTag(java.util.Hashtable<String,String> atts, PrintWriter pw) 
