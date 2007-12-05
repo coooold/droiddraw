@@ -30,7 +30,7 @@ public class TextView extends AbstractWidget {
 	public TextView(String str) {
 		super("TextView");
 		
-		text = new StringProperty("Text", "android:text", str);
+		text = new StringProperty("Text", "android:text", str!=null?str:"");
 		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"");
 		width = new StringProperty("Width", "android:layout_width", "wrap_content");
 		height = new StringProperty("Height", "android:layout_height", "wrap_content");
@@ -74,6 +74,8 @@ public class TextView extends AbstractWidget {
 	}
 	
 	protected int stringLength(String str) {
+		if (str == null)
+			return 0;
 		return bg.getGraphics().getFontMetrics(f).stringWidth(str);
 	}
 	
