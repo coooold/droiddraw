@@ -1,12 +1,14 @@
 package org.droiddraw;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -22,14 +24,30 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 	Hashtable<Property, JComponent> components;
 	Viewer viewer;
 	Widget w;
+	JPanel items;
+	Dimension d;
+	
+	public PropertiesPanel() {
+		this(new Vector<Property>(), null);
+	}
 	
 	public PropertiesPanel(Vector<Property> properties, Widget w) {
-		this.properties = properties;
 		this.components = new Hashtable<Property, JComponent>();
 		this.w =w;
 		
-		JPanel items = new JPanel();
+		setProperties(properties, w);
+		this.d = new Dimension(200,400);
+	}
+
+	public void setProperties(Vector<Property> properties, Widget w) {
+		this.properties = properties;
+		this.removeAll();
+		items = new JPanel();
 		items.setLayout(new GridLayout(0,2));
+		items.setBorder(BorderFactory.createTitledBorder("Properties"));
+		components.clear();
+		this.w = w;
+		
 		for (Property prop: properties) {
 			if (prop instanceof BooleanProperty) {
 				items.add(new JPanel());
@@ -48,11 +66,15 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 					jc = new JTextField(prop.getValue().toString(), 10);
 				}
 				components.put(prop, jc);
-				items.add(jc);
+				JPanel p = new JPanel();
+				p.add(jc);
+				items.add(p);
 			}
 		}
 		this.setLayout(new BorderLayout());
-		this.add(items, BorderLayout.CENTER);
+		JPanel p = new JPanel();
+		p.add(items);
+		this.add(p, BorderLayout.CENTER);
 		JButton apply = new JButton("Apply");
 		apply.addActionListener(this);
 		this.add(apply, BorderLayout.SOUTH);
