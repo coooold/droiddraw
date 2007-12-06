@@ -90,6 +90,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 					off_x = w.getX()-x;
 					off_y = w.getY()-y;
 				}
+				viewer.requestFocus();
+				viewer.repaint();
 			}
 		}
 		else {
@@ -103,9 +105,9 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			bg.setSelected(addButton.getModel(), false);
 			bg.setSelected(selectButton.getModel(), true);
 			select = true;
+			viewer.requestFocus();
+			viewer.repaint();
 		}
-		viewer.requestFocus();
-		viewer.repaint();
 	}
 	
 	public void mouseReleased(MouseEvent ev) {
