@@ -29,7 +29,7 @@ import javax.swing.border.TitledBorder;
 
 public class DroidDraw extends JApplet {
 	private static final long serialVersionUID = 1L;
-
+	
 	protected static final void switchToLookAndFeel(String clazz) {
 		try {
 			UIManager.setLookAndFeel(clazz);
@@ -41,6 +41,7 @@ public class DroidDraw extends JApplet {
 	@Override
 	public void init() {
 		super.init();
+		
 		switchToLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
 		final AndroidEditor ae = AndroidEditor.instance();
@@ -154,7 +155,8 @@ public class DroidDraw extends JApplet {
 			}
 		});
 		p.add(layout);
-		sl.putConstraint(SpringLayout.BASELINE, lbl, 0, SpringLayout.BASELINE, layout);
+		// This is 1.6.x specific *sigh*
+		//sl.putConstraint(SpringLayout.BASELINE, lbl, 0, SpringLayout.BASELINE, layout);
 		sl.putConstraint(SpringLayout.NORTH, tb, 5, SpringLayout.SOUTH, layout);
 		p.add(tb);
 		
