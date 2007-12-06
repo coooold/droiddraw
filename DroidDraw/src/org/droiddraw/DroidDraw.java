@@ -1,6 +1,7 @@
 package org.droiddraw;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -19,6 +20,7 @@ import javax.swing.JApplet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
@@ -158,6 +160,7 @@ public class DroidDraw extends JApplet {
 
 		p.setLayout(l);
 		JButton load = new JButton("Load");
+		final Component c = this;
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -167,6 +170,7 @@ public class DroidDraw extends JApplet {
 					viewer.repaint();
 				} 
 				catch (Exception ex) {
+					JOptionPane.showMessageDialog(c, ex.getMessage(), ex.toString(), JOptionPane.ERROR_MESSAGE);
 					ex.printStackTrace();
 				}
 			}
