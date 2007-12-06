@@ -24,14 +24,25 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
+import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
 public class DroidDraw extends JApplet {
 	private static final long serialVersionUID = 1L;
 
+	protected static final void switchToLookAndFeel(String clazz) {
+		try {
+			UIManager.setLookAndFeel(clazz);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void init() {
 		super.init();
+		switchToLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		
 		final AndroidEditor ae = AndroidEditor.instance();
 		String screen = this.getParameter("Screen");
 		Image img;
@@ -143,7 +154,7 @@ public class DroidDraw extends JApplet {
 			}
 		});
 		p.add(layout);
-
+		sl.putConstraint(SpringLayout.BASELINE, lbl, 0, SpringLayout.BASELINE, layout);
 		sl.putConstraint(SpringLayout.NORTH, tb, 5, SpringLayout.SOUTH, layout);
 		p.add(tb);
 		
@@ -167,10 +178,10 @@ public class DroidDraw extends JApplet {
 		sl.putConstraint(SpringLayout.WEST, gen, 5, SpringLayout.WEST, p);
 		sl.putConstraint(SpringLayout.NORTH, gen, 0, SpringLayout.SOUTH, tb);
 		sl.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.SOUTH, tb);
-		sl.putConstraint(SpringLayout.EAST, gen, 0, SpringLayout.EAST, tb);
+		sl.putConstraint(SpringLayout.EAST, gen, 0, SpringLayout.EAST, layout);
+		sl.putConstraint(SpringLayout.WEST, gen, 0, SpringLayout.WEST, layout);
 		sl.putConstraint(SpringLayout.EAST, layout, 0, SpringLayout.EAST, tb);
 		sl.putConstraint(SpringLayout.SOUTH, p, 5, SpringLayout.SOUTH, gen);
-		
 		p.add(load);
 		p.add(gen);
 		p.setSize(200, 300);
