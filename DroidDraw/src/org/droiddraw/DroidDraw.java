@@ -3,7 +3,6 @@ package org.droiddraw;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.MediaTracker;
 import java.awt.TextArea;
@@ -100,15 +99,6 @@ public class DroidDraw extends JApplet {
 		
 		ButtonGroup bg = viewer.getListener().getInterfaceStateGroup();
 
-
-		FlowLayout fl = new FlowLayout();
-		fl.setAlignment(FlowLayout.LEFT);
-		
-		FlowLayout f2 = new FlowLayout();
-		f2.setAlignment(FlowLayout.LEFT);
-		
-		JPanel bp = new JPanel();
-		bp.setLayout(new GridLayout(0,1));
 		JToolBar tb = new JToolBar();
 		
 		Enumeration<AbstractButton> buttons = bg.getElements();
@@ -125,10 +115,14 @@ public class DroidDraw extends JApplet {
 		tb.setFloatable(false);
 		
 		JPanel p = new JPanel();
-		p.setLayout(fl);
+		SpringLayout sl = new SpringLayout();
+		p.setLayout(sl);
+		JLabel lbl = new JLabel("Layout:");
+		sl.putConstraint(SpringLayout.WEST, lbl, 5, SpringLayout.WEST, p);
+		p.add(lbl);
 		
-		p.add(new JLabel("Layout:"));
 		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout"});
+		
 		layout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("comboBoxChanged")) {
@@ -149,16 +143,10 @@ public class DroidDraw extends JApplet {
 			}
 		});
 		p.add(layout);
-		bp.add(p);
-		JPanel tbp = new JPanel();
-		tbp.setLayout(fl);
-		tbp.add(tb);
-		bp.add(tbp);
-		
-		p = new JPanel();
-		SpringLayout l = new SpringLayout();
 
-		p.setLayout(l);
+		sl.putConstraint(SpringLayout.NORTH, tb, 5, SpringLayout.SOUTH, layout);
+		p.add(tb);
+		
 		JButton load = new JButton("Load");
 		final Component c = this;
 		load.addActionListener(new ActionListener() {
@@ -176,26 +164,32 @@ public class DroidDraw extends JApplet {
 			}
 		});
 		
-		l.putConstraint(SpringLayout.WEST, gen, 5, SpringLayout.WEST, p);
-		l.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.NORTH, gen);
-		l.putConstraint(SpringLayout.WEST, gen, 40, SpringLayout.EAST, load);
+		sl.putConstraint(SpringLayout.WEST, gen, 5, SpringLayout.WEST, p);
+		sl.putConstraint(SpringLayout.NORTH, gen, 0, SpringLayout.SOUTH, tb);
+		sl.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.SOUTH, tb);
+		sl.putConstraint(SpringLayout.EAST, gen, 0, SpringLayout.EAST, tb);
+		sl.putConstraint(SpringLayout.EAST, layout, 0, SpringLayout.EAST, tb);
+		sl.putConstraint(SpringLayout.SOUTH, p, 5, SpringLayout.SOUTH, gen);
+		
 		p.add(load);
 		p.add(gen);
-		
-		bp.add(p);
+		p.setSize(200, 300);
+		p.validate();
+		//bp.add(p);
 		
 		//layout.setBorder(BorderFactory.createTitledBorder("Layout"));
 		jp.setLayout(new BorderLayout());
 		
 		JComboBox screen_size = new JComboBox(new String[] {"QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait"});
 		JPanel top = new JPanel();
+		FlowLayout fl = new FlowLayout();
+		fl.setAlignment(FlowLayout.LEFT);
 		top.setLayout(fl);
 		top.add(new JLabel("Screen Size:"));
 		top.add(screen_size);
 		
 		jp.add(top, BorderLayout.NORTH);
 		jp.add(viewer, BorderLayout.CENTER);
-		jp.add(bp, BorderLayout.SOUTH);
 		jp.setBorder(BorderFactory.createTitledBorder("Screen"));
 		
 		//setLayout(new BorderLayout());
@@ -210,15 +204,15 @@ public class DroidDraw extends JApplet {
 		TitledBorder border = BorderFactory.createTitledBorder("Output");
 		
 		out.setBorder(border);
-		JPanel jp2 = new JPanel();
+		//JPanel jp2 = new JPanel();
 		//jp2.setLayout(f2);
-		jp2.setLayout(new GridLayout(0,1));
-		jp2.add(bp);
+		//jp2.setLayout(new GridLayout(0,1));
+		//jp2.add(p);
 		
-		jp2.setBorder(BorderFactory.createTitledBorder("Tools"));
+		p.setBorder(BorderFactory.createTitledBorder("Tools"));
 		
 		//add(out, BorderLayout.CENTER);
-		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jp2, out);
+		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, p, out);
 		final JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jp, ctl);
 		add(jsp);
 		screen_size.addActionListener(new ActionListener() {
