@@ -152,10 +152,10 @@ public class AndroidEditor {
 	
 	public void editSelected() {
 		if (jf != null) {
-			//jf.setVisible(false);
 			jf.invalidate();
 			jf.pack();
 			jf.setVisible(true);
+			jf.toFront();
 		}
 		else {
 			jf = new JFrame("Edit");

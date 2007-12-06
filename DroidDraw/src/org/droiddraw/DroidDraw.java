@@ -105,6 +105,7 @@ public class DroidDraw extends JApplet {
 		delete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				ae.removeWidget(ae.getSelected());
+				viewer.repaint();
 			}
 		});
 		
