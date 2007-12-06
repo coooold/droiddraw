@@ -21,7 +21,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import javax.swing.filechooser.FileFilter;
 
@@ -34,6 +33,8 @@ public class AndroidEditor {
 	Viewer viewer;
 	ScreenMode screen;
 	int sx, sy;
+	PropertiesPanel pp;
+	JFrame jf;
 	
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
@@ -47,8 +48,13 @@ public class AndroidEditor {
 	private AndroidEditor(ScreenMode mode) {
 		layout = new AbsoluteLayout();
 		setScreenMode(mode);
+		this.pp = new PropertiesPanel();
 	}
 
+	public PropertiesPanel getPropertiesPanel() {
+		return pp;
+	}
+	
 	public static AndroidEditor instance() {
 		if (inst == null)
 			inst = new AndroidEditor();
@@ -92,6 +98,7 @@ public class AndroidEditor {
 	
 	public void setViewer(Viewer v) {
 		this.viewer = v;
+		this.pp.setViewer(v);
 	}
 	
 	public void setLayout(Layout l) {
@@ -117,6 +124,18 @@ public class AndroidEditor {
 
 	public void select(Widget w) {
 		selected = w;
+		if (w != null) {
+			pp.setProperties(w.getProperties(), w);
+			pp.validate();
+			pp.repaint();
+			if (jf != null) {jf.validate(); jf.pack();}
+		}
+		else {
+			pp.setProperties(new Vector<Property>(), null);
+			pp.validate();
+			pp.repaint();
+			if (jf != null) { jf.validate(); jf.pack();}
+		}
 	}
 
 	public void removeWidget(Widget w) {
@@ -132,14 +151,17 @@ public class AndroidEditor {
 	}
 	
 	public void editSelected() {
-		final Widget select = getSelected();
-		if (select!=null) {
-			JFrame f = new JFrame("Edit");
-			JPanel editor = select.getEditorPanel();
-			((PropertiesPanel)editor).setViewer(viewer);
-			f.getContentPane().add(editor);
-			f.pack();
-			f.setVisible(true);
+		if (jf != null) {
+			//jf.setVisible(false);
+			jf.invalidate();
+			jf.pack();
+			jf.setVisible(true);
+		}
+		else {
+			jf = new JFrame("Edit");
+			jf.getContentPane().add(pp);
+			jf.pack();
+			jf.setVisible(true);
 		}
 	}
 
@@ -160,7 +182,7 @@ public class AndroidEditor {
 			selected = null;
 		}
 		else {
-			selected = res;
+			this.select(res);
 		}
 	}
 

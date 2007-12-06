@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.SpringLayout;
 import javax.swing.border.TitledBorder;
 
 public class DroidDraw extends JApplet {
@@ -99,7 +100,7 @@ public class DroidDraw extends JApplet {
 
 
 		FlowLayout fl = new FlowLayout();
-		fl.setAlignment(FlowLayout.RIGHT);
+		fl.setAlignment(FlowLayout.LEFT);
 		
 		FlowLayout f2 = new FlowLayout();
 		f2.setAlignment(FlowLayout.LEFT);
@@ -119,7 +120,6 @@ public class DroidDraw extends JApplet {
 		tb.add(edit);
 		tb.addSeparator();
 		tb.add(delete);
-		//bp.add(tb);
 		tb.setFloatable(false);
 		
 		JPanel p = new JPanel();
@@ -154,8 +154,9 @@ public class DroidDraw extends JApplet {
 		bp.add(tbp);
 		
 		p = new JPanel();
-		p.add(gen);
-		
+		SpringLayout l = new SpringLayout();
+
+		p.setLayout(l);
 		JButton load = new JButton("Load");
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -170,7 +171,12 @@ public class DroidDraw extends JApplet {
 				}
 			}
 		});
+		
+		l.putConstraint(SpringLayout.WEST, gen, 5, SpringLayout.WEST, p);
+		l.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.NORTH, gen);
+		l.putConstraint(SpringLayout.WEST, gen, 40, SpringLayout.EAST, load);
 		p.add(load);
+		p.add(gen);
 		
 		bp.add(p);
 		
@@ -202,7 +208,9 @@ public class DroidDraw extends JApplet {
 		out.setBorder(border);
 		JPanel jp2 = new JPanel();
 		//jp2.setLayout(f2);
+		jp2.setLayout(new GridLayout(0,1));
 		jp2.add(bp);
+		
 		jp2.setBorder(BorderFactory.createTitledBorder("Tools"));
 		
 		//add(out, BorderLayout.CENTER);
