@@ -23,7 +23,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	
 	Viewer viewer;
 	AndroidEditor app;
-	JComboBox widgetType = new JComboBox(new String[] {"Button", "CheckBox", "EditText", "TextView"});
+	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock", "Button", "CheckBox", "DigitalClock", "EditText", "TextView"});
 	JToggleButton addButton;
 	JToggleButton selectButton;
 	ButtonGroup bg;
@@ -60,6 +60,14 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return new EditView("EditText");
 		else if (str.equals("TextView"))
 			return new TextView("TextView");
+		else if (str.equals("AnalogClock"))
+			return new AnalogClock();
+		else if (str.equals("DigitalClock"))
+			return new DigitalClock();
+/*
+ 		else if (str.equals("LinearLayout"))
+			return new LinearLayout();
+*/
 		else
 			return null;
 	}
@@ -84,12 +92,12 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				}
 			}
 			else {
-				app.selectWidget(x, y);
-				Widget w = app.getSelected();
+				Widget w = app.findWidget(x,y);
 				if (w != null) {
 					off_x = w.getX()-x;
 					off_y = w.getY()-y;
 				}
+				app.selectWidget(x, y);
 				viewer.requestFocus();
 				viewer.repaint();
 			}
@@ -100,7 +108,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				w.setPosition((x/grid_x)*grid_x, (y/grid_y)*grid_y);
 			else
 				w.setPosition(x, y);
-			app.addWidget(w);
+			app.getLayout().addWidget(w);
 			app.select(w);
 			bg.setSelected(addButton.getModel(), false);
 			bg.setSelected(selectButton.getModel(), true);

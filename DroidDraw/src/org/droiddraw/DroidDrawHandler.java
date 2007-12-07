@@ -29,15 +29,21 @@ public class DroidDrawHandler extends DefaultHandler {
 		throws SAXException 
 	{
 		if (qName.equals("AbsoluteLayout")) {
-			AndroidEditor.instance().setLayout(new AbsoluteLayout());
+			Layout l = new AbsoluteLayout();
+			l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
+			AndroidEditor.instance().setLayout(l);
 			layout = true;
 		}
 		else if (qName.equals("LinearLayout")) {
-			AndroidEditor.instance().setLayout(new LinearLayout());
+			Layout l = new LinearLayout();
+			l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
+			AndroidEditor.instance().setLayout(l);
 			layout = true;
 		}
 		else if (qName.equals("RelativeLayout")) {
-			AndroidEditor.instance().setLayout(new RelativeLayout());
+			Layout l = new RelativeLayout();
+			l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
+			AndroidEditor.instance().setLayout(l);
 			layout = true;
 			all_props.add("android:layout_alignRight");
 			all_props.add("android:layout_alignLeft");
@@ -88,12 +94,13 @@ public class DroidDrawHandler extends DefaultHandler {
 						w.setPropertyByAttName(prop, atts.getValue(prop));	
 					}
 				}
-				if (AndroidEditor.instance().getLayout() instanceof LinearLayout)
-					w.setPosition(x+AndroidEditor.OFFSET_X, y+AndroidEditor.OFFSET_Y+AndroidEditor.instance().getScreenY());
+				Layout layout = AndroidEditor.instance().getLayout();
+				if (layout instanceof LinearLayout)
+					w.setPosition(x+layout.getX(), y+layout.getY()+AndroidEditor.instance().getScreenY());
 				else
-					w.setPosition(x+AndroidEditor.OFFSET_X, y+AndroidEditor.OFFSET_Y);
+					w.setPosition(x+layout.getX(), y+layout.getY());
 				w.apply();
-				AndroidEditor.instance().addWidget(w);
+				AndroidEditor.instance().getLayout().addWidget(w);
 			}
 		}
 	}

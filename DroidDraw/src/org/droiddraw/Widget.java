@@ -13,12 +13,14 @@ public interface Widget {
 	public void setPosition(int x, int y);
 	public void move(int dx, int dy);
 	public void paint(Graphics g);
-	public JPanel getEditorPanel();
 	public void apply();
 	public Vector<Property> getProperties();
 	public void setPropertyByAttName(String attName, String value);
 	public Property getPropertyByAttName(String attName);
+	public void addProperty(Property p);
 	public void removeProperty(Property p);
 	public String getTagName();
 	public String getId();
+	public Widget getParent();
+	public void setParent(Widget w);
 }

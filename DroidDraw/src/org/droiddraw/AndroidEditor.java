@@ -46,7 +46,6 @@ public class AndroidEditor {
 	}
 	
 	private AndroidEditor(ScreenMode mode) {
-		layout = new AbsoluteLayout();
 		setScreenMode(mode);
 		this.pp = new PropertiesPanel();
 	}
@@ -83,8 +82,12 @@ public class AndroidEditor {
 			sx = 320;
 			sy = 480;
 		}
-		for (Widget w : this.getLayout().getWidgets()) {
-			w.apply();
+		if (this.getLayout() != null) {
+			this.getLayout().apply();
+			for (Widget w : this.getLayout().getWidgets()) {
+				w.apply();
+			}
+			this.getLayout().repositionAllWidgets();
 		}
 	}
 	
@@ -102,22 +105,20 @@ public class AndroidEditor {
 	}
 	
 	public void setLayout(Layout l) {
-		Vector<Widget> widgets = layout.getWidgets();
-		this.layout = l;
-		for (Widget w : widgets) {
-			l.addWidget(w);
+		if (this.layout != null) {
+			Vector<Widget> widgets = layout.getWidgets();
+			for (Widget w : widgets) {
+				l.addWidget(w);
+			}
+			this.layout.removeAllWidgets();
 		}
+		this.layout = l;
 	}
 	
 	public Layout getLayout() {
 		return layout;
 	}
 	
-	public void addWidget(Widget w) {
-		layout.addWidget(w);
-		layout.addEditableProperties(w, w.getProperties());
-	}
-
 	public Widget getSelected() {
 		return selected;
 	}

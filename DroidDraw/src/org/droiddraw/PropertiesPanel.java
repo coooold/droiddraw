@@ -60,7 +60,9 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 				items.add(new JLabel(prop.getEnglishName()));
 				JComponent jc;
 				if (prop instanceof SelectProperty) {
-					jc = new JComboBox(((SelectProperty)prop).getOptions());
+					JComboBox jcb = new JComboBox(((SelectProperty)prop).getOptions());
+					jcb.setSelectedIndex(((SelectProperty)prop).getSelectedIndex());
+					jc = jcb;
 				}
 				else {
 					jc = new JTextField(prop.getValue().toString(), 10);
@@ -104,5 +106,6 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 		if (viewer != null)
 			viewer.repaint();
 		w.apply();
+		AndroidEditor.instance().getLayout().positionWidget(w);
 	}
 }

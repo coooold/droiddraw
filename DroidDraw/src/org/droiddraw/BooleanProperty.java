@@ -10,7 +10,10 @@ public class BooleanProperty extends Property {
 
 	@Override
 	public Object getValue() {
-		return getBooleanValue();
+		if (value)
+			return "true";
+		else
+			return "false";
 	}
 	
 	public boolean getBooleanValue() {

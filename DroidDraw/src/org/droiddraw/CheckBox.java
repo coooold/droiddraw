@@ -3,7 +3,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 
-public class CheckBox extends Button {
+public class CheckBox extends CompoundButton {
 	public CheckBox(String text) {
 		super(text);
 		this.tagName = "CheckBox";
@@ -19,6 +19,12 @@ public class CheckBox extends Button {
 		
 		g.setColor(Color.black);
 		g.drawRect(getX()+2, getY()+2, 16, 16);
+		
+		if ("true".equals(this.getPropertyByAttName("android:checked").getValue())) {
+			System.out.println("foo");
+			g.drawLine(getX()+2, getY()+2, getX()+18, getY()+18);
+			g.drawLine(getX()+2, getY()+18, getX()+18, getY()+2);
+		}
 		g.setFont(f);
 		g.drawString(text.getStringValue(), getX()+22, getY()+fontSize+2);
 	}
