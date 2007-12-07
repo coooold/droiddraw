@@ -110,7 +110,7 @@ public class RelativeLayout extends AbstractLayout {
 			return;
 		
 		if (widgets.size() == 1) {
-			w.setPosition(AndroidEditor.OFFSET_X,AndroidEditor.OFFSET_Y);
+			w.setPosition(getX(),getY());
 			return;
 		}
 
@@ -216,7 +216,7 @@ public class RelativeLayout extends AbstractLayout {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void repositionAllWidgets(Vector<Widget> widgets) {
+	public void repositionAllWidgets() {
 		Vector<Widget> ws = (Vector<Widget>)widgets.clone();
 		widgets.clear();
 		for (Widget w : ws) {
@@ -224,8 +224,9 @@ public class RelativeLayout extends AbstractLayout {
 		}
 	}
 
-	public void addEditableProperties(Widget w, Vector<Property> properties) {
-	}
+	public void addEditableProperties(Widget w) {}
+
+	public void removeEditableProperties(Widget w) {}
 
 	public void addOutputProperties(Widget w, Vector<Property> properties) {
 		Vector<Relation> rels = relations.get(w);
@@ -296,5 +297,4 @@ public class RelativeLayout extends AbstractLayout {
 			return widget;
 		}
 	}
-	
 }

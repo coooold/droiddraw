@@ -12,10 +12,9 @@ public class TextView extends AbstractWidget {
 	
 	StringProperty text;
 	StringProperty fontSz;
-	StringProperty width;
-	StringProperty height;
 	SelectProperty face;
 	SelectProperty style;
+	
 	
 	int pad_x = 5;
 	int pad_y = 3;
@@ -32,15 +31,11 @@ public class TextView extends AbstractWidget {
 		
 		text = new StringProperty("Text", "android:text", str!=null?str:"");
 		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"");
-		width = new StringProperty("Width", "android:layout_width", "wrap_content");
-		height = new StringProperty("Height", "android:layout_height", "wrap_content");
 		face = new SelectProperty("Font Face", "android:typeface", new String[] {"plain","sans","serif","monospace"}, 0);
 		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"plain", "bold", "italic", "bold_italic"}, 0);
 		
 		props.add(text);
 		//props.add(fontSz);
-		props.add(width);
-		props.add(height);
 		props.add(face);
 		props.add(style);
 		buildFont();
@@ -68,8 +63,8 @@ public class TextView extends AbstractWidget {
 	}
 
 	public void apply() {
+		super.apply();
 		fontSize = Integer.parseInt(fontSz.getStringValue());
-		readWidthHeight();
 		buildFont();
 	}
 	
@@ -79,44 +74,13 @@ public class TextView extends AbstractWidget {
 		return bg.getGraphics().getFontMetrics(f).stringWidth(str);
 	}
 	
-	protected void readWidthHeight() {
-		int w = readSize(width);
-		int h = readSize(height);
-		if (w < 0) {
-			w = getWidth();
-		}
-		if (h < 0) {
-			h = getHeight();
-		}
-		
-		if (width.getStringValue().equals("wrap_content"))
-			w = stringLength(text.getStringValue())+pad_x;
-
-		if (height.getStringValue().equals("wrap_content"))
-			h = fontSize+pad_y;
-		
-		if (width.getStringValue().equals("fill_parent")) 
-			w = AndroidEditor.instance().getScreenX()-AndroidEditor.OFFSET_X;
-		if (height.getStringValue().equals("fill_parent"))
-			h = AndroidEditor.instance().getScreenY()-AndroidEditor.OFFSET_Y;
-		
-		setSize(w, h);
-	}
-
-	protected int readSize(StringProperty prop) 
-	{
-		int size = -1;
-		String w = prop.getStringValue();
-		if (w.endsWith("px")) {
-			try {
-				size = Integer.parseInt(w.substring(0, w.length()-2));
-			} 
-			catch (NumberFormatException ex) {}
-		}
-		return size;
+	protected int getContentWidth() {
+		return stringLength(text.getStringValue())+pad_x;
 	}
 	
-	
+	protected int getContentHeight() {
+		return fontSize+pad_y;
+	}
 	
 	public void paint(Graphics g) {
 		g.setColor(Color.black);

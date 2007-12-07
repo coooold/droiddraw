@@ -38,6 +38,13 @@ public class DroidDraw extends JApplet {
 		}
 	}
 	
+	protected static final void setupRootLayout(Layout l) {
+		l.setPosition(AndroidEditor.OFFSET_X,AndroidEditor.OFFSET_Y);
+		l.setPropertyByAttName("android:layout_width", "fill_parent");
+		l.setPropertyByAttName("android:layout_height", "fill_parent");
+		l.apply();
+	}
+	
 	@Override
 	public void init() {
 		super.init();
@@ -45,6 +52,10 @@ public class DroidDraw extends JApplet {
 		switchToLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
 		final AndroidEditor ae = AndroidEditor.instance();
+		AbsoluteLayout al = new AbsoluteLayout();
+		setupRootLayout(al);
+
+		ae.setLayout(al);
 		String screen = this.getParameter("Screen");
 		Image img;
 		MediaTracker md = new MediaTracker(this);
@@ -140,18 +151,21 @@ public class DroidDraw extends JApplet {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("comboBoxChanged")) {
 					String select = (String)((JComboBox)e.getSource()).getSelectedItem();
+					Layout l = null;
 					if (select.equals("AbsoluteLayout")) {
-						ae.setLayout(new AbsoluteLayout());
+						l = new AbsoluteLayout();
 						viewer.repaint();
 					}
 					else if (select.equals("LinearLayout")) {
-						ae.setLayout(new LinearLayout());
+						l = new LinearLayout();
 						viewer.repaint();
 					}
 					else if (select.equals("RelativeLayout")) {
-						ae.setLayout(new RelativeLayout());
+						l = new RelativeLayout();
 						viewer.repaint();
 					}
+					setupRootLayout(l);
+					AndroidEditor.instance().setLayout(l);
 				}
 			}
 		});

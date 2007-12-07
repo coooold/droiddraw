@@ -64,10 +64,8 @@ public class Viewer extends JPanel {
 		if (img != null)
 			g.drawImage(img, 0, 0, this);
 		
-		Vector<Widget> widgets = app.getLayout().getWidgets();
-		for (Widget w : widgets) {
-			w.paint(g);
-		}
+		app.getLayout().paint(g);
+
 		Widget w = app.getSelected();
 		if (w != null) {
 			g.setColor(Color.black);
