@@ -3,13 +3,19 @@ package org.droiddraw;
 public abstract class Property {
 	protected String englishName;
 	protected String attName;
-
-	public Property(String englishName, String attName) {
+	protected boolean editable;
+	
+	public Property(String englishName, String attName, boolean editable) {
 		super();
 		this.englishName = englishName;
 		this.attName = attName;
+		this.editable = editable;
 	}
 		
+	public boolean getEditable() {
+		return editable;
+	}
+	
 	public String getEnglishName() {
 		return englishName;
 	}

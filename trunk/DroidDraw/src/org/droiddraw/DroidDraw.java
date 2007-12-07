@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URL;
 import java.util.Enumeration;
 
 import javax.swing.AbstractButton;
@@ -48,10 +49,22 @@ public class DroidDraw extends JApplet {
 	@Override
 	public void init() {
 		super.init();
+		final AndroidEditor ae = AndroidEditor.instance();
+		
+		// This is so that I can test out the Google examples...
+		// START
+		if ("true".equals(this.getParameter("load_strings"))) {
+			try {
+				URL url = new URL(getCodeBase(), "strings.xml");
+				ae.setStrings(StringHandler.load(url.openStream()));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		// END
 		
 		switchToLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
-		final AndroidEditor ae = AndroidEditor.instance();
 		AbsoluteLayout al = new AbsoluteLayout();
 		setupRootLayout(al);
 
@@ -141,13 +154,13 @@ public class DroidDraw extends JApplet {
 		JPanel p = new JPanel();
 		SpringLayout sl = new SpringLayout();
 		p.setLayout(sl);
-		JLabel lbl = new JLabel("Layout:");
+		JLabel lbl = new JLabel("Root Layout:");
 		sl.putConstraint(SpringLayout.WEST, lbl, 5, SpringLayout.WEST, p);
 		p.add(lbl);
 		
 		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout"});
 		
-		layout.addActionListener(new ActionListener() {
+		final ActionListener layoutActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("comboBoxChanged")) {
 					String select = (String)((JComboBox)e.getSource()).getSelectedItem();
@@ -168,7 +181,9 @@ public class DroidDraw extends JApplet {
 					AndroidEditor.instance().setLayout(l);
 				}
 			}
-		});
+		};
+		
+		layout.addActionListener(layoutActionListener);
 		p.add(layout);
 		// This is 1.6.x specific *sigh*
 		//sl.putConstraint(SpringLayout.BASELINE, lbl, 0, SpringLayout.BASELINE, layout);
@@ -182,7 +197,9 @@ public class DroidDraw extends JApplet {
 				try {
 					ae.removeAllWidgets();
 					DroidDrawHandler.loadFromString(text.getText());
+					layout.removeActionListener(layoutActionListener);
 					layout.setSelectedItem(ae.getLayout().toString());
+					layout.addActionListener(layoutActionListener);
 					viewer.repaint();
 				} 
 				catch (Exception ex) {

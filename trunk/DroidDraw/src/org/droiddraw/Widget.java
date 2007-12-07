@@ -2,8 +2,6 @@ package org.droiddraw;
 import java.awt.Graphics;
 import java.util.Vector;
 
-import javax.swing.JPanel;
-
 public interface Widget {
 	public boolean clickedOn(int x, int y);
 	public int getX();
@@ -21,6 +19,6 @@ public interface Widget {
 	public void removeProperty(Property p);
 	public String getTagName();
 	public String getId();
-	public Widget getParent();
-	public void setParent(Widget w);
+	public Layout getParent();
+	public void setParent(Layout w);
 }

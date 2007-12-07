@@ -2,6 +2,7 @@ package org.droiddraw;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Stack;
 import java.util.Vector;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,47 +15,66 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 public class DroidDrawHandler extends DefaultHandler {
-	boolean layout = false;
 	Vector<String> all_props;
+	Stack<Vector<String>> layout_props;
+	Stack<Layout> layoutStack;
 	
 	public DroidDrawHandler() {
 		all_props = new Vector<String>();
 		all_props.add("android:layout_width");
 		all_props.add("android:layout_height");
 		all_props.add("id");
+		layout_props = new Stack<Vector<String> >();
+		layoutStack = new Stack<Layout>();
+	}
+	
+	protected boolean isLayout(String name) {
+		return name.endsWith("Layout");
 	}
 	
 	@Override
 	public void startElement(String uri, String lName, String qName, Attributes atts) 
 		throws SAXException 
 	{
-		if (qName.equals("AbsoluteLayout")) {
-			Layout l = new AbsoluteLayout();
-			l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
-			AndroidEditor.instance().setLayout(l);
-			layout = true;
+		if (isLayout(qName)) {
+			Layout l = null;
+			Vector<String> l_props = new Vector<String>();
+			if (qName.equals("AbsoluteLayout")) 
+				l = new AbsoluteLayout();
+			else if (qName.equals("LinearLayout")) {
+				l = new LinearLayout();
+				l.setPropertyByAttName("android:orientation", atts.getValue("android:orientation"));
+				l_props.add("android:layout_gravity");
+				l_props.add("android:layout_weight");
+			}
+			else if (qName.equals("RelativeLayout"))  {
+				l = new RelativeLayout();
+				l_props.add("android:layout_alignRight");
+				l_props.add("android:layout_alignLeft");
+				l_props.add("android:layout_alignTop");
+				l_props.add("android:layout_alignBottom");
+				l_props.add("android:layout_toRight");
+				l_props.add("android:layout_toLeft");
+				l_props.add("android:layout_above");
+				l_props.add("android:layout_below");
+			}
+			if (layoutStack.size() == 0) {
+				l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
+				for (String prop : all_props) {
+					if (atts.getValue(prop) != null) {
+						l.setPropertyByAttName(prop, atts.getValue(prop));	
+					}
+				}
+				l.apply();
+				AndroidEditor.instance().setLayout(l);
+			}
+			else {
+				addWidget(l, atts);
+			}
+			layoutStack.push(l);
+			layout_props.push(l_props);
 		}
-		else if (qName.equals("LinearLayout")) {
-			Layout l = new LinearLayout();
-			l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
-			AndroidEditor.instance().setLayout(l);
-			layout = true;
-		}
-		else if (qName.equals("RelativeLayout")) {
-			Layout l = new RelativeLayout();
-			l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
-			AndroidEditor.instance().setLayout(l);
-			layout = true;
-			all_props.add("android:layout_alignRight");
-			all_props.add("android:layout_alignLeft");
-			all_props.add("android:layout_alignTop");
-			all_props.add("android:layout_alignBottom");
-			all_props.add("android:layout_toRight");
-			all_props.add("android:layout_toLeft");
-			all_props.add("android:layout_above");
-			all_props.add("android:layout_below");
-		}
-		else if (!layout) {
+		else if (layoutStack.size() == 0) {
 			throw new SAXException("Error, no Layout!");
 		}
 		else {
@@ -80,31 +100,65 @@ public class DroidDrawHandler extends DefaultHandler {
 				String txt = atts.getValue("android:text");
 				w = new CheckBox(txt);
 			}
+			else if (qName.equals("DigitalClock")) {
+				w = new DigitalClock();
+			}
+			else if (qName.equals("AnalogClock")) {
+				w = new AnalogClock();
+			}
+			else if (qName.equals("ProgressBar")) {
+				w = new ProgressBar();
+				for (int i=0;i<ProgressBar.propertyNames.length;i++) {
+					w.setPropertyByAttName(ProgressBar.propertyNames[i], 
+							atts.getValue(ProgressBar.propertyNames[i]));
+				}
+			}
 			if (w != null) {
-				if (w instanceof TextView) {
-					for (int i=0;i<TextView.propertyNames.length;i++) {
-						w.setPropertyByAttName(TextView.propertyNames[i], atts.getValue(TextView.propertyNames[i]));
-					}
-				}
-				int x = readLength(atts.getValue("android:layout_x"));
-				int y = readLength(atts.getValue("android:layout_y"));
-			
-				for (String prop : all_props) {
-					if (atts.getValue(prop) != null) {
-						w.setPropertyByAttName(prop, atts.getValue(prop));	
-					}
-				}
-				Layout layout = AndroidEditor.instance().getLayout();
-				if (layout instanceof LinearLayout)
-					w.setPosition(x+layout.getX(), y+layout.getY()+AndroidEditor.instance().getScreenY());
-				else
-					w.setPosition(x+layout.getX(), y+layout.getY());
-				w.apply();
-				AndroidEditor.instance().getLayout().addWidget(w);
+				addWidget(w, atts);
 			}
 		}
 	}
 	
+	
+	protected void addWidget(Widget w, Attributes atts) {
+		if (w instanceof TextView) {
+			for (int i=0;i<TextView.propertyNames.length;i++) {
+				w.setPropertyByAttName(TextView.propertyNames[i], atts.getValue(TextView.propertyNames[i]));
+			}
+		}
+		int x = readLength(atts.getValue("android:layout_x"));
+		int y = readLength(atts.getValue("android:layout_y"));
+	
+		for (String prop : all_props) {
+			if (atts.getValue(prop) != null) {
+				w.setPropertyByAttName(prop, atts.getValue(prop));	
+			}
+		}
+		for (String prop : layout_props.peek()) {
+			if (atts.getValue(prop) != null) {
+				w.setPropertyByAttName(prop, atts.getValue(prop));	
+			}
+		}
+		Layout layout = layoutStack.peek();
+		if (layout instanceof LinearLayout) {
+			w.setPosition(-1,-1);
+		}
+		else
+			w.setPosition(x, y);
+		w.apply();
+		layout.addWidget(w);
+	}
+	
+	
+	@Override
+	public void endElement(String ns, String lName, String qName) 
+	{
+		if (isLayout(qName)) {
+			layout_props.pop();
+			layoutStack.pop();
+		}
+	}
+
 	protected static int readLength(String s) {
 		if (s != null && s.endsWith("px")) {
 			return Integer.parseInt(s.substring(0, s.length()-2));

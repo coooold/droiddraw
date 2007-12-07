@@ -2,7 +2,7 @@ package org.droiddraw;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.io.PrintWriter;
+import java.awt.Graphics2D;
 import java.util.Vector;
 
 public abstract class AbstractLayout extends AbstractWidget implements Layout {
@@ -11,6 +11,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	public AbstractLayout(String tagName) {
 		super(tagName);
 		this.widgets = new Vector<Widget>();
+		addProperty(new StringProperty("xmlns", "xmlns:android", "http://schemas.android.com/apk/res/android", false));
 		apply();
 	}
 	
@@ -23,6 +24,10 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		w.setParent(this);
 		addEditableProperties(w);
 		positionWidget(w);
+		apply();
+		if (getParent() != null) {
+			getParent().repositionAllWidgets();
+		}
 	}
 	
 	public Vector<Widget> getWidgets() {
@@ -41,63 +46,77 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		}
 		widgets.clear();
 	}
-
-	protected void printStartTag(java.util.Hashtable<String,String> atts, PrintWriter pw) 
-	{
-		pw.println("<"+tagName);
-		for (String key : atts.keySet()) {
-			pw.println(key+"=\""+atts.get(key)+"\"");
-		}
-		pw.println(">");
-	}
-
-	public void printEndTag(PrintWriter pw) {
-		pw.println("</"+tagName+">");
-	}
 	
 	public void paint(Graphics g) {
+		Graphics2D g2d = (Graphics2D)g;
+		g2d.translate(getX(), getY());
+		
+		g.setColor(Color.white);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		g.setColor(Color.lightGray);
-		g.drawString(tagName, getX()+2, getY()+15);
-		g.drawRect(getX(), getY(), getWidth(), getHeight());
+		g.drawString(tagName, 2, 15);
+		g.drawRect(0, 0, getWidth(), getHeight());
 		for (Widget w : widgets) {
 			w.paint(g);
 		}
+		g2d.translate(-getX(),-getY());
+	}
+	
+	
+	public int getContentWidth() {
+		if (widgets.size() > 0) {
+			int maxX = 0;
+			for (Widget w : widgets) {
+				if (w.getX()+w.getWidth() > maxX)
+					maxX = w.getX()+w.getWidth();
+			}
+			return maxX+10;
+		}
+		else
+			return 100;
 	}
 	
 	public int getContentHeight() {
-		int minY = AndroidEditor.instance().getScreenY();
-		int maxY = 0;
-		
-		for (Widget w : widgets) {
-			if (w.getY() < minY)
-				minY = w.getY();
-			if (w.getY()+w.getHeight() > maxY)
-				maxY = w.getY()+w.getHeight();
+		if (widgets.size() > 0) {
+			int maxY = 0;
+			for (Widget w : widgets) {
+				if (w.getY()+w.getHeight() > maxY)
+					maxY = w.getY()+w.getHeight();
+			}
+			return maxY;
 		}
-		if (maxY < minY)
+		else
 			return 20;
-		else
-			return maxY-minY;
-	}
-
-	public int getContentWidth() {
-		int minX = AndroidEditor.instance().getScreenX();
-		int maxX = 0;
-		
-		for (Widget w : widgets) {
-			if (w.getX() < minX)
-				minX = w.getX();
-			if (w.getX()+w.getWidth() > maxX)
-				maxX = w.getX()+w.getWidth();
-		}
-		if (maxX < minX)
-			return 100;
-		else
-			return maxX-minX;
 	}
 	
+
+	@Override
+	public void setPosition(int x, int y) {
+		super.setPosition(x, y);
+		repositionAllWidgets();
+		apply();
+	}
+
 	public abstract void positionWidget(Widget w);
 	public abstract void repositionAllWidgets();
 	protected abstract void addEditableProperties(Widget w);
 	protected abstract void removeEditableProperties(Widget w);
+	
+	public int getScreenX() {
+		if (parent != null) {
+			return ((Layout)parent).getScreenX()+getX();
+		}
+		else {
+			return getX();
+		}
+	}
+	
+	public int getScreenY() {
+		if (parent != null) {
+			return ((Layout)parent).getScreenY()+getY();
+		}
+		else {
+			return getY();
+		}
+	}
 }

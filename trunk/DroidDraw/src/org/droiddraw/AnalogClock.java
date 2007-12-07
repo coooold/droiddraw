@@ -13,12 +13,12 @@ public class AnalogClock extends AbstractWidget {
 
 	@Override
 	protected int getContentHeight() {
-		return 100;
+		return 140;
 	}
 
 	@Override
 	protected int getContentWidth() {
-		return 100;
+		return 140;
 	}
 
 	private void drawAngleLine(Graphics g, double angle, double scale) {
