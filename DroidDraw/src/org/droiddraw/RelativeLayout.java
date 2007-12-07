@@ -1,6 +1,5 @@
 package org.droiddraw;
 
-import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -110,7 +109,7 @@ public class RelativeLayout extends AbstractLayout {
 			return;
 		
 		if (widgets.size() == 1) {
-			w.setPosition(getX(),getY());
+			w.setPosition(0,0);
 			return;
 		}
 
@@ -267,11 +266,7 @@ public class RelativeLayout extends AbstractLayout {
 			}
 		}
 	}
-
-	public void printStartTag(PrintWriter pw) {
-		pw.println("<RelativeLayout  xmlns:android=\"http://schemas.android.com/apk/res/android\" android:layout_width=\"fill_parent\" android:layout_height=\"wrap_content\">");
-	}
-
+	
 	public static enum RelationType {TOP, ABOVE, BOTTOM, BELOW, LEFT, TO_LEFT, RIGHT, TO_RIGHT, CENTER_VERTICAL, CENTER_HORIZONTAL};
 	
 	public static class Relation {

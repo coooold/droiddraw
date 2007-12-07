@@ -18,6 +18,10 @@ public class SelectProperty extends StringProperty {
 		setStringValue(options[ix]);
 	}
 	
+	public String getStringValue() {
+		return options[selected_ix];
+	}
+	
 	public void setStringValue(String value) {
 		super.setStringValue(value);
 		for (int i=0;i<options.length;i++) {

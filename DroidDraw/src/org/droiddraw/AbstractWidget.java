@@ -9,7 +9,7 @@ public abstract class AbstractWidget implements Widget {
 	Vector<Property> props;
 	protected StringProperty id;
 	protected static int widget_num = 0;
-	Widget parent;
+	Layout parent;
 	
 	StringProperty widthProp;
 	StringProperty heightProp;
@@ -26,11 +26,11 @@ public abstract class AbstractWidget implements Widget {
 		this.parent = null;
 	}
 	
-	public Widget getParent() {
+	public Layout getParent() {
 		return parent;
 	}
 	
-	public void setParent(Widget parent) {
+	public void setParent(Layout parent) {
 		this.parent = parent;
 	}
 	
@@ -43,7 +43,9 @@ public abstract class AbstractWidget implements Widget {
 	}
 	
 	public void addProperty(Property p) {
-		props.add(p);
+		if (!props.contains(p)) {
+			props.add(p);
+		}
 	}
 	
 	public void removeProperty(Property p) {
@@ -97,7 +99,14 @@ public abstract class AbstractWidget implements Widget {
 	}
 
 	public boolean clickedOn(int x, int y) {
-		return (x > this.x && x < this.x+width && y > this.y && y < this.y+height);
+		int off_x = 0;
+		int off_y = 0;
+		if (parent != null) {
+			off_x = parent.getScreenX();
+			off_y = parent.getScreenY();
+		}
+		return (x > this.getX()+off_x && x < this.getX()+off_x+getWidth()
+				&& y > this.getY()+off_y && y < this.getY()+getHeight()+off_y);
 	}
 
 	public void move(int dx, int dy) {
@@ -146,6 +155,9 @@ public abstract class AbstractWidget implements Widget {
 	
 	public void apply() {
 		readWidthHeight();
+		if (getParent() != null) {
+			getParent().apply();
+		}
 	}
 	
 	protected abstract int getContentWidth();

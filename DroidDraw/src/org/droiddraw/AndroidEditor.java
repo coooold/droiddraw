@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -35,6 +36,7 @@ public class AndroidEditor {
 	int sx, sy;
 	PropertiesPanel pp;
 	JFrame jf;
+	Hashtable<String, String> strings;
 	
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
@@ -54,6 +56,14 @@ public class AndroidEditor {
 		return pp;
 	}
 	
+	public Hashtable<String, String> getStrings() {
+		return strings;
+	}
+
+	public void setStrings(Hashtable<String, String> strings) {
+		this.strings = strings;
+	}
+
 	public static AndroidEditor instance() {
 		if (inst == null)
 			inst = new AndroidEditor();
@@ -124,6 +134,10 @@ public class AndroidEditor {
 	}
 
 	public void select(Widget w) {
+		if (w == layout) {
+			selected = null;
+			return;
+		}
 		selected = w;
 		if (w != null) {
 			pp.setProperties(w.getProperties(), w);
@@ -166,15 +180,33 @@ public class AndroidEditor {
 		}
 	}
 
-	public Widget findWidget(int x, int y) {
-		Widget res = null;
-		for (Widget w : layout.getWidgets()) {
-			if (w.clickedOn(x, y)) {
-				res = w;
-				break;
+	public Layout findLayout(int x, int y) {
+		return findLayout(layout, x, y);
+	}
+	
+	protected Layout findLayout(Layout l, int x, int y) {
+		for (Widget w : l.getWidgets()) {
+			if (w.clickedOn(x, y) && w instanceof Layout) {
+				return findLayout((Layout)w, x, y);
 			}
 		}
-		return res;
+		return l;
+	}
+	
+	public Widget findWidget(int x, int y) {
+		return findWidget(layout, x, y);
+	}
+	
+	public Widget findWidget(Layout l, int x, int y) {
+		for (Widget w : l.getWidgets()) {
+			if (w.clickedOn(x, y)) {
+				if (w instanceof Layout) {
+					return findWidget((Layout)w, x, y);
+				}
+				return w;
+			}
+		}
+		return l;
 	}
 	
 	public void selectWidget(int x, int y) {
@@ -187,26 +219,33 @@ public class AndroidEditor {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void generate(PrintWriter pw) {
 		pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
-		layout.printStartTag(pw);
-		for (Widget w : layout.getWidgets()) {
-			pw.println("<"+w.getTagName());
-			Vector<Property> props = (Vector<Property>)w.getProperties().clone();
-			layout.addOutputProperties(w, props);
-			for (Property prop : props) {
-				if (prop.getValue() != null) {
-					pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
-				}
-			}
-			pw.println(">");
-			pw.println("</"+w.getTagName()+">");
-		}
-		layout.printEndTag(pw);
+		generateWidget(layout, pw);
 		pw.flush();
 	}
 
+
+	@SuppressWarnings("unchecked")
+	protected void generateWidget(Widget w, PrintWriter pw) {
+		pw.println("<"+w.getTagName());
+		Vector<Property> props = (Vector<Property>)w.getProperties().clone();
+		if (w != layout)
+			((Layout)w.getParent()).addOutputProperties(w, props);
+		for (Property prop : props) {
+			if (prop.getValue() != null) {
+				pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
+			}
+		}
+		pw.println(">");
+		if (w instanceof Layout) {
+			for (Widget wt : ((Layout)w).getWidgets()) {
+				generateWidget(wt, pw);
+			}
+		}
+		pw.println("</"+w.getTagName()+">");
+	}
+	
 	public static void main(String[] args) {
 		JFrame jf = new JFrame("Android Editor");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

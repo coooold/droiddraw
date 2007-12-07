@@ -19,22 +19,22 @@ import javax.swing.JTextField;
 
 public class PropertiesPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	
+
 	Vector<Property> properties;
 	Hashtable<Property, JComponent> components;
 	Viewer viewer;
 	Widget w;
 	JPanel items;
 	Dimension d;
-	
+
 	public PropertiesPanel() {
 		this(new Vector<Property>(), null);
 	}
-	
+
 	public PropertiesPanel(Vector<Property> properties, Widget w) {
 		this.components = new Hashtable<Property, JComponent>();
 		this.w =w;
-		
+
 		setProperties(properties, w);
 		this.d = new Dimension(200,400);
 	}
@@ -47,30 +47,32 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 		items.setBorder(BorderFactory.createTitledBorder("Properties"));
 		components.clear();
 		this.w = w;
-		
+
 		for (Property prop: properties) {
-			if (prop instanceof BooleanProperty) {
-				items.add(new JPanel());
-				JCheckBox jcb = new JCheckBox(prop.getEnglishName());
-				jcb.setSelected(((BooleanProperty)prop).getBooleanValue());
-				components.put(prop, jcb);
-				items.add(jcb);
-			}	
-			else if (prop instanceof StringProperty) {
-				items.add(new JLabel(prop.getEnglishName()));
-				JComponent jc;
-				if (prop instanceof SelectProperty) {
-					JComboBox jcb = new JComboBox(((SelectProperty)prop).getOptions());
-					jcb.setSelectedIndex(((SelectProperty)prop).getSelectedIndex());
-					jc = jcb;
+			if (prop.getEditable()) {
+				if (prop instanceof BooleanProperty) {
+					items.add(new JPanel());
+					JCheckBox jcb = new JCheckBox(prop.getEnglishName());
+					jcb.setSelected(((BooleanProperty)prop).getBooleanValue());
+					components.put(prop, jcb);
+					items.add(jcb);
+				}	
+				else if (prop instanceof StringProperty) {
+					items.add(new JLabel(prop.getEnglishName()));
+					JComponent jc;
+					if (prop instanceof SelectProperty) {
+						JComboBox jcb = new JComboBox(((SelectProperty)prop).getOptions());
+						jcb.setSelectedIndex(((SelectProperty)prop).getSelectedIndex());
+						jc = jcb;
+					}
+					else {
+						jc = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 10);
+					}
+					components.put(prop, jc);
+					JPanel p = new JPanel();
+					p.add(jc);
+					items.add(p);
 				}
-				else {
-					jc = new JTextField(prop.getValue().toString(), 10);
-				}
-				components.put(prop, jc);
-				JPanel p = new JPanel();
-				p.add(jc);
-				items.add(p);
 			}
 		}
 		this.setLayout(new BorderLayout());
@@ -81,25 +83,27 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 		apply.addActionListener(this);
 		this.add(apply, BorderLayout.SOUTH);
 	}
-	
+
 	public void setViewer(Viewer v) {
 		this.viewer = v;
 	}
-	
+
 	public void actionPerformed(ActionEvent arg0) {
 		for (Property prop : properties) {
-			if (prop instanceof BooleanProperty) {
-				JCheckBox jcb = (JCheckBox)components.get(prop);
-				((BooleanProperty)prop).setBooleanValue(jcb.isSelected());
-			}
-			else if (prop instanceof StringProperty) {
-				if (prop instanceof SelectProperty) {
-					JComboBox jcb = (JComboBox)components.get(prop);
-					((SelectProperty)prop).setSelectedIndex(jcb.getSelectedIndex());
+			if (prop.getEditable()) {
+				if (prop instanceof BooleanProperty) {
+					JCheckBox jcb = (JCheckBox)components.get(prop);
+					((BooleanProperty)prop).setBooleanValue(jcb.isSelected());
 				}
-				else {
-					JTextField jtf = (JTextField)components.get(prop);
-					((StringProperty)prop).setStringValue(jtf.getText());
+				else if (prop instanceof StringProperty) {
+					if (prop instanceof SelectProperty) {
+						JComboBox jcb = (JComboBox)components.get(prop);
+						((SelectProperty)prop).setSelectedIndex(jcb.getSelectedIndex());
+					}
+					else {
+						JTextField jtf = (JTextField)components.get(prop);
+						((StringProperty)prop).setStringValue(jtf.getText());
+					}
 				}
 			}
 		}

@@ -4,7 +4,11 @@ public class BooleanProperty extends Property {
 	boolean value;
 	
 	public BooleanProperty(String englishName, String attName, boolean defaultValue) {
-		super(englishName, attName);
+		this(englishName, attName, defaultValue, true);
+	}
+	
+	public BooleanProperty(String englishName, String attName, boolean defaultValue, boolean editable) {
+		super(englishName, attName, editable);
 		this.value = defaultValue;
 	}
 

@@ -2,9 +2,13 @@ package org.droiddraw;
 
 public class StringProperty extends Property {
 	String value;
-	
+
 	public StringProperty(String englishName, String attName, String defaultValue) {
-		super(englishName, attName);
+		this(englishName, attName, defaultValue, true);
+	}
+	
+	public StringProperty(String englishName, String attName, String defaultValue, boolean editable) {
+		super(englishName, attName, editable);
 		this.value = defaultValue;
 	}
 
@@ -14,7 +18,14 @@ public class StringProperty extends Property {
 	}
 	
 	public String getStringValue() {
-		return value;
+		if (value != null && value.startsWith("@string") && AndroidEditor.instance().getStrings() != null) {
+			String key = value.substring(value.indexOf("/")+1);
+			String str = AndroidEditor.instance().getStrings().get(key);
+			return str;
+		}
+		else {
+			return value;
+		}
 	}
 	
 	public void setStringValue(String value) {
