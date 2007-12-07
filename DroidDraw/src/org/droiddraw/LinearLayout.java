@@ -16,7 +16,7 @@ public class LinearLayout extends AbstractLayout {
 	
 	public LinearLayout(boolean vertical) {
 		super("LinearLayout");
-		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 0);
+		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 1);
 		addProperty(orientation);
 	}
 		
