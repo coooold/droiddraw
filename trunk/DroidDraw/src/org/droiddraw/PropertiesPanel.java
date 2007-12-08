@@ -107,9 +107,14 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 				}
 			}
 		}
+		w.apply();
+		if (w instanceof Layout) {
+			((Layout)w).repositionAllWidgets();
+			w.apply();
+		}
+		w.getParent().positionWidget(w);
+		
 		if (viewer != null)
 			viewer.repaint();
-		w.apply();
-		AndroidEditor.instance().getLayout().positionWidget(w);
 	}
 }

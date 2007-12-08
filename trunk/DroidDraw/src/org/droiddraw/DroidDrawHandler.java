@@ -29,7 +29,7 @@ public class DroidDrawHandler extends DefaultHandler {
 	}
 	
 	protected boolean isLayout(String name) {
-		return name.endsWith("Layout");
+		return name.endsWith("Layout") || name.equals("RadioGroup");
 	}
 	
 	@Override
@@ -41,8 +41,13 @@ public class DroidDrawHandler extends DefaultHandler {
 			Vector<String> l_props = new Vector<String>();
 			if (qName.equals("AbsoluteLayout")) 
 				l = new AbsoluteLayout();
-			else if (qName.equals("LinearLayout")) {
-				l = new LinearLayout();
+			else if (qName.equals("LinearLayout") || (qName.equals("RadioGroup"))) {
+				if (qName.equals("LinearLayout"))
+					l = new LinearLayout();
+				else if (qName.equals("RadioGroup")) {
+					l = new RadioGroup();
+					l.setPropertyByAttName("android:checkedButton", atts.getValue("android:checkedButton"));
+				}
 				l.setPropertyByAttName("android:orientation", atts.getValue("android:orientation"));
 				l_props.add("android:layout_gravity");
 				l_props.add("android:layout_weight");
@@ -96,9 +101,13 @@ public class DroidDrawHandler extends DefaultHandler {
 				}
 				w = et;
 			}
-			else if (qName.equals("CheckBox")) {
+			else if (qName.equals("CheckBox") || qName.equals("RadioButton")) {
 				String txt = atts.getValue("android:text");
-				w = new CheckBox(txt);
+				if (qName.equals("CheckBox"))
+					w = new CheckBox(txt);
+				else if (qName.equals("RadioButton"))
+					w = new RadioButton(txt);
+				w.setPropertyByAttName("android:checked", atts.getValue("android:checked"));
 			}
 			else if (qName.equals("DigitalClock")) {
 				w = new DigitalClock();
