@@ -150,6 +150,10 @@ public class RelativeLayout extends AbstractLayout {
 				}
 			}
 		}
+		if (closestTop == null || closestLeft == null) {
+			w.setPosition(0,0);
+			return;
+		}
 		int x, y;
 		x = w.getX();
 		y = w.getY();

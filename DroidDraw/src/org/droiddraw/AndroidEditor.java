@@ -233,7 +233,7 @@ public class AndroidEditor {
 		if (w != layout)
 			((Layout)w.getParent()).addOutputProperties(w, props);
 		for (Property prop : props) {
-			if (prop.getValue() != null) {
+			if (prop.getValue() != null && prop.getValue().toString().length() > 0) {
 				pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
 			}
 		}
