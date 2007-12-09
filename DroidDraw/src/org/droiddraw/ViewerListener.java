@@ -1,4 +1,5 @@
 package org.droiddraw;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -24,6 +25,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	Viewer viewer;
 	AndroidEditor app;
 	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock", "Button", "CheckBox", "DigitalClock","EditText", "RadioButton","RadioGroup", "ProgressBar",  "TextView", "AbsoluteLayout", "LinearLayout", "RelativeLayout"});
+	
 	JToggleButton addButton;
 	JToggleButton selectButton;
 	ButtonGroup bg;
@@ -40,13 +42,16 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		bg.add(selectButton);
 		bg.add(addButton);
 		bg.setSelected(addButton.getModel(), true);
+		
+		if (!System.getProperty("os.name").toLowerCase().contains("mac os x"))
+			widgetType.setLightWeightPopupEnabled(false);
 	}
 	
 	public ButtonGroup getInterfaceStateGroup() {
 		return bg;
 	}
 	
-	public JComboBox getWidgetSelector() {
+	public Component getWidgetSelector() {
 		return widgetType;
 	}
 	
