@@ -16,8 +16,15 @@ public class DisplayMetrics {
 
 	public static int readSize(String sz)
 	{
+		if (sz == null)
+			return -1;
 		try {
-			float size = Float.parseFloat(sz.substring(0, sz.length()-2));
+			float size;
+			if (sz.endsWith("dip"))
+				size = Float.parseFloat(sz.substring(0, sz.length()-3));
+			else
+				size = Float.parseFloat(sz.substring(0, sz.length()-2));
+			
 			if (sz.endsWith("px")) {
 				return (int)size;
 			}
@@ -30,14 +37,14 @@ public class DisplayMetrics {
 			else if (sz.endsWith("pt")) {
 				return (int)(size*PT_TO_IN*xdpi);
 			}
-			else if (sz.endsWith("dp")) {
+			else if (sz.endsWith("dp") || sz.endsWith("dip")) {
 				return (int)(size*density);
 			}
 			else if (sz.endsWith("sp")) {
 				return (int)(size*scaledDensity);
 			}
 			else {
-				return -1;
+				return Integer.parseInt(sz);
 			}
 		} catch (NumberFormatException ex) {
 			return -1;
