@@ -118,8 +118,8 @@ public abstract class AbstractWidget implements Widget {
 	}
 	
 	protected void readWidthHeight() {
-		int w = readSize(widthProp);
-		int h = readSize(heightProp);
+		int w = DisplayMetrics.readSize(widthProp);
+		int h = DisplayMetrics.readSize(heightProp);
 		if (w < 0) {
 			w = getWidth();
 		}
@@ -138,19 +138,6 @@ public abstract class AbstractWidget implements Widget {
 			h = getParent()!=null?getParent().getHeight():AndroidEditor.instance().getScreenY()-AndroidEditor.OFFSET_Y;
 		
 		setSize(w, h);
-	}
-	
-	protected int readSize(StringProperty prop) 
-	{
-		int size = -1;
-		String w = prop.getStringValue();
-		if (w.endsWith("px")) {
-			try {
-				size = Integer.parseInt(w.substring(0, w.length()-2));
-			} 
-			catch (NumberFormatException ex) {}
-		}
-		return size;
 	}
 	
 	public void apply() {
