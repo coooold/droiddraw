@@ -30,12 +30,12 @@ public class TextView extends AbstractWidget {
 		super("TextView");
 		
 		text = new StringProperty("Text", "android:text", str!=null?str:"");
-		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"");
+		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"sp");
 		face = new SelectProperty("Font Face", "android:typeface", new String[] {"plain","sans","serif","monospace"}, 0);
 		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"plain", "bold", "italic", "bold_italic"}, 0);
 		
 		props.add(text);
-		//props.add(fontSz);
+		props.add(fontSz);
 		props.add(face);
 		props.add(style);
 		buildFont();
@@ -63,9 +63,11 @@ public class TextView extends AbstractWidget {
 	}
 
 	public void apply() {
-		super.apply();
-		fontSize = Integer.parseInt(fontSz.getStringValue());
+		if (fontSz.getStringValue() != null) {
+			fontSize = (DisplayMetrics.readSize(fontSz));
+		}
 		buildFont();
+		super.apply();
 	}
 	
 	protected int stringLength(String str) {

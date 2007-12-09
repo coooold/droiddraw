@@ -54,14 +54,9 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if (qName.equals("RelativeLayout"))  {
 				l = new RelativeLayout();
-				l_props.add("android:layout_alignRight");
-				l_props.add("android:layout_alignLeft");
-				l_props.add("android:layout_alignTop");
-				l_props.add("android:layout_alignBottom");
-				l_props.add("android:layout_toRight");
-				l_props.add("android:layout_toLeft");
-				l_props.add("android:layout_above");
-				l_props.add("android:layout_below");
+				for (int i=0;i<RelativeLayout.propNames.length;i++) {
+					l_props.add(RelativeLayout.propNames[i]);
+				}
 			}
 			if (layoutStack.size() == 0) {
 				l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
