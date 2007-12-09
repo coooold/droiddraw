@@ -159,7 +159,8 @@ public class DroidDraw extends JApplet {
 		p.add(lbl);
 		
 		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout"});
-		
+		if (!System.getProperty("os.name").toLowerCase().contains("mac os x"))
+			layout.setLightWeightPopupEnabled(false);
 		final ActionListener layoutActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("comboBoxChanged")) {
