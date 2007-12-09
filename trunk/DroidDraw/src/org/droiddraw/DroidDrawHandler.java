@@ -135,8 +135,8 @@ public class DroidDrawHandler extends DefaultHandler {
 				w.setPropertyByAttName(TextView.propertyNames[i], atts.getValue(TextView.propertyNames[i]));
 			}
 		}
-		int x = readLength(atts.getValue("android:layout_x"));
-		int y = readLength(atts.getValue("android:layout_y"));
+		int x = DisplayMetrics.readSize(atts.getValue("android:layout_x"));
+		int y = DisplayMetrics.readSize(atts.getValue("android:layout_y"));
 	
 		for (String prop : all_props) {
 			if (atts.getValue(prop) != null) {
@@ -166,13 +166,6 @@ public class DroidDrawHandler extends DefaultHandler {
 			layout_props.pop();
 			layoutStack.pop();
 		}
-	}
-
-	protected static int readLength(String s) {
-		if (s != null && s.endsWith("px")) {
-			return Integer.parseInt(s.substring(0, s.length()-2));
-		}
-		return 0;
 	}
 	
 	public static void loadFromString(String content) 
