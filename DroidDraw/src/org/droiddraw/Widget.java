@@ -9,6 +9,8 @@ public interface Widget {
 	public int getWidth();
 	public int getHeight();
 	public void setPosition(int x, int y);
+	public void setSize(int width, int height);
+	public void setSizeInternal(int w, int h);
 	public void move(int dx, int dy);
 	public void paint(Graphics g);
 	public void apply();

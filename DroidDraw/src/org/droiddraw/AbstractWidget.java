@@ -78,8 +78,9 @@ public abstract class AbstractWidget implements Widget {
 	}
 
 	public void setSize(int width, int height) {
-		this.width = width;
-		this.height = height;
+		this.widthProp.setStringValue(width+"px");
+		this.heightProp.setStringValue(height+"px");
+		apply();
 	}
 
 	public int getX() {
@@ -137,7 +138,8 @@ public abstract class AbstractWidget implements Widget {
 		if (heightProp.getStringValue().equals("fill_parent"))
 			h = getParent()!=null?getParent().getHeight():AndroidEditor.instance().getScreenY()-AndroidEditor.OFFSET_Y;
 		
-		setSize(w, h);
+		width = w;
+		height = h;
 	}
 	
 	public void apply() {
@@ -145,6 +147,11 @@ public abstract class AbstractWidget implements Widget {
 		if (getParent() != null) {
 			getParent().apply();
 		}
+	}
+	
+	public void setSizeInternal(int w, int h) {
+		this.width = w;
+		this.height = h;
 	}
 	
 	protected abstract int getContentWidth();

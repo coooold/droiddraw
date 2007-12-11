@@ -148,8 +148,6 @@ public class RelativeLayout extends AbstractLayout {
 		}
 		dist[0] = Math.abs(w.getX()-x);
 		dist[1] = Math.abs(w.getX()+w.getWidth()-(x+wd.getWidth()));
-		if (wd == w.getParent())
-			System.out.println(wd+":"+dist[1]);
 		dist[2] = Math.abs(w.getX()+w.getWidth()-x);
 		dist[3] = Math.abs(w.getX()-(x+wd.getWidth()));
 		int min = dist[0];
@@ -164,7 +162,6 @@ public class RelativeLayout extends AbstractLayout {
 		if (wd == w.getParent() && Math.abs(w.getX()+w.getWidth()/2 - (wd.getWidth()/2)) < min) {
 			min = Math.abs((w.getX()+w.getWidth())/2 - (wd.getWidth()/2));
 			mode = 4;
-			System.out.println("foo");
 		}
 		dist[0] = min;
 		return mode;
@@ -250,7 +247,6 @@ public class RelativeLayout extends AbstractLayout {
 				}
 			}
 		}
-		System.out.println("foo: "+closestLeft+":"+modeHorz);
 		if (closestTop == null || closestLeft == null) {
 			w.setPosition(0,0);
 			return;

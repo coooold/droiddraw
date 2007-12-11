@@ -41,8 +41,7 @@ public class TextView extends AbstractWidget {
 		buildFont();
 
 		bg = new BufferedImage(1,1,BufferedImage.TYPE_BYTE_GRAY);
-		int w = bg.getGraphics().getFontMetrics(f).stringWidth(text.getStringValue());
-		setSize(w+5, fontSize+3);
+		apply();
 	}
 
 	protected void buildFont() {
@@ -85,9 +84,11 @@ public class TextView extends AbstractWidget {
 	}
 	
 	public void paint(Graphics g) {
-		g.setColor(Color.black);
-		g.setFont(f);
-		g.drawString(text.getStringValue(), getX()+2, getY()+fontSize);
+		if (text.getStringValue() != null) {
+			g.setColor(Color.black);
+			g.setFont(f);
+			g.drawString(text.getStringValue(), getX()+2, getY()+fontSize);
+		}
 	}
 	
 	@SuppressWarnings("unchecked")

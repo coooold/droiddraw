@@ -1,6 +1,7 @@
 package org.droiddraw;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.util.Vector;
 
 public class EditView extends TextView {
@@ -11,6 +12,8 @@ public class EditView extends TextView {
 	SelectProperty capitalize;
 	StringProperty digits;
 	
+	NineWayImage img;
+	
 	public static final String[] propertyNames = 
 		new String[] {"android:password", "android:capitalize", "android:numeric", "android:phoneNumber","android:autoText","android:digits"};
 	
@@ -19,10 +22,8 @@ public class EditView extends TextView {
 		// This is a hack and bad oo, I know...
 		this.tagName="EditText";
 		
-		setSize(stringLength(txt)+12, fontSize+6);
-		
-		pad_x = 12;
-		pad_y = 6;
+		pad_x = 18;
+		pad_y = 12;
 		
 		password = new BooleanProperty("Password", "android:password", false);
 		capitalize = new SelectProperty("Capitalize", "android:capitalize", new String[] {"sentences", "words"}, 0);
@@ -37,6 +38,12 @@ public class EditView extends TextView {
 		props.add(autoText);
 		props.add(capitalize);
 		props.add(digits);
+		
+		Image img = ImageResources.instance().getImage("editbox_background_normal.9");
+		if (img != null) {
+			this.img = new NineWayImage(img, 10, 10);
+		}
+		apply();
 	}
 	
 
@@ -49,13 +56,18 @@ public class EditView extends TextView {
 	}
 	
 	public void paint(Graphics g) {
-		g.setColor(Color.white);
-		g.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);
-		
-		g.setColor(Color.darkGray);
-		g.drawRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);
+		if (img == null) {
+			g.setColor(Color.white);
+			g.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);
+			g.setColor(Color.darkGray);
+			g.drawRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);
+		}
+		else {
+			img.paint(g, getX(), getY(),getWidth(), getHeight());
+			g.setColor(Color.darkGray);
+		}
 		g.setFont(f);
-		g.drawString(text.getStringValue(), getX()+8, getY()+fontSize+2);
-		g.drawLine(getX()+7, getY()+2, getX()+7, getY()+fontSize+2);
+		g.drawString(text.getStringValue(), getX()+pad_x/2, getY()+fontSize+pad_y/2-1);
+		g.drawLine(getX()+pad_x/2-2, getY()+4, getX()+pad_x/2-2, getY()+fontSize+pad_y/2+1);
 	}
 }

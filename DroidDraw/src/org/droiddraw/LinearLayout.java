@@ -4,22 +4,22 @@ import java.util.Vector;
 
 public class LinearLayout extends AbstractLayout {
 	SelectProperty orientation;
-	public static int VERTICAL_PADDING = 4;
-	public static int HORIZONTAL_PADDING = 4;
-	
+	public static int VERTICAL_PADDING = 2;
+	public static int HORIZONTAL_PADDING = 2;
+
 	private static final String[] OPTIONS = new String[] {"left", "right","center_horizontal", "top", "bottom", "center_vertical"};
-	
-	
+
+
 	public LinearLayout() {
 		this(true);
 	}
-	
+
 	public LinearLayout(boolean vertical) {
 		super("LinearLayout");
 		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 1);
 		addProperty(orientation);
 	}
-		
+
 	@Override
 	public void positionWidget(Widget w) {
 		widgets.remove(w);
@@ -54,9 +54,41 @@ public class LinearLayout extends AbstractLayout {
 		boolean vertical = "vertical".equals(orientation.getStringValue());
 		int y = 0;
 		int x = 0;
+		Vector<Widget> with_weight = new Vector<Widget>();
+		int share = 0;
 		
 		for (Widget w : widgets) {
-			String gravity = (String)w.getPropertyByAttName("android:layout_gravity").getValue();
+			w.apply();
+			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
+			if (prop != null && "1".equals(prop.getStringValue()))
+				with_weight.add(w);
+			if (vertical)
+				y += w.getHeight();
+			else
+				x += w.getWidth();
+		}
+		if (with_weight.size() > 0) {
+			if (vertical) {
+				int extra = getHeight()-y;
+				share = extra/with_weight.size();
+			}
+			else {
+				int extra = getWidth()-x;
+				share = extra/with_weight.size();
+			}
+		}
+		y=0;
+		x=0;
+		for (Widget w : widgets) {
+			String gravity = "left";
+			boolean weight = false;
+			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_gravity");
+			if (prop != null)
+				gravity = prop.getStringValue();
+			prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
+			if (prop != null && "1".equals(prop.getStringValue()))
+				weight = true;
+			
 			if (vertical) {
 				if ("right".equals(gravity))
 					x = getWidth()-w.getWidth();
@@ -74,11 +106,18 @@ public class LinearLayout extends AbstractLayout {
 					y = 0;
 			}
 			w.setPosition(x, y);
-			if (vertical)
-				y+=w.getHeight()+VERTICAL_PADDING;
-			else {
-				x+=w.getWidth()+HORIZONTAL_PADDING;
+			if (vertical) {
+				if (weight) {
+					w.setSizeInternal(w.getWidth(), w.getHeight()+share);
+				}					
+				y+=w.getHeight();
 			}
+			else {
+				if (weight) {
+					w.setSizeInternal(w.getWidth()+share, w.getHeight());
+				}
+				x+=w.getWidth();
+			}	
 		}
 	}
 
@@ -88,7 +127,7 @@ public class LinearLayout extends AbstractLayout {
 		w.addProperty(new StringProperty("Linear Layout Weight", "android:layout_weight", "0"));
 		w.addProperty(new SelectProperty("Layout Gravity", "android:layout_gravity", OPTIONS, 0));
 	}
-	
+
 	public void removeEditableProperties(Widget w) {
 		w.removeProperty(new StringProperty("", "android:layout_weight", ""));
 		w.removeProperty(new SelectProperty("", "android:layout_gravity", new String[] {""}, 0));
