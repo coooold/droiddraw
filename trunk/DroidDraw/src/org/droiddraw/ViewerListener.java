@@ -32,7 +32,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 
 	Viewer viewer;
 	AndroidEditor app;
-	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock", "Button", "CheckBox", "DigitalClock","EditText", "RadioButton","RadioGroup", "ProgressBar",  "TextView", "AbsoluteLayout", "LinearLayout", "RelativeLayout"});
+	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock", "Button", "CheckBox", "DigitalClock","EditText", "ProgressBar", "RadioButton","RadioGroup", "TextView", "TimePicker", "AbsoluteLayout", "LinearLayout", "RelativeLayout"});
 
 	JToggleButton addButton;
 	JToggleButton selectButton;
@@ -88,6 +88,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return new RadioButton("RadioButton");
 		else if (str.equals("RadioGroup"))
 			return new RadioGroup();
+		else if (str.equals("TimePicker"))
+			return new TimePicker();
 		else
 			return null;
 	}

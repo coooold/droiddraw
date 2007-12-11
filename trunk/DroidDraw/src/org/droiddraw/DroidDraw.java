@@ -100,6 +100,8 @@ public class DroidDraw extends JApplet {
 		loadImage("progress_circular_background", md, ix++);
 		loadImage("progress_particle", md, ix++);
 		loadImage("progress_circular_indeterminate", md, ix++);
+		loadImage("arrow_up_float", md, ix++);
+		loadImage("arrow_down_float", md, ix++);
 		
 		for (int i=1;i<5;i++) {
 			try {
