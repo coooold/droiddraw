@@ -22,6 +22,11 @@ public class Button extends TextView {
 		apply();
 	}
 
+	public void apply() {
+		super.apply();
+		this.baseline = fontSize+2;
+	}
+	
 	public void paint(Graphics g) {
 		if (img == null) {
 			g.setColor(Color.white);

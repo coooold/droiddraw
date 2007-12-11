@@ -24,6 +24,7 @@ public class RelativeLayout extends AbstractLayout {
 		"android:layout_centerHorizontal",
 		"android:layout_centerVertical",
 		"android:layout_centerInParent",
+		"android:layout_alignBaseline"
 	};
 
 	public static final RelationType[] rts = {
@@ -41,12 +42,28 @@ public class RelativeLayout extends AbstractLayout {
 		RelationType.PARENT_BOTTOM,
 		RelationType.CENTER_HORIZONTAL,
 		RelationType.CENTER_VERTICAL,
-		RelationType.CENTER
+		RelationType.CENTER,
+		RelationType.BASELINE
 	};
 
 	public RelativeLayout() {
 		super("RelativeLayout");
 		relations = new Hashtable<Widget, Vector<Relation>>();
+	}
+
+
+	protected boolean isRelatedTo(Widget w, Widget to) {
+		Vector<Relation> rels = relations.get(w);
+		if (rels == null) {
+			return false;
+		}
+		if (w.equals(to)) {
+			return true;
+		}
+		else {
+			return isRelatedTo(rels.get(0).getRelatedTo(), to) ||
+			isRelatedTo(rels.get(1).getRelatedTo(), to);
+		}
 	}
 
 	protected static final String strip(String id) {
@@ -91,6 +108,9 @@ public class RelativeLayout extends AbstractLayout {
 		if (r == RelationType.CENTER || r == RelationType.CENTER_VERTICAL) {
 			y = parent.getHeight()/2-w.getHeight()/2;
 		}
+		if (r == RelationType.BASELINE) {
+			y = parent.getY()+parent.getBaseline()-w.getBaseline();
+		}
 		if (r == RelationType.LEFT) {
 			x = parent.getX();
 		}
@@ -124,6 +144,7 @@ public class RelativeLayout extends AbstractLayout {
 		dist[1] = Math.abs(w.getY()+w.getHeight()-(y+wd.getHeight()));
 		dist[2] = Math.abs(w.getY()+w.getHeight()-y);
 		dist[3] = Math.abs(w.getY()-(y+wd.getHeight()));
+		dist[4] = Math.abs(w.getY()+w.getBaseline()-(y+wd.getBaseline()));
 		int min = dist[0];
 		int mode = 0;
 		for (int i=1;i<dist.length;i++) {
@@ -131,11 +152,13 @@ public class RelativeLayout extends AbstractLayout {
 				min = dist[i];
 				mode = i;
 			}
+			if (wd == w.getParent() && i == 1)
+				break;
 		}
 		// Test for centering
 		if (wd == w.getParent() && Math.abs(w.getY()+(w.getHeight())/2 - (wd.getHeight()/2)) < min) {
 			min = Math.abs((w.getY()+w.getHeight())/2 - (wd.getHeight()/2));
-			mode = 4;
+			mode = dist.length;
 		}
 		dist[0] = min;
 		return mode;
@@ -150,6 +173,7 @@ public class RelativeLayout extends AbstractLayout {
 		dist[1] = Math.abs(w.getX()+w.getWidth()-(x+wd.getWidth()));
 		dist[2] = Math.abs(w.getX()+w.getWidth()-x);
 		dist[3] = Math.abs(w.getX()-(x+wd.getWidth()));
+		dist[4] = Integer.MAX_VALUE;
 		int min = dist[0];
 		int mode = 0;
 		for (int i=1;i<dist.length;i++) {
@@ -157,11 +181,13 @@ public class RelativeLayout extends AbstractLayout {
 				min = dist[i];
 				mode = i;
 			}
+			if (wd == w.getParent() && i == 1)
+				break;
 		}
 		// Test for centering
 		if (wd == w.getParent() && Math.abs(w.getX()+w.getWidth()/2 - (wd.getWidth()/2)) < min) {
 			min = Math.abs((w.getX()+w.getWidth())/2 - (wd.getWidth()/2));
-			mode = 4;
+			mode = dist.length;
 		}
 		dist[0] = min;
 		return mode;
@@ -207,11 +233,11 @@ public class RelativeLayout extends AbstractLayout {
 		int modeVert=0;
 		int modeHorz=0;
 
-		int dist[] = new int[4];
+		int dist[] = new int[5];
 
 		if (w.getParent() != null) {
 			modeVert = closestVertical(w, w.getParent(), dist);
-			if (modeVert < 2 || modeVert == 4) {
+			if (modeVert < 2 || modeVert == dist.length) {
 				closeVert = dist[0];
 				closestTop = w.getParent();
 			}
@@ -219,7 +245,7 @@ public class RelativeLayout extends AbstractLayout {
 				modeVert = 0;
 			}
 			modeHorz = closestHorizontal(w, w.getParent(), dist);
-			if (modeHorz < 2 || modeHorz == 4) {
+			if (modeHorz < 2 || modeHorz == dist.length) {
 				closeHorz = dist[0];
 				closestLeft = w.getParent();
 			}
@@ -230,31 +256,29 @@ public class RelativeLayout extends AbstractLayout {
 
 
 		for (Widget wd : widgets) {
-			if (wd == w)
-				break;
-			if (wd != w) {
-				int mode = closestVertical(w, wd, dist);
-				if (dist[0] < closeVert) {
-					closeVert = dist[0];
-					closestTop = wd;
-					modeVert = mode;
-				}
-				mode = closestHorizontal(w, wd, dist);
-				if (dist[0] < closeHorz) {
-					closeHorz = dist[0];
-					closestLeft = wd;
-					modeHorz = mode;
-				}
+			if (isRelatedTo(wd, w) || wd == w)
+				continue;
+			int mode = closestVertical(w, wd, dist);
+			if (dist[0] < closeVert) {
+				closeVert = dist[0];
+				closestTop = wd;
+				modeVert = mode;
+			}
+			mode = closestHorizontal(w, wd, dist);
+			if (dist[0] < closeHorz) {
+				closeHorz = dist[0];
+				closestLeft = wd;
+				modeHorz = mode;
 			}
 		}
 		if (closestTop == null || closestLeft == null) {
 			w.setPosition(0,0);
 			return;
 		}
+
 		int x, y;
 		x = w.getX();
 		y = w.getY();
-
 		if (closestTop == w.getParent()) {
 			switch (modeVert) {
 			case 0:
@@ -265,7 +289,7 @@ public class RelativeLayout extends AbstractLayout {
 				y = closestTop.getHeight()-w.getHeight();
 				v.add(new Relation(w, closestTop, RelationType.PARENT_BOTTOM));
 				break;
-			case 4:
+			case 5:
 				y = closestTop.getHeight()/2-w.getHeight()/2;
 				v.add(new Relation(w, closestTop, RelationType.CENTER_VERTICAL));
 				break;
@@ -289,6 +313,10 @@ public class RelativeLayout extends AbstractLayout {
 				y = closestTop.getY()+closestTop.getHeight()+PADDING;
 				v.add(new Relation(w, closestTop, RelationType.BELOW));
 				break;
+			case 4:
+				y = closestTop.getY()+closestTop.getBaseline()-w.getBaseline();
+				v.add(new Relation(w, closestTop, RelationType.BASELINE));
+				break;
 			}
 		}
 		if (closestLeft == w.getParent()) {
@@ -301,7 +329,7 @@ public class RelativeLayout extends AbstractLayout {
 				x = closestLeft.getWidth()-w.getWidth();
 				v.add(new Relation(w, closestLeft, RelationType.PARENT_RIGHT));
 				break;
-			case 4:
+			case 5:
 				x = closestLeft.getWidth()/2-w.getWidth()/2;
 				v.add(new Relation(w, closestLeft, RelationType.CENTER_HORIZONTAL));
 				break;
@@ -390,12 +418,14 @@ public class RelativeLayout extends AbstractLayout {
 				else if (r.getRelation().equals(RelationType.PARENT_RIGHT)) {
 					properties.add(new StringProperty("relation", "android:layout_alignParentRight", r.getRelatedTo().getId()));
 				}
-
+				else if (r.getRelation().equals(RelationType.BASELINE)) {
+					properties.add(new StringProperty("relation", "android:layout_alignBaseline", r.getRelatedTo().getId()));
+				}
 			}
 		}
 	}
 
-	public static enum RelationType {TOP, ABOVE, BOTTOM, BELOW, LEFT, TO_LEFT, RIGHT, TO_RIGHT, CENTER_VERTICAL, CENTER_HORIZONTAL, CENTER, PARENT_TOP, PARENT_BOTTOM, PARENT_RIGHT, PARENT_LEFT};
+	public static enum RelationType {TOP, ABOVE, BOTTOM, BELOW, LEFT, TO_LEFT, RIGHT, TO_RIGHT, BASELINE, CENTER_VERTICAL, CENTER_HORIZONTAL, CENTER, PARENT_TOP, PARENT_BOTTOM, PARENT_RIGHT, PARENT_LEFT};
 
 	public static class Relation {
 		RelationType relation;
