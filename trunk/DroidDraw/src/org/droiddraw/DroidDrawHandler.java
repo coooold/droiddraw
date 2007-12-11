@@ -36,6 +36,7 @@ public class DroidDrawHandler extends DefaultHandler {
 	public void startElement(String uri, String lName, String qName, Attributes atts) 
 		throws SAXException 
 	{
+		System.out.println(qName);
 		if (isLayout(qName)) {
 			Layout l = null;
 			Vector<String> l_props = new Vector<String>();
@@ -57,6 +58,9 @@ public class DroidDrawHandler extends DefaultHandler {
 				for (int i=0;i<RelativeLayout.propNames.length;i++) {
 					l_props.add(RelativeLayout.propNames[i]);
 				}
+			}
+			else if (qName.equals("FrameLayout")) {
+				l = new FrameLayout();
 			}
 			if (layoutStack.size() == 0) {
 				l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);

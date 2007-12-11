@@ -21,6 +21,8 @@ public class StringProperty extends Property {
 		if (value != null && value.startsWith("@string") && AndroidEditor.instance().getStrings() != null) {
 			String key = value.substring(value.indexOf("/")+1);
 			String str = AndroidEditor.instance().getStrings().get(key);
+			if (str == null)
+				str = value;
 			return str;
 		}
 		else {

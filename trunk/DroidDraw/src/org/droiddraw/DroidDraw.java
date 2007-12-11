@@ -46,6 +46,16 @@ public class DroidDraw extends JApplet {
 		l.apply();
 	}
 	
+	protected void loadImage(String name, MediaTracker md, int id) {
+		Image img = getImage(getCodeBase(), "ui/"+name+".png");
+		md.addImage(img, id);
+		try {
+			md.waitForID(id);
+		} catch (InterruptedException ex) {}
+		ImageResources.instance().addImage(img, name);
+		
+	}
+	
 	@Override
 	public void init() {
 		super.init();
@@ -73,11 +83,24 @@ public class DroidDraw extends JApplet {
 		Image img;
 		MediaTracker md = new MediaTracker(this);
 		final Image[] images = new Image[4];
-		images[0] = getImage(getCodeBase(), "emu1.png");
 		for (int i=1;i<5;i++) {
 			images[i-1] = getImage(getCodeBase(), "emu"+i+".png");
 			md.addImage(images[i-1], i);
 		}
+		int ix = images.length;
+		loadImage("checkbox_off_background", md, ix++);
+		loadImage("checkbox_on_background", md, ix++);
+		loadImage("clock_dial", md, ix++);
+		loadImage("clock_hand_hour", md, ix++);
+		loadImage("clock_hand_minute", md, ix++);
+		loadImage("radiobutton_off_background", md, ix++);
+		loadImage("radiobutton_on_background", md, ix++);
+		loadImage("button_background_normal.9", md, ix++);
+		loadImage("editbox_background_normal.9", md, ix++);
+		loadImage("progress_circular_background", md, ix++);
+		loadImage("progress_particle", md, ix++);
+		loadImage("progress_circular_indeterminate", md, ix++);
+		
 		for (int i=1;i<5;i++) {
 			try {
 				md.waitForID(i);

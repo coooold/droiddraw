@@ -154,7 +154,7 @@ public class AndroidEditor {
 	}
 
 	public void removeWidget(Widget w) {
-		layout.removeWidget(w);
+		w.getParent().removeWidget(w);
 		if (selected == w) {
 			selected = null;
 		}
