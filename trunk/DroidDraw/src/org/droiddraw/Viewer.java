@@ -17,16 +17,17 @@ public class Viewer extends JPanel {
 
 	public Viewer(AndroidEditor app, Image img) {
 		this.app = app;
-		this.d = new Dimension(app.getScreenX(),app.getScreenY());
+		//this.d = new Dimension(app.getScreenX(),app.getScreenY());
 		vl = new ViewerListener(app, this);
 		addMouseListener(vl);
 		addMouseMotionListener(vl);
 		addKeyListener(vl);
 		this.img = img;
+		this.d = new Dimension(480,480);
 	}
 
 	public void resetScreen(Image img) {
-		this.d = new Dimension(app.getScreenX(),app.getScreenY());
+		//this.d = new Dimension(app.getScreenX(),app.getScreenY());
 		this.img = img;
 	}
 
@@ -43,7 +44,7 @@ public class Viewer extends JPanel {
 	}
 
 	public int getOffX() {
-		return (int)(getWidth()-d.getWidth())/2;
+		return (int)(getWidth()-app.getScreenX())/2;
 	}
 
 	public int getOffY() {
