@@ -100,8 +100,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	public void mouseEntered(MouseEvent arg0) { }
 	public void mouseExited(MouseEvent arg0) { }
 	public void mousePressed(MouseEvent e) { 
-		int x = e.getX();
-		int y = e.getY();
+		int x = e.getX()-viewer.getOffX();
+		int y = e.getY()-viewer.getOffY();
 
 		if (select) {
 			if (e.getClickCount() > 1) {
@@ -147,8 +147,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	}
 
 	public void mouseDragged(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
+		int x = e.getX()-viewer.getOffX();
+		int y = e.getY()-viewer.getOffY();
 
 		Widget selected = app.getSelected();
 		if (selected == null) {
@@ -191,16 +191,19 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		}
 	}
 
-	public void mouseMoved(MouseEvent e) { 
+	public void mouseMoved(MouseEvent ev) { 
+		int ex = ev.getX();
+		int ey = ev.getY();
+		
 		Widget selected = AndroidEditor.instance().getSelected();
 		mode = 0;
 		Cursor c = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 
 		if (selected != null) {
-			int x = selected.getParent().getScreenX()+selected.getX();
-			int y = selected.getParent().getScreenY()+selected.getY();
-			boolean close_r = Math.abs(e.getX()-(x+selected.getWidth())) < 5;
-			boolean close_b = Math.abs(e.getY()-(y+selected.getHeight())) < 5 && e.getX() > x && e.getX() < x+selected.getWidth();
+			int x = selected.getParent().getScreenX()+selected.getX()+viewer.getOffX();
+			int y = selected.getParent().getScreenY()+selected.getY()+viewer.getOffY();
+			boolean close_r = Math.abs(ex-(x+selected.getWidth())) < 5;
+			boolean close_b = Math.abs(ey-(y+selected.getHeight())) < 5 && ex > x && ey < x+selected.getWidth();
 
 
 			if (close_r) {
@@ -218,7 +221,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				mode = S;
 			}
 		}
-		e.getComponent().setCursor(c);
+		ev.getComponent().setCursor(c);
 	}
 
 	public void actionPerformed(ActionEvent ev) {
