@@ -16,8 +16,8 @@ public class TextView extends AbstractWidget {
 	SelectProperty style;
 	
 	
-	int pad_x = 5;
-	int pad_y = 3;
+	int pad_x = 6;
+	int pad_y = 4;
 	
 	PropertiesPanel p;
 	Font f;
@@ -67,6 +67,7 @@ public class TextView extends AbstractWidget {
 		}
 		buildFont();
 		super.apply();
+		this.baseline = fontSize+pad_y/2;
 	}
 	
 	protected int stringLength(String str) {
@@ -87,7 +88,7 @@ public class TextView extends AbstractWidget {
 		if (text.getStringValue() != null) {
 			g.setColor(Color.black);
 			g.setFont(f);
-			g.drawString(text.getStringValue(), getX()+2, getY()+fontSize);
+			g.drawString(text.getStringValue(), getX()+pad_x/2, getY()+fontSize+pad_y/2);
 		}
 	}
 	

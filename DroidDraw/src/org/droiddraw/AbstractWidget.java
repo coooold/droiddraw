@@ -4,6 +4,7 @@ import java.util.Vector;
 
 public abstract class AbstractWidget implements Widget {
 	int x, y;
+	int baseline;
 	int width, height;
 	String tagName;
 	Vector<Property> props;
@@ -147,11 +148,16 @@ public abstract class AbstractWidget implements Widget {
 		if (getParent() != null) {
 			getParent().apply();
 		}
+		baseline = getHeight()/2;
 	}
 	
 	public void setSizeInternal(int w, int h) {
 		this.width = w;
 		this.height = h;
+	}
+	
+	public int getBaseline() {
+		return baseline;
 	}
 	
 	protected abstract int getContentWidth();

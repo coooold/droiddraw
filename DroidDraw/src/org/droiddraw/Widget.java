@@ -23,4 +23,5 @@ public interface Widget {
 	public String getId();
 	public Layout getParent();
 	public void setParent(Layout w);
+	public int getBaseline();
 }

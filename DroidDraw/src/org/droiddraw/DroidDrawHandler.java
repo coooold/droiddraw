@@ -36,7 +36,6 @@ public class DroidDrawHandler extends DefaultHandler {
 	public void startElement(String uri, String lName, String qName, Attributes atts) 
 		throws SAXException 
 	{
-		System.out.println(qName);
 		if (isLayout(qName)) {
 			Layout l = null;
 			Vector<String> l_props = new Vector<String>();
@@ -113,6 +112,9 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if (qName.equals("AnalogClock")) {
 				w = new AnalogClock();
+			}
+			else if (qName.equals("TimePicker")) {
+				w = new TimePicker();
 			}
 			else if (qName.equals("ProgressBar")) {
 				w = new ProgressBar();
