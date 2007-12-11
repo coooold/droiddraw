@@ -161,7 +161,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 				int nx = (x+off_x);
 				int ny = (y+off_y);
-				if (!shift) {
+				if (!shift && l instanceof AbsoluteLayout) {
 					nx = nx/grid_x*grid_x;
 					ny = ny/grid_y*grid_y;
 				}
