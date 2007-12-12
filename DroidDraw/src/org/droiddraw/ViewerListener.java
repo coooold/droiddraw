@@ -32,7 +32,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 
 	Viewer viewer;
 	AndroidEditor app;
-	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock","AutoCompleteTextView", "Button", "CheckBox", "DigitalClock","EditText", "ListView", "ProgressBar", "RadioButton","RadioGroup", "Spinner", "TextView", "TimePicker", "AbsoluteLayout", "LinearLayout", "RelativeLayout", "Ticker"});
+	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock","AutoCompleteTextView", "Button", "CheckBox", "DigitalClock","EditText", "ImageButton", "ImageView", "ListView", "ProgressBar", "RadioButton","RadioGroup", "Spinner", "TextView", "TimePicker", "AbsoluteLayout", "LinearLayout", "RelativeLayout", "Ticker"});
 
 	JToggleButton addButton;
 	JToggleButton selectButton;
@@ -96,6 +96,10 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return new Ticker();
 		else if (str.equals("Spinner"))
 			return new Spinner();
+		else if (str.equals("ImageView"))
+			return new ImageView();
+		else if (str.equals("ImageButton"))
+			return new ImageButton();
 		else if (str.equals("AutoCompleteTextView"))
 			return new AutoCompleteTextView("AutoComplete");
 		else
@@ -210,8 +214,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		if (selected != null) {
 			int x = selected.getParent().getScreenX()+selected.getX()+viewer.getOffX();
 			int y = selected.getParent().getScreenY()+selected.getY()+viewer.getOffY();
-			boolean close_r = Math.abs(ex-(x+selected.getWidth())) < 5;
-			boolean close_b = Math.abs(ey-(y+selected.getHeight())) < 5 && ex > x && ey < x+selected.getWidth();
+			boolean close_r = Math.abs(ex-(x+selected.getWidth())) < 5 && ey > y && ey < y+selected.getHeight();
+			boolean close_b = Math.abs(ey-(y+selected.getHeight())) < 5 && ex > x && ex < x+selected.getWidth();
 
 
 			if (close_r) {

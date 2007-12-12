@@ -1,5 +1,8 @@
 package org.droiddraw;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Stack;
@@ -128,6 +131,12 @@ public class DroidDrawHandler extends DefaultHandler {
 			else if (qName.equals("AutoCompleteTextView")) {
 				w = new AutoCompleteTextView("AutoComplete");
 			}
+			else if (qName.equals("ImageButton")) {
+				w = new ImageButton();
+			}
+			else if (qName.equals("ImageView")) {
+				w = new ImageView();
+			}
 			else if (qName.equals("ProgressBar")) {
 				w = new ProgressBar();
 				for (int i=0;i<ProgressBar.propertyNames.length;i++) {
@@ -187,6 +196,12 @@ public class DroidDrawHandler extends DefaultHandler {
 		load(new InputSource(new StringReader(content)));
 	}
 	
+	
+	public static void load(File f) 
+	throws SAXException, ParserConfigurationException, IOException, FileNotFoundException
+	{
+		load(new InputSource(new FileReader(f)));
+	}
 
 	public static void load(InputSource in) 
 		throws SAXException, ParserConfigurationException, IOException
