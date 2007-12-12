@@ -1,5 +1,7 @@
 package org.droiddraw;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -204,13 +206,14 @@ public class RelativeLayout extends AbstractLayout {
 		boolean positioned = false;
 
 		for (int i=0;i<propNames.length;i++) {
-			if (w.getPropertyByAttName(propNames[i]) != null) {
-				StringProperty p = (StringProperty)w.getPropertyByAttName(propNames[i]);
-				String id = p.getStringValue();
-				Widget parent = findById(id);
-				if (parent == null && id.equals(this.getId()))
-					parent = this;
-				if (parent != null) {
+			Property p = w.getPropertyByAttName(propNames[i]);
+			if (p != null) {
+				if (p instanceof StringProperty) {
+					String id = ((StringProperty)p).getStringValue();
+					Widget parent = findById(id);
+					if (parent == null) {
+						parent = this;
+					}
 					v.add(new Relation(w, parent, rts[i]));
 					applyRelation(rts[i], w, parent);
 					w.removeProperty(p);
@@ -356,6 +359,18 @@ public class RelativeLayout extends AbstractLayout {
 			}
 		}
 		w.setPosition(x, y);
+		Collections.sort(widgets, new Comparator<Widget>() {
+			public int compare(Widget w1, Widget w2) {
+				if (isRelatedTo(w1, w2)) {
+					return 1;
+				}
+				else if (isRelatedTo(w2, w1)) {
+					return -1;
+				}
+				else
+					return 0;
+			}
+		});
 	}
 
 	@SuppressWarnings("unchecked")
@@ -401,22 +416,22 @@ public class RelativeLayout extends AbstractLayout {
 					properties.add(new StringProperty("relation", "android:layout_alignBottom", r.getRelatedTo().getId()));
 				}
 				else if (r.getRelation().equals(RelationType.CENTER_VERTICAL)) {
-					properties.add(new StringProperty("relation", "android:layout_centerVertical", r.getRelatedTo().getId()));
+					properties.add(new BooleanProperty("relation", "android:layout_centerVertical", true));
 				}
 				else if (r.getRelation().equals(RelationType.CENTER_HORIZONTAL)) {
-					properties.add(new StringProperty("relation", "android:layout_centerHorizontal", r.getRelatedTo().getId()));
+					properties.add(new BooleanProperty("relation", "android:layout_centerHorizontal", true));
 				}
 				else if (r.getRelation().equals(RelationType.PARENT_BOTTOM)) {
-					properties.add(new StringProperty("relation", "android:layout_alignParentBottom", r.getRelatedTo().getId()));
+					properties.add(new BooleanProperty("relation", "android:layout_alignParentBottom", true));
 				}
 				else if (r.getRelation().equals(RelationType.PARENT_TOP)) {
-					properties.add(new StringProperty("relation", "android:layout_alignParentTop", r.getRelatedTo().getId()));
+					properties.add(new BooleanProperty("relation", "android:layout_alignParentTop", true));
 				}
 				else if (r.getRelation().equals(RelationType.PARENT_LEFT)) {
-					properties.add(new StringProperty("relation", "android:layout_alignParentLeft", r.getRelatedTo().getId()));
+					properties.add(new BooleanProperty("relation", "android:layout_alignParentLeft", true));
 				}
 				else if (r.getRelation().equals(RelationType.PARENT_RIGHT)) {
-					properties.add(new StringProperty("relation", "android:layout_alignParentRight", r.getRelatedTo().getId()));
+					properties.add(new BooleanProperty("relation", "android:layout_alignParentRight", true));
 				}
 				else if (r.getRelation().equals(RelationType.BASELINE)) {
 					properties.add(new StringProperty("relation", "android:layout_alignBaseline", r.getRelatedTo().getId()));
