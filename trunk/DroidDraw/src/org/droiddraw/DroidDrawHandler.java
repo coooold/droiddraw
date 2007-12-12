@@ -29,7 +29,7 @@ public class DroidDrawHandler extends DefaultHandler {
 	}
 	
 	protected boolean isLayout(String name) {
-		return name.endsWith("Layout") || name.equals("RadioGroup");
+		return name.endsWith("Layout") || name.equals("RadioGroup") || name.equals("Ticker");
 	}
 	
 	@Override
@@ -60,6 +60,9 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if (qName.equals("FrameLayout")) {
 				l = new FrameLayout();
+			}
+			else if (qName.equals("Ticker")) {
+				l = new Ticker();
 			}
 			if (layoutStack.size() == 0) {
 				l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
@@ -115,6 +118,15 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if (qName.equals("TimePicker")) {
 				w = new TimePicker();
+			}
+			else if (qName.equals("ListView")) {
+				w = new ListView();
+			}
+			else if (qName.equals("Spinner")) {
+				w = new Spinner();
+			}
+			else if (qName.equals("AutoCompleteTextView")) {
+				w = new AutoCompleteTextView("AutoComplete");
 			}
 			else if (qName.equals("ProgressBar")) {
 				w = new ProgressBar();
