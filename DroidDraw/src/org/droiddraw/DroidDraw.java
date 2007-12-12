@@ -72,6 +72,8 @@ public class DroidDraw extends JApplet {
 		loadImage("progress_circular_indeterminate", md, ix++);
 		loadImage("arrow_up_float", md, ix++);
 		loadImage("arrow_down_float", md, ix++);
+		loadImage("spinnerbox_background_focus_yellow.9", md, ix++);
+		loadImage("spinnerbox_arrow_middle.9", md, ix++);
 		
 		for (int i=0;i<ix;i++) {
 			try {

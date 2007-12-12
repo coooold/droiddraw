@@ -74,7 +74,6 @@ public class LinearLayout extends AbstractLayout {
 			else
 				x += w.getWidth();
 		}
-		System.out.println(max_base);
 		if (with_weight.size() > 0) {
 			if (vertical) {
 				int extra = getHeight()-y;
