@@ -6,7 +6,8 @@ public class LinearLayout extends AbstractLayout {
 	SelectProperty orientation;
 	public static int VERTICAL_PADDING = 2;
 	public static int HORIZONTAL_PADDING = 2;
-
+	
+	int share;
 	private static final String[] OPTIONS = new String[] {"left", "right","center_horizontal", "top", "bottom", "center_vertical"};
 
 
@@ -55,7 +56,6 @@ public class LinearLayout extends AbstractLayout {
 		int y = 0;
 		int x = 0;
 		Vector<Widget> with_weight = new Vector<Widget>();
-		int share = 0;
 		int max_base = 0;
 		
 		for (Widget w : widgets) {
@@ -88,13 +88,9 @@ public class LinearLayout extends AbstractLayout {
 		x=0;
 		for (Widget w : widgets) {
 			String gravity = "left";
-			boolean weight = false;
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_gravity");
 			if (prop != null)
 				gravity = prop.getStringValue();
-			prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
-			if (prop != null && "1".equals(prop.getStringValue()))
-				weight = true;
 			
 			if (vertical) {
 				if ("right".equals(gravity))
@@ -119,18 +115,28 @@ public class LinearLayout extends AbstractLayout {
 				}
 			}
 			w.setPosition(x, y);
-			if (vertical) {
-				if (weight) {
-					w.setSizeInternal(w.getWidth(), w.getHeight()+share);
-				}					
+			if (vertical) {			
 				y+=w.getHeight();
 			}
 			else {
-				if (weight) {
-					w.setSizeInternal(w.getWidth()+share, w.getHeight());
-				}
 				x+=w.getWidth();
 			}	
+		}
+	}
+	
+	@Override
+	public void resizeForRendering() {
+		boolean vertical = "vertical".equals(orientation.getStringValue());
+		
+		for (Widget w : widgets) {
+			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
+			boolean weight = (prop != null && "1".equals(prop.getStringValue()));
+			if (weight) {
+				if (vertical)
+					w.setSizeInternal(w.getWidth(), w.getHeight()+share);
+				else
+					w.setSizeInternal(w.getWidth()+share, w.getHeight());
+			}
 		}
 	}
 

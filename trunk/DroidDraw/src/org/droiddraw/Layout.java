@@ -12,4 +12,7 @@ public interface Layout extends Widget {
 	public void removeAllWidgets();
 	public int getScreenX();
 	public int getScreenY();
+	
+	public void resizeForRendering();
+	public void clearRendering();
 }

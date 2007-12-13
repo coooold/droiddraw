@@ -63,7 +63,9 @@ public class Viewer extends JPanel {
 
 		if (img != null)
 			g.drawImage(img, 0, 0, this);
-
+		
+		app.getLayout().clearRendering();
+		app.getLayout().resizeForRendering();
 		app.getLayout().paint(g);
 
 		Widget w = app.getSelected();

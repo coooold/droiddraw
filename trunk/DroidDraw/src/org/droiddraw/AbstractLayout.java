@@ -119,4 +119,21 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 			return getY();
 		}
 	}
+	
+	public void resizeForRendering() {
+		for (Widget w : widgets) {
+			if (w instanceof Layout) {
+				((Layout)w).resizeForRendering();
+			}
+		}
+	}
+	
+	public void clearRendering() {
+		for (Widget w : widgets) {
+			w.apply();
+			if (w instanceof Layout) {
+				((Layout)w).clearRendering();
+			}
+		}
+	}
 }

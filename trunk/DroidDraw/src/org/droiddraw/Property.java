@@ -16,6 +16,10 @@ public abstract class Property {
 		return editable;
 	}
 	
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+	}
+	
 	public String getEnglishName() {
 		return englishName;
 	}

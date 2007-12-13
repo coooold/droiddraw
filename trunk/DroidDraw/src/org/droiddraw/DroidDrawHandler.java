@@ -32,7 +32,7 @@ public class DroidDrawHandler extends DefaultHandler {
 	}
 	
 	protected boolean isLayout(String name) {
-		return name.endsWith("Layout") || name.equals("RadioGroup") || name.equals("Ticker");
+		return name.endsWith("Layout") || name.equals("RadioGroup") || name.equals("Ticker") || name.equals("TableRow");
 	}
 	
 	@Override
@@ -63,6 +63,13 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if (qName.equals("FrameLayout")) {
 				l = new FrameLayout();
+			}
+			else if (qName.equals("TableLayout")) {
+				l = new TableLayout();
+				l.setPropertyByAttName("android:stretchColumns", atts.getValue("android:stretchColumns"));
+			}
+			else if (qName.equals("TableRow")) {
+				l = new TableRow();
 			}
 			else if (qName.equals("Ticker")) {
 				l = new Ticker();
