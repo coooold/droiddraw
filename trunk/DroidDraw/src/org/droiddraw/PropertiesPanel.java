@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -47,7 +46,10 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 		//items.setBorder(BorderFactory.createTitledBorder("Properties"));
 		components.clear();
 		this.w = w;
-
+		if (properties.size() > 0) {
+			items.add(new JLabel("Properties for: "));
+			items.add(new JLabel(w.getTagName()));
+		}
 		for (Property prop: properties) {
 			if (prop.getEditable()) {
 				if (prop instanceof BooleanProperty) {

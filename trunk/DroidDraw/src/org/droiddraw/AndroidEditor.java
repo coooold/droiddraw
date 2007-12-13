@@ -101,6 +101,9 @@ public class AndroidEditor {
 			this.layout.removeAllWidgets();
 		}
 		this.layout = l;
+		if (selected == null) {
+			pp.setProperties(l.getProperties(), l);
+		}
 	}
 	
 	public Layout getLayout() {
@@ -114,19 +117,16 @@ public class AndroidEditor {
 	public void select(Widget w) {
 		if (w == layout) {
 			selected = null;
-			return;
-		}
-		selected = w;
-		if (w != null) {
-			pp.setProperties(w.getProperties(), w);
-			pp.validate();
-			pp.repaint();
+			pp.setProperties(layout.getProperties(), w);
 		}
 		else {
-			pp.setProperties(new Vector<Property>(), null);
-			pp.validate();
-			pp.repaint();
+			selected = w;
 		}
+		if (w != null) {
+			pp.setProperties(w.getProperties(), w);
+		}
+		pp.validate();
+		pp.repaint();
 	}
 
 	public void removeWidget(Widget w) {
