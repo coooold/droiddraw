@@ -26,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
@@ -39,6 +40,8 @@ public class DroidDrawPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Dimension d = new Dimension(1100,600);
 	JTabbedPane jtb = new JTabbedPane();
+	TextArea text;
+	JTextArea jtext;
 	
 	public Dimension getMinimumSize() {
 		return d;
@@ -72,8 +75,19 @@ public class DroidDrawPanel extends JPanel {
 	
 	public void open(FileReader r) {
 		try {
+			StringBuffer buff = new StringBuffer();
+			char[] data = new char[4098];
+			int read = r.read(data);
+			while (read != -1) {
+				buff.append(data, 0, read);
+				read = r.read(data);
+			}
 			AndroidEditor.instance().removeAllWidgets();
-			DroidDrawHandler.load(r);
+			DroidDrawHandler.loadFromString(buff.toString());
+			if (text != null)
+				text.setText(buff.toString());
+			else
+				jtext.setText(buff.toString());
 			repaint();
 		} 
 		catch (IOException ex) {
@@ -113,9 +127,16 @@ public class DroidDrawPanel extends JPanel {
 		l.apply();
 	}
 	
-	public DroidDrawPanel(String screen) {	
+	public DroidDrawPanel(String screen, boolean applet) {	
 		switchToLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		AndroidEditor ae = AndroidEditor.instance();
+		
+		if (applet) {
+			text = new TextArea(5,50);
+		}
+		else {
+			jtext = new JTextArea(5,50);
+		}
 		
 		AbsoluteLayout al = new AbsoluteLayout();
 		setupRootLayout(al);
@@ -147,8 +168,6 @@ public class DroidDrawPanel extends JPanel {
 		
 		JButton gen;
 		JButton edit;
-		
-		final TextArea text = new TextArea(5,50);
 		
 		gen = new JButton("Generate");
 		gen.addActionListener(new ActionListener() {
@@ -240,7 +259,11 @@ public class DroidDrawPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					AndroidEditor.instance().removeAllWidgets();
-					DroidDrawHandler.loadFromString(text.getText());
+					if (text != null)
+						DroidDrawHandler.loadFromString(text.getText());
+					else
+						DroidDrawHandler.loadFromString(jtext.getText());
+								
 					layout.removeActionListener(layoutActionListener);
 					layout.setSelectedItem(AndroidEditor.instance().getLayout().toString());
 					layout.addActionListener(layoutActionListener);
@@ -294,8 +317,7 @@ public class DroidDrawPanel extends JPanel {
 		
 		JPanel out = new JPanel();
 		out.setLayout(new BorderLayout());
-		out.add(text, BorderLayout.CENTER);
-		JPanel gp = new JPanel();
+		out.add(text!=null?text:jtext, BorderLayout.CENTER);JPanel gp = new JPanel();
 		gp.add(gen);
 		gp.add(load);
 		out.add(gp, BorderLayout.SOUTH);
