@@ -2,6 +2,7 @@ package org.droiddraw;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -50,6 +51,8 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 			items.add(new JLabel("Properties for: "));
 			items.add(new JLabel(w.getTagName()));
 		}
+		java.awt.FlowLayout fl = new FlowLayout();
+		fl.setAlignment(FlowLayout.RIGHT);
 		for (Property prop: properties) {
 			if (prop.getEditable()) {
 				if (prop instanceof BooleanProperty) {
@@ -72,6 +75,7 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 					}
 					components.put(prop, jc);
 					JPanel p = new JPanel();
+					p.setLayout(fl);
 					p.add(jc);
 					items.add(p);
 				}

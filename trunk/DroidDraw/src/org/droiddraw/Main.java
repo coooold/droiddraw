@@ -91,7 +91,7 @@ public class Main {
 		final JFrame jf = new JFrame("DroidDraw");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		final DroidDrawPanel ddp = new DroidDrawPanel("qvga");
+		final DroidDrawPanel ddp = new DroidDrawPanel("qvga", true);
 		
 		final FileFilter ff = new FileFilter() {
 			@Override
@@ -118,6 +118,7 @@ public class Main {
 				int res = jfc.showOpenDialog(ddp);
 				if (res == JFileChooser.APPROVE_OPTION) {
 					ddp.open(jfc.getSelectedFile());
+					saveFile[0] = jfc.getSelectedFile();
 				}
 			}
 		});

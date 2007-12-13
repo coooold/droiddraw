@@ -83,6 +83,6 @@ public class DroidDraw extends JApplet {
 		}
 		setLayout(new BorderLayout());
 		setSize(1100, 600);
-		add(new DroidDrawPanel(screen), BorderLayout.CENTER);
+		add(new DroidDrawPanel(screen, true), BorderLayout.CENTER);
 	}
 }

@@ -10,9 +10,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AnalogClock extends AbstractWidget {
-	static BufferedImage face, face_scale;
-	static BufferedImage hour, hour_scale;
-	static BufferedImage minute, minute_scale;
+	BufferedImage face, face_scale;
+	BufferedImage hour, hour_scale;
+	BufferedImage minute, minute_scale;
 	int offx;
 	
 	public AnalogClock() {
