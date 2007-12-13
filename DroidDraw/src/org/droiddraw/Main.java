@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,6 +43,18 @@ public class Main {
 	public static void main(String[] args) 
 		throws IOException
 	{
+		
+		// This is so that I can test out the Google examples...
+		// START
+		if (args.length > 0) {
+			try {
+				AndroidEditor.instance().setStrings(StringHandler.load(new FileInputStream("src/strings.xml")));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+		}
+		// END
+		
 		loadImage("emu1");
 		loadImage("emu2");
 		loadImage("emu3");

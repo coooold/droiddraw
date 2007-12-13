@@ -141,7 +141,7 @@ public class DroidDrawPanel extends JPanel {
 		sl.putConstraint(SpringLayout.WEST, lbl, 5, SpringLayout.WEST, p);
 		p.add(lbl);
 		
-		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout"});
+		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout", "TableLayout"});
 		if (!System.getProperty("os.name").toLowerCase().contains("mac os x"))
 			layout.setLightWeightPopupEnabled(false);
 		final ActionListener layoutActionListener = new ActionListener() {
@@ -151,16 +151,17 @@ public class DroidDrawPanel extends JPanel {
 					Layout l = null;
 					if (select.equals("AbsoluteLayout")) {
 						l = new AbsoluteLayout();
-						viewer.repaint();
 					}
 					else if (select.equals("LinearLayout")) {
 						l = new LinearLayout();
-						viewer.repaint();
 					}
 					else if (select.equals("RelativeLayout")) {
 						l = new RelativeLayout();
-						viewer.repaint();
 					}
+					else if (select.equals("TableLayout")) {
+						l = new TableLayout();
+					}
+					viewer.repaint();
 					setupRootLayout(l);
 					AndroidEditor.instance().setLayout(l);
 				}
