@@ -8,6 +8,11 @@ import java.awt.Image;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Enumeration;
@@ -25,12 +30,14 @@ import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 
 public class DroidDrawPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
-	Dimension d = new Dimension(1100,600);	
-
+	Dimension d = new Dimension(1100,600);
 	
 	public Dimension getMinimumSize() {
 		return d;
@@ -38,6 +45,52 @@ public class DroidDrawPanel extends JPanel {
 	
 	public Dimension getPreferredSize() {
 		return d;
+	}
+		
+	public void save(File f) {
+		try {
+			AndroidEditor.instance().generate(new PrintWriter(new FileWriter(f)));
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			error(ex.getMessage(), "Error saving...");
+		}
+	}
+	
+	public void open(File f) {
+		try {
+			this.open(new FileReader(f));
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+			error(ex.getMessage());
+		}
+	}
+	
+	public void open(FileReader r) {
+		try {
+			AndroidEditor.instance().removeAllWidgets();
+			DroidDrawHandler.load(r);
+			repaint();
+		} 
+		catch (IOException ex) {
+			ex.printStackTrace();
+			error(ex.getMessage());
+		}
+		catch (SAXException ex) {
+			ex.printStackTrace();
+			error(ex.getMessage());
+		}
+		catch (ParserConfigurationException ex) {
+			ex.printStackTrace();
+			error(ex.getMessage());
+		}
+	}
+	
+	public void error(String message) {
+		this.error(message, "Error");
+	}
+	
+	public void error(String message, String title) {
+		JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
 	}
 	
 	protected static final void switchToLookAndFeel(String clazz) {
@@ -55,7 +108,7 @@ public class DroidDrawPanel extends JPanel {
 		l.apply();
 	}
 	
-	public DroidDrawPanel(String screen) {		
+	public DroidDrawPanel(String screen) {	
 		switchToLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		AndroidEditor ae = AndroidEditor.instance();
 		
