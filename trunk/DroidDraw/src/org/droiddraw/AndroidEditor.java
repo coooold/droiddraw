@@ -4,9 +4,6 @@ import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import javax.swing.JFrame;
-
-
 
 public class AndroidEditor {
 	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT};
@@ -17,7 +14,6 @@ public class AndroidEditor {
 	ScreenMode screen;
 	int sx, sy;
 	PropertiesPanel pp;
-	JFrame jf;
 	Hashtable<String, String> strings;
 	
 	public static int OFFSET_X = 0;
@@ -125,13 +121,11 @@ public class AndroidEditor {
 			pp.setProperties(w.getProperties(), w);
 			pp.validate();
 			pp.repaint();
-			if (jf != null) {jf.validate(); jf.pack();}
 		}
 		else {
 			pp.setProperties(new Vector<Property>(), null);
 			pp.validate();
 			pp.repaint();
-			if (jf != null) { jf.validate(); jf.pack();}
 		}
 	}
 
@@ -147,21 +141,6 @@ public class AndroidEditor {
 		selected = null;
 	}
 	
-	public void editSelected() {
-		if (jf != null) {
-			jf.invalidate();
-			jf.pack();
-			jf.setVisible(true);
-			jf.toFront();
-		}
-		else {
-			jf = new JFrame("Edit");
-			jf.getContentPane().add(pp);
-			jf.pack();
-			jf.setVisible(true);
-		}
-	}
-
 	public Layout findLayout(int x, int y) {
 		return findLayout(layout, x, y);
 	}

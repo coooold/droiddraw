@@ -37,8 +37,10 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	JToggleButton addButton;
 	JToggleButton selectButton;
 	ButtonGroup bg;
-
-	public ViewerListener(AndroidEditor app, Viewer viewer) {
+	DroidDrawPanel ddp;
+	
+	public ViewerListener(AndroidEditor app, DroidDrawPanel ddp, Viewer viewer) {
+		this.ddp = ddp;
 		this.app = app;
 		this.viewer = viewer;
 		this.addButton = new JToggleButton("Add");
@@ -48,7 +50,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		bg = new ButtonGroup();
 		bg.add(selectButton);
 		bg.add(addButton);
-		bg.setSelected(addButton.getModel(), true);
+		bg.setSelected(selectButton.getModel(), true);
 
 		if (!System.getProperty("os.name").toLowerCase().contains("mac os x"))
 			widgetType.setLightWeightPopupEnabled(false);
@@ -64,6 +66,10 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 
 	public Widget createWidget() {
 		String str = (String)widgetType.getSelectedItem();
+		return createWidget(str);
+	}
+	
+	public static Widget createWidget(String str) {
 		if (str.equals("Button"))
 			return new Button("Button");
 		else if (str.equals("CheckBox"))
@@ -126,7 +132,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 					if (w != app.getSelected()) {
 						app.select(w);
 					}
-					app.editSelected();
+					ddp.editSelected();
 				}
 			}
 			else if (mode == NORMAL ){
@@ -142,22 +148,26 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		}
 		else {
 			Widget w = createWidget();
-			Layout l = app.findLayout(x, y);
-			if (l instanceof AbsoluteLayout)
-				w.setPosition((x/grid_x)*grid_x-l.getScreenX(), (y/grid_y)*grid_y-l.getScreenY());
-			else
-				w.setPosition(x-l.getScreenX(), y-l.getScreenY());
-			l.addWidget(w);
-			l.apply();
-			app.select(w);
-			bg.setSelected(addButton.getModel(), false);
-			bg.setSelected(selectButton.getModel(), true);
-			select = true;
-			viewer.requestFocus();
-			viewer.repaint();
+			addWidget(w, x, y);
 		}
 	}
 
+	public void addWidget(Widget w, int x, int y) {
+		Layout l = app.findLayout(x, y);
+		if (l instanceof AbsoluteLayout)
+			w.setPosition((x/grid_x)*grid_x-l.getScreenX(), (y/grid_y)*grid_y-l.getScreenY());
+		else
+			w.setPosition(x-l.getScreenX(), y-l.getScreenY());
+		l.addWidget(w);
+		l.apply();
+		app.select(w);
+		bg.setSelected(addButton.getModel(), false);
+		bg.setSelected(selectButton.getModel(), true);
+		select = true;
+		viewer.requestFocus();
+		viewer.repaint();
+	}
+	
 	public void mouseReleased(MouseEvent e) {
 		e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}

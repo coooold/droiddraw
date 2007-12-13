@@ -11,6 +11,7 @@ public class ImageButton extends ImageView {
 		if (i != null) {
 			this.img = new NineWayImage(i, 10, 10);
 		}
+		this.tagName = "ImageButton";
 		apply();
 	}
 
