@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
@@ -25,7 +26,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
@@ -38,6 +41,7 @@ import org.xml.sax.SAXException;
 public class DroidDrawPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	Dimension d = new Dimension(1100,600);
+	JTabbedPane jtb = new JTabbedPane();
 	
 	public Dimension getMinimumSize() {
 		return d;
@@ -46,7 +50,11 @@ public class DroidDrawPanel extends JPanel {
 	public Dimension getPreferredSize() {
 		return d;
 	}
-		
+	
+	public void editSelected() {
+		jtb.setSelectedIndex(2);
+	}
+	
 	public void save(File f) {
 		try {
 			AndroidEditor.instance().generate(new PrintWriter(new FileWriter(f)));
@@ -133,7 +141,7 @@ public class DroidDrawPanel extends JPanel {
 		else {
 			img = ImageResources.instance().getImage("emu1");
 		}
-		final Viewer viewer = new Viewer(ae, img);
+		final Viewer viewer = new Viewer(ae, this, img);
 		JPanel jp = new JPanel();
 		
 		ae.setViewer(viewer);
@@ -157,7 +165,7 @@ public class DroidDrawPanel extends JPanel {
 		edit = new JButton("Edit");
 		edit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				AndroidEditor.instance().editSelected();
+				editSelected();
 			}
 		});
 
@@ -170,29 +178,30 @@ public class DroidDrawPanel extends JPanel {
 		});
 		
 		
-		ButtonGroup bg = viewer.getListener().getInterfaceStateGroup();
+		//ButtonGroup bg = viewer.getListener().getInterfaceStateGroup();
 
 		JToolBar tb = new JToolBar();
 		
-		Enumeration<AbstractButton> buttons = bg.getElements();
-		while (buttons.hasMoreElements()) {
-			tb.add(buttons.nextElement());
-			tb.addSeparator();
-		}
+		//Enumeration<AbstractButton> buttons = bg.getElements();
+		//while (buttons.hasMoreElements()) {
+		//	tb.add(buttons.nextElement());
+		//	tb.addSeparator();
+		//}
 
-		tb.add(viewer.getListener().getWidgetSelector());
+		//tb.add(viewer.getListener().getWidgetSelector());
 		tb.addSeparator();
 		tb.add(edit);
 		tb.addSeparator();
 		tb.add(delete);
+		tb.addSeparator();
 		tb.setFloatable(false);
 		
 		JPanel p = new JPanel();
 		SpringLayout sl = new SpringLayout();
 		p.setLayout(sl);
 		JLabel lbl = new JLabel("Root Layout:");
-		sl.putConstraint(SpringLayout.WEST, lbl, 5, SpringLayout.WEST, p);
-		p.add(lbl);
+		//tb.add(lbl);
+		//sl.putConstraint(SpringLayout.WEST, lbl, 5, SpringLayout.WEST, p);
 		
 		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout", "TableLayout"});
 		if (!System.getProperty("os.name").toLowerCase().contains("mac os x"))
@@ -222,10 +231,10 @@ public class DroidDrawPanel extends JPanel {
 		};
 		
 		layout.addActionListener(layoutActionListener);
-		p.add(layout);
+		tb.add(layout);
 		// This is 1.6.x specific *sigh*
 		//sl.putConstraint(SpringLayout.BASELINE, lbl, 0, SpringLayout.BASELINE, layout);
-		sl.putConstraint(SpringLayout.NORTH, tb, 5, SpringLayout.SOUTH, layout);
+		//sl.putConstraint(SpringLayout.NORTH, tb, 5, SpringLayout.SOUTH, layout);
 		p.add(tb);
 		
 		JButton load = new JButton("Load");
@@ -247,15 +256,16 @@ public class DroidDrawPanel extends JPanel {
 			}
 		});
 		
-		sl.putConstraint(SpringLayout.WEST, gen, 5, SpringLayout.WEST, p);
-		sl.putConstraint(SpringLayout.NORTH, gen, 0, SpringLayout.SOUTH, tb);
-		sl.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.SOUTH, tb);
-		sl.putConstraint(SpringLayout.EAST, gen, 0, SpringLayout.EAST, layout);
-		sl.putConstraint(SpringLayout.WEST, gen, 0, SpringLayout.WEST, layout);
-		sl.putConstraint(SpringLayout.EAST, layout, 0, SpringLayout.EAST, tb);
-		sl.putConstraint(SpringLayout.SOUTH, p, 5, SpringLayout.SOUTH, gen);
-		p.add(load);
-		p.add(gen);
+		//sl.putConstraint(SpringLayout.WEST, gen, 5, SpringLayout.WEST, p);
+		//sl.putConstraint(SpringLayout.NORTH, gen, 0, SpringLayout.SOUTH, tb);
+		//sl.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.SOUTH, tb);
+		//sl.putConstraint(SpringLayout.EAST, gen, 0, SpringLayout.EAST, layout);
+		//sl.putConstraint(SpringLayout.WEST, gen, 0, SpringLayout.WEST, layout);
+		//sl.putConstraint(SpringLayout.EAST, layout, 0, SpringLayout.EAST, tb);
+		//sl.putConstraint(SpringLayout.SOUTH, p, 5, SpringLayout.SOUTH, gen);
+		//p.add(load);
+		//p.add(gen);
+		
 		p.setSize(200, 300);
 		p.validate();
 		//bp.add(p);
@@ -267,11 +277,16 @@ public class DroidDrawPanel extends JPanel {
 		JPanel top = new JPanel();
 		FlowLayout fl = new FlowLayout();
 		fl.setAlignment(FlowLayout.LEFT);
-		top.setLayout(fl);
+		top.setLayout(new GridLayout(2,2));
+
+		top.add(lbl);
+		top.add(layout);
 		top.add(new JLabel("Screen Size:"));
 		top.add(screen_size);
-		
-		jp.add(top, BorderLayout.NORTH);
+		p = new JPanel();
+		p.setLayout(fl);
+		p.add(top);
+		jp.add(p, BorderLayout.NORTH);
 		jp.add(viewer, BorderLayout.CENTER);
 		jp.setBorder(BorderFactory.createTitledBorder("Screen"));
 		
@@ -283,7 +298,11 @@ public class DroidDrawPanel extends JPanel {
 		JPanel out = new JPanel();
 		out.setLayout(new BorderLayout());
 		out.add(text, BorderLayout.CENTER);
-
+		JPanel gp = new JPanel();
+		gp.add(gen);
+		gp.add(load);
+		out.add(gp, BorderLayout.SOUTH);
+		
 		TitledBorder border = BorderFactory.createTitledBorder("Output");
 		
 		out.setBorder(border);
@@ -292,11 +311,70 @@ public class DroidDrawPanel extends JPanel {
 		//jp2.setLayout(new GridLayout(0,1));
 		//jp2.add(p);
 		
-		p.setBorder(BorderFactory.createTitledBorder("Tools"));
+		//p.setBorder(BorderFactory.createTitledBorder("Tools"));
+		
+		JPanel wp = new JPanel();
+		JPanel mp = new JPanel();
+		wp.setLayout(new GridLayout(0,1));
+		AnalogClock ac = new AnalogClock();
+		ac.setSize(50, 50);
+		mp.add(new WidgetPanel(ac));
+		mp.add(new WidgetPanel(new AutoCompleteTextView("AutoComplete")));
+		mp.add(new WidgetPanel(new Button("Button")));
+		mp.add(new WidgetPanel(new CheckBox("CheckBox")));
+		mp.add(new WidgetPanel(new DigitalClock()));
+		wp.add(mp);
+		mp = new JPanel();
+		mp.add(new WidgetPanel(new EditView("EditText")));
+		mp.add(new WidgetPanel(new ImageButton()));
+		mp.add(new WidgetPanel(new ImageView()));
+		mp.add(new WidgetPanel(new ListView()));
+		mp.add(new WidgetPanel(new ProgressBar()));
+		mp.add(new WidgetPanel(new RadioButton("RadioButton")));
+		mp.add(new WidgetPanel(new RadioGroup()));
+		wp.add(mp);
+		mp = new JPanel();
+		mp.add(new WidgetPanel(new Spinner()));
+		mp.add(new WidgetPanel(new TextView("TextView")));
+		mp.add(new WidgetPanel(new Ticker()));
+		mp.add(new WidgetPanel(new TimePicker()));
+		wp.add(mp);
+		//wp.setSize(wp.getWidth(), 150);
+		JScrollPane jswp = new JScrollPane(wp);
+		//jswp.setPreferredSize(new Dimension(wp.getWidth(), 80));
+		
+		JPanel lp = new JPanel();
+		lp.setLayout(new GridLayout(0,1));
+		mp = new JPanel();
+		mp.setLayout(new FlowLayout());
+		mp.add(new WidgetPanel(new AbsoluteLayout()));
+		mp.add(new WidgetPanel(new FrameLayout()));
+		mp.add(new WidgetPanel(new LinearLayout()));
+		lp.add(mp);
+		mp = new JPanel();
+
+		mp.add(new WidgetPanel(new RelativeLayout()));
+		TableRow tr = new TableRow();
+		tr.setSizeInternal(70, tr.getHeight());
+		mp.add(new WidgetPanel(tr));
+		mp.add(new WidgetPanel(new TableLayout()));
+		lp.add(mp);
+		mp = new JPanel();
+		mp.add(lp);
+		JScrollPane jslp = new JScrollPane(mp);
+		
+		jtb.addTab("Widgets", jswp);
+		jtb.addTab("Layouts", jslp);
+		jtb.addTab("Properties", new JScrollPane(AndroidEditor.instance().pp));
 		
 		//add(out, BorderLayout.CENTER);
-		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, p, out);
+		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jtb, out);
 		final JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jp, ctl);
+		
+		//p = new JPanel();
+		//p.setLayout(fl);
+		//p.add(tb);
+		//add(p, BorderLayout.NORTH);
 		add(jsp, BorderLayout.CENTER);
 		screen_size.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -332,6 +410,7 @@ public class DroidDrawPanel extends JPanel {
 				viewer.repaint();
 			}
 		});
+		
 		validate();
 	}
 	

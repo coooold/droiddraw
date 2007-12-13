@@ -44,7 +44,7 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 		this.removeAll();
 		items = new JPanel();
 		items.setLayout(new GridLayout(0,2));
-		items.setBorder(BorderFactory.createTitledBorder("Properties"));
+		//items.setBorder(BorderFactory.createTitledBorder("Properties"));
 		components.clear();
 		this.w = w;
 
@@ -79,9 +79,13 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 		JPanel p = new JPanel();
 		p.add(items);
 		this.add(p, BorderLayout.CENTER);
-		JButton apply = new JButton("Apply");
-		apply.addActionListener(this);
-		this.add(apply, BorderLayout.SOUTH);
+		if (properties.size() > 0) {
+			JButton apply = new JButton("Apply");
+			apply.addActionListener(this);
+			p = new JPanel();
+			p.add(apply);
+			this.add(p, BorderLayout.SOUTH);
+		}
 	}
 
 	public void setViewer(Viewer v) {
