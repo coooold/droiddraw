@@ -10,10 +10,8 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -21,11 +19,24 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
 
 public class Main {
+	static final File[] saveFile = new File[1];
+	              
+	protected static void doSave(DroidDrawPanel ddp, JFileChooser jfc, JFrame jf) {
+		int res = jfc.showSaveDialog(ddp);
+		if (res == JFileChooser.APPROVE_OPTION) {
+			File f = jfc.getSelectedFile();
+			if (f.exists()) {
+				res = JOptionPane.showConfirmDialog(ddp, f.getName()+" exists. Overwrite?", "Overwrite", JOptionPane.OK_CANCEL_OPTION);
+				if (res == JOptionPane.CANCEL_OPTION)
+					return;
+			}
+			jf.setTitle("DroidDraw: "+f.getName());
+			ddp.save(f);
+			saveFile[0] = f;
+		}
+	}
 	
 	protected static void loadImage(String name) 
 		throws IOException
@@ -77,7 +88,7 @@ public class Main {
 		loadImage("spinnerbox_arrow_middle.9");
 		loadImage("paint");
 		
-		JFrame jf = new JFrame("DroidDraw");
+		final JFrame jf = new JFrame("DroidDraw");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		final DroidDrawPanel ddp = new DroidDrawPanel("qvga");
@@ -106,24 +117,7 @@ public class Main {
 			public void actionPerformed(ActionEvent ev) { 
 				int res = jfc.showOpenDialog(ddp);
 				if (res == JFileChooser.APPROVE_OPTION) {
-					try {
-						System.out.println("Loading..");
-						AndroidEditor.instance().removeAllWidgets();
-						DroidDrawHandler.load(jfc.getSelectedFile());
-						ddp.repaint();
-					} 
-					catch (IOException ex) {
-						ex.printStackTrace();
-						JOptionPane.showMessageDialog(ddp, ex.getMessage(), ex.toString(), JOptionPane.ERROR_MESSAGE);
-					}
-					catch (SAXException ex) {
-						ex.printStackTrace();
-						JOptionPane.showMessageDialog(ddp, ex.getMessage(), ex.toString(), JOptionPane.ERROR_MESSAGE);
-					}
-					catch (ParserConfigurationException ex) {
-						ex.printStackTrace();
-						JOptionPane.showMessageDialog(ddp, ex.getMessage(), ex.toString(), JOptionPane.ERROR_MESSAGE);
-					}
+					ddp.open(jfc.getSelectedFile());
 				}
 			}
 		});
@@ -132,18 +126,25 @@ public class Main {
 		it = new MenuItem("Save");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) { 
-				int res = jfc.showSaveDialog(ddp);
-				if (res == JFileChooser.APPROVE_OPTION) {
-					try {
-						AndroidEditor.instance().generate(new PrintWriter(new FileWriter(jfc.getSelectedFile())));
-					} catch (IOException ex) {
-						ex.printStackTrace();
-					}
+				if (saveFile[0] == null) {
+					doSave(ddp, jfc, jf);
+				}
+				else {
+					ddp.save(saveFile[0]);
 				}
 			}
 		});
 		it.setShortcut(new MenuShortcut(KeyEvent.VK_S, false));
 		menu.add(it);
+		
+		it = new MenuItem("Save As...");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				doSave(ddp, jfc, jf);
+			}
+		});
+		menu.add(it);
+		
 		menu.addSeparator();
 		it = new MenuItem("Quit");
 		it.addActionListener(new ActionListener() {
@@ -155,6 +156,26 @@ public class Main {
 		menu.add(it);
 
 		mb.add(menu);
+		
+	/*
+	 	menu = new Menu("Edit");
+		it = new MenuItem("Cut");
+		it.setShortcut(new MenuShortcut(KeyEvent.VK_X, false));
+		menu.add(it);
+		it = new MenuItem("Copy");
+		it.setShortcut(new MenuShortcut(KeyEvent.VK_C, false));
+		menu.add(it);
+		it = new MenuItem("Paste");
+		it.setShortcut(new MenuShortcut(KeyEvent.VK_V, false));
+		menu.add(it);
+		
+		menu.addSeparator();
+		it = new MenuItem("Select All");
+		it.setShortcut(new MenuShortcut(KeyEvent.VK_A, false));
+		menu.add(it);
+	*/	
+		mb.add(menu);
+		
 		jf.setMenuBar(mb);
 		
 		jf.getContentPane().add(ddp);

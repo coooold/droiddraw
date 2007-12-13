@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.Stack;
 import java.util.Vector;
@@ -207,9 +208,15 @@ public class DroidDrawHandler extends DefaultHandler {
 	public static void load(File f) 
 	throws SAXException, ParserConfigurationException, IOException, FileNotFoundException
 	{
-		load(new InputSource(new FileReader(f)));
+		load(new FileReader(f));
 	}
 
+	public static void load(Reader r) 
+	throws SAXException, ParserConfigurationException, IOException
+	{
+		load(new InputSource(r));
+	}
+	
 	public static void load(InputSource in) 
 		throws SAXException, ParserConfigurationException, IOException
 	{
