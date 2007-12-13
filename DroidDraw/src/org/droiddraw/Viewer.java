@@ -69,7 +69,7 @@ public class Viewer extends JPanel implements DropTargetListener {
 	public void paint(Graphics g) {
 		g.setColor(Color.lightGray);
 		g.fillRect(0, 0, getWidth(), getHeight());
-
+		
 		Graphics2D g2d = (Graphics2D)g;
 		int dx = getOffX();
 		int dy = getOffY();
@@ -82,7 +82,7 @@ public class Viewer extends JPanel implements DropTargetListener {
 		app.getLayout().clearRendering();
 		app.getLayout().resizeForRendering();
 		app.getLayout().paint(g);
-
+		
 		Widget w = app.getSelected();
 
 		if (w != null) {
