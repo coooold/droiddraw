@@ -92,7 +92,6 @@ public class TextView extends AbstractWidget {
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Vector<Property> getProperties() {
 		return props;
 	}

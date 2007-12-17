@@ -51,7 +51,9 @@ public class DroidDraw extends JApplet {
 		// END
 		
 		String screen = this.getParameter("Screen");
-		
+		if (screen == null) {
+			screen="hvgap";
+		}
 		MediaTracker md = new MediaTracker(this);
 		int ix = 0;
 		loadImage("emu1", md, ix++);

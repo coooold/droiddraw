@@ -1,12 +1,12 @@
 package org.droiddraw;
 
-import java.awt.Menu;
-import java.awt.MenuBar;
-import java.awt.MenuItem;
-import java.awt.MenuShortcut;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,14 +15,64 @@ import java.io.InputStream;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 
-public class Main {
-	static final File[] saveFile = new File[1];
-	              
+import org.simplericity.macify.eawt.Application;
+import org.simplericity.macify.eawt.ApplicationEvent;
+import org.simplericity.macify.eawt.ApplicationListener;
+import org.simplericity.macify.eawt.DefaultApplication;
+
+
+public class Main implements ApplicationListener {
+	static File saveFile = null;
+	static JFrame jf;
+	static DroidDrawPanel ddp;
+	
+	
+	protected static void doMacOSXIntegration() {
+		Application a = new DefaultApplication();
+		a.addApplicationListener(new Main());
+	}
+	
+	protected static void open(String file) {
+		open(new File(file));
+	}
+	
+	protected static void open(File f) {
+		ddp.open(f);
+		saveFile = f;
+	}
+	
+	protected static void quit() {
+		System.exit(0);
+	}
+	
+	protected static void about() {
+		final JDialog jd = new JDialog(jf, "About DroidDraw");
+		jd.getContentPane().setLayout(new BorderLayout());
+		jd.getContentPane().add(new JLabel(new ImageIcon(ImageResources.instance().getImage("droiddraw_small"))), BorderLayout.CENTER);
+		jd.pack();
+		jd.setResizable(false);
+		jd.setLocationRelativeTo(null);
+		jd.setVisible(true);
+		jd.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent ev) {
+				jd.setVisible(false);
+				jd.dispose();
+			}
+		});
+	}
+	
 	protected static void doSave(DroidDrawPanel ddp, JFileChooser jfc, JFrame jf) {
 		int res = jfc.showSaveDialog(ddp);
 		if (res == JFileChooser.APPROVE_OPTION) {
@@ -34,7 +84,7 @@ public class Main {
 			}
 			jf.setTitle("DroidDraw: "+f.getName());
 			ddp.save(f);
-			saveFile[0] = f;
+			saveFile = f;
 		}
 	}
 	
@@ -66,6 +116,10 @@ public class Main {
 		}
 		// END
 		
+		boolean osx = (System.getProperty("os.name").toLowerCase().contains("mac os x"));
+		if (osx) {
+			doMacOSXIntegration();
+		}
 		loadImage("emu1");
 		loadImage("emu2");
 		loadImage("emu3");
@@ -87,11 +141,12 @@ public class Main {
 		loadImage("spinnerbox_background_focus_yellow.9");
 		loadImage("spinnerbox_arrow_middle.9");
 		loadImage("paint");
+		loadImage("droiddraw_small");
 		
-		final JFrame jf = new JFrame("DroidDraw");
+		jf = new JFrame("DroidDraw");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		final DroidDrawPanel ddp = new DroidDrawPanel("qvga", true);
+		final DroidDrawPanel ddp = new DroidDrawPanel("hvgap", true);
 		
 		final FileFilter ff = new FileFilter() {
 			@Override
@@ -109,36 +164,40 @@ public class Main {
 		jfc.setFileFilter(ff);
 
 		
-		MenuBar mb = new MenuBar();
-		Menu menu = new Menu("File");
-		MenuItem it;
-		it = new MenuItem("Open");
+		int ctl_key = InputEvent.CTRL_MASK;
+		if (osx)
+			ctl_key = InputEvent.META_MASK;
+		
+		JMenuBar mb = new JMenuBar();
+		JMenu menu = new JMenu("File");
+		JMenuItem it;
+		it = new JMenuItem("Open");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) { 
 				int res = jfc.showOpenDialog(ddp);
 				if (res == JFileChooser.APPROVE_OPTION) {
-					ddp.open(jfc.getSelectedFile());
-					saveFile[0] = jfc.getSelectedFile();
+					open(jfc.getSelectedFile());
 				}
 			}
 		});
-		it.setShortcut(new MenuShortcut(KeyEvent.VK_O, false));
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ctl_key));
 		menu.add(it);
-		it = new MenuItem("Save");
+		menu.addSeparator();
+		it = new JMenuItem("Save");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) { 
-				if (saveFile[0] == null) {
+				if (saveFile == null) {
 					doSave(ddp, jfc, jf);
 				}
 				else {
-					ddp.save(saveFile[0]);
+					ddp.save(saveFile);
 				}
 			}
 		});
-		it.setShortcut(new MenuShortcut(KeyEvent.VK_S, false));
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ctl_key));
 		menu.add(it);
 		
-		it = new MenuItem("Save As...");
+		it = new JMenuItem("Save As...");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				doSave(ddp, jfc, jf);
@@ -146,16 +205,18 @@ public class Main {
 		});
 		menu.add(it);
 		
-		menu.addSeparator();
-		it = new MenuItem("Quit");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				System.exit(0);
-			}
-		});
-		it.setShortcut(new MenuShortcut(KeyEvent.VK_Q, false));
-		menu.add(it);
-
+		if (!osx) {
+			menu.addSeparator();
+			it = new JMenuItem("Quit");
+			it.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					quit();
+				}
+			});
+			it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ctl_key));
+			menu.add(it);
+		}
+		
 		mb.add(menu);
 		
 	/*
@@ -177,10 +238,38 @@ public class Main {
 	*/	
 		mb.add(menu);
 		
-		jf.setMenuBar(mb);
+		jf.setJMenuBar(mb);
 		
 		jf.getContentPane().add(ddp);
 		jf.pack();
 		jf.setVisible(true);
+	}
+
+	public void handleAbout(ApplicationEvent ev) {
+		about();
+		ev.setHandled(true);
+	}
+
+	public void handleOpenApplication(ApplicationEvent arg0) {}
+
+	public void handleOpenFile(ApplicationEvent ev) {
+		String f = ev.getFilename();
+		if (f.endsWith(".xml")) {
+			open(ev.getFilename());
+			ev.setHandled(true);
+		}
+	}
+
+	public void handlePreferences(ApplicationEvent arg0) {
+	}
+
+	public void handlePrintFile(ApplicationEvent arg0) {
+	}
+
+	public void handleQuit(ApplicationEvent arg0) {
+		quit();
+	}
+
+	public void handleReopenApplication(ApplicationEvent arg0) {
 	}
 }

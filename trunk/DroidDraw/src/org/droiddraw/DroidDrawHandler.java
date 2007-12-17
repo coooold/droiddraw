@@ -33,7 +33,7 @@ public class DroidDrawHandler extends DefaultHandler {
 	}
 	
 	protected boolean isLayout(String name) {
-		return name.endsWith("Layout") || name.equals("RadioGroup") || name.equals("Ticker") || name.equals("TableRow");
+		return name.endsWith("Layout") || name.equals("RadioGroup") || name.equals("Ticker") || name.equals("TableRow") || name.equals("ScrollView");
 	}
 	
 	@Override
@@ -74,6 +74,9 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if (qName.equals("Ticker")) {
 				l = new Ticker();
+			}
+			else if (qName.equals("ScrollView")) {
+				l = new ScrollView();
 			}
 			if (layoutStack.size() == 0) {
 				l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);

@@ -142,7 +142,7 @@ public class DroidDrawPanel extends JPanel {
 		setupRootLayout(al);
 		ae.setLayout(al);
 		
-		Image img;
+		Image img = null;
 		
 		if ("qvgap".equals(screen)) {
 			ae.setScreenMode(AndroidEditor.ScreenMode.QVGA_PORTRAIT);
@@ -156,7 +156,7 @@ public class DroidDrawPanel extends JPanel {
 			ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_PORTRAIT);
 			img = ImageResources.instance().getImage("emu4");
 		}
-		else {
+		else if ("qvgal".equals(screen)) {
 			img = ImageResources.instance().getImage("emu1");
 		}
 		final Viewer viewer = new Viewer(ae, this, img);
@@ -297,6 +297,7 @@ public class DroidDrawPanel extends JPanel {
 		jp.setLayout(new BorderLayout());
 		
 		JComboBox screen_size = new JComboBox(new String[] {"QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait"});
+		screen_size.setSelectedIndex(3);
 		JPanel top = new JPanel();
 		FlowLayout fl = new FlowLayout();
 		fl.setAlignment(FlowLayout.LEFT);
