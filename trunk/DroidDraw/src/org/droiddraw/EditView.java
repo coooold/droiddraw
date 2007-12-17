@@ -53,6 +53,18 @@ public class EditView extends TextView {
 		return ret;
 	}
 	
+	public int getContentWidth() {
+		if (password != null && password.getBooleanValue()) {
+			String s = "";
+			for (int i=0;i<text.getStringValue().length();i++) 
+				s = s+'¥';
+			return stringLength(s)+pad_x;
+		}
+		else {
+			return super.getContentWidth();
+		}
+	}
+	
 	public void paint(Graphics g) {
 		if (img == null) {
 			g.setColor(Color.white);
@@ -65,7 +77,16 @@ public class EditView extends TextView {
 			g.setColor(Color.darkGray);
 		}
 		g.setFont(f);
-		g.drawString(text.getStringValue(), getX()+pad_x/2, getY()+fontSize+pad_y/2-1);
+		String s;
+		if (password.getBooleanValue()) {
+			s = "";
+			for (int i=0;i<text.getStringValue().length();i++) 
+				s = s+'¥';
+		}
+		else {
+			s = text.getStringValue();
+		}
+		g.drawString(s, getX()+pad_x/2, getY()+fontSize+pad_y/2-1);
 		g.drawLine(getX()+pad_x/2-2, getY()+4, getX()+pad_x/2-2, getY()+fontSize+pad_y/2+1);
 	}
 }
