@@ -92,6 +92,24 @@ public class AndroidEditor {
 		this.pp.setViewer(v);
 	}
 	
+	public void setIdsFromLabels() {
+		setIdsFromLabels(layout);
+	}
+	
+	public void setIdsFromLabels(Layout l) {
+		for (Widget w : l.getWidgets()) {
+			if (w instanceof Layout) {
+				setIdsFromLabels((Layout)w);
+			}
+			else {
+				Property p = w.getPropertyByAttName("android:text");
+				if (p != null) {
+					((AbstractWidget)w).setId("@+id/"+((StringProperty)p).getStringValue());
+				}
+			}
+		}
+	}
+	
 	public void setLayout(Layout l) {
 		if (this.layout != null) {
 			Vector<Widget> widgets = layout.getWidgets();
