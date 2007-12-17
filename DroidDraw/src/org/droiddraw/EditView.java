@@ -46,8 +46,6 @@ public class EditView extends TextView {
 		apply();
 	}
 	
-
-	@SuppressWarnings("unchecked")
 	public Vector<Property> getProperties() {
 		Vector<Property> ret = super.getProperties();
 		if (digits.getStringValue() == null || digits.getStringValue().length() < 1)
