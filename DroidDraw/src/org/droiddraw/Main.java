@@ -1,6 +1,11 @@
 package org.droiddraw;
 
 import java.awt.BorderLayout;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
@@ -220,6 +225,56 @@ public class Main implements ApplicationListener {
 		mb.add(menu);
 		
 		menu = new JMenu("Edit");
+
+		it = new JMenuItem("Cut");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String txt = ddp.getSelectedText();
+				ddp.deleteSelectedText();
+				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+				c.setContents(new StringSelection(txt), null);
+			}
+		});
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ctl_key));
+		menu.add(it);
+		it = new JMenuItem("Copy");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(ddp.getSelectedText()), null);
+			}
+		});
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ctl_key));
+		menu.add(it);
+		it = new JMenuItem("Paste");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+				try {
+					String txt = (String)c.getData(DataFlavor.stringFlavor);
+					if (txt != null) {
+						ddp.insertText(txt);
+					}
+				} 
+				catch (UnsupportedFlavorException ex) {}
+				catch (IOException ex) {}
+			}
+		});
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ctl_key));
+		menu.add(it);
+		
+		menu.addSeparator();
+		it = new JMenuItem("Select All");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ddp.selectAll();
+			}
+		});
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ctl_key));
+		//it.setShortcut(new MenuShortcut(KeyEvent.VK_A, false));
+		menu.add(it);
+	
+		menu.addSeparator();
+		
 		it = new JMenuItem("Set Ids from Labels");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -227,22 +282,8 @@ public class Main implements ApplicationListener {
 			}
 		});
 		menu.add(it);
-		/*
-		it = new MenuItem("Cut");
-		it.setShortcut(new MenuShortcut(KeyEvent.VK_X, false));
-		menu.add(it);
-		it = new MenuItem("Copy");
-		it.setShortcut(new MenuShortcut(KeyEvent.VK_C, false));
-		menu.add(it);
-		it = new MenuItem("Paste");
-		it.setShortcut(new MenuShortcut(KeyEvent.VK_V, false));
-		menu.add(it);
+
 		
-		menu.addSeparator();
-		it = new MenuItem("Select All");
-		it.setShortcut(new MenuShortcut(KeyEvent.VK_A, false));
-		menu.add(it);
-	*/	
 		mb.add(menu);
 		
 		jf.setJMenuBar(mb);
