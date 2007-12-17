@@ -43,6 +43,57 @@ public class DroidDrawPanel extends JPanel {
 	TextArea text;
 	JTextArea jtext;
 	
+	public String getSelectedText() {
+		if (text != null) {
+			return text.getSelectedText();
+		}
+		else {
+			return jtext.getSelectedText();
+		}
+	}
+	
+	public void deleteSelectedText() {
+		if (text != null) {
+			String txt = text.getText();
+			int start = text.getSelectionStart();
+			int end = text.getSelectionEnd();
+			System.out.println(start+":"+end);
+			if (end < txt.length())
+				text.setText(txt.substring(0, start)+txt.substring(end+1));
+			else 
+				text.setText(txt.substring(0, start));
+		}
+		else {
+			String txt = jtext.getText();
+			int start = jtext.getSelectionStart();
+			int end = jtext.getSelectionEnd();
+			if (end < txt.length())
+				jtext.setText(txt.substring(0, start)+txt.substring(end+1));
+			else 
+				jtext.setText(txt.substring(0, start));
+		}
+	}
+	
+	public void insertText(String txt) {
+		int start = (text != null)?text.getSelectionStart():jtext.getSelectionStart();
+		deleteSelectedText();
+		if (text != null) {
+			text.insert(txt, start);
+		}
+		else {
+			jtext.insert(txt, start);
+		}
+	}
+	
+	public void selectAll() {
+		if (text != null) {
+			text.selectAll();
+		}
+		else {
+			jtext.selectAll();
+		}
+	}
+	
 	public Dimension getMinimumSize() {
 		return d;
 	}
