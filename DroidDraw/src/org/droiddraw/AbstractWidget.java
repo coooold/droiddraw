@@ -39,6 +39,10 @@ public abstract class AbstractWidget implements Widget {
 		return id.getStringValue();
 	}
 
+	public void setId(String id) {
+		this.id.setStringValue(id);
+	}
+	
 	public Vector<Property> getProperties() {
 		return props;
 	}

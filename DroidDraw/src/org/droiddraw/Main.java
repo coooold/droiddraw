@@ -219,8 +219,15 @@ public class Main implements ApplicationListener {
 		
 		mb.add(menu);
 		
-	/*
-	 	menu = new Menu("Edit");
+		menu = new JMenu("Edit");
+		it = new JMenuItem("Set Ids from Labels");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				AndroidEditor.instance().setIdsFromLabels();
+			}
+		});
+		menu.add(it);
+		/*
 		it = new MenuItem("Cut");
 		it.setShortcut(new MenuShortcut(KeyEvent.VK_X, false));
 		menu.add(it);
