@@ -1,5 +1,7 @@
 package org.droiddraw;
 
+import org.droiddraw.property.StringProperty;
+
 public class DisplayMetrics {
 	public static float density=1.0f;
 	public static float scaledDensity=1.0f;

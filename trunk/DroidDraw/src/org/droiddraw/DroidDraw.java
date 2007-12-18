@@ -8,6 +8,11 @@ import java.net.URL;
 import javax.swing.JApplet;
 import javax.swing.UIManager;
 
+import org.droiddraw.gui.DroidDrawPanel;
+import org.droiddraw.gui.ImageResources;
+import org.droiddraw.util.StringHandler;
+import org.droiddraw.widget.Layout;
+
 public class DroidDraw extends JApplet {
 	private static final long serialVersionUID = 1L;
 	

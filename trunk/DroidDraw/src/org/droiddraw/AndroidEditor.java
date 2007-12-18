@@ -5,6 +5,14 @@ import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.droiddraw.gui.PropertiesPanel;
+import org.droiddraw.gui.Viewer;
+import org.droiddraw.property.Property;
+import org.droiddraw.property.StringProperty;
+import org.droiddraw.widget.AbstractWidget;
+import org.droiddraw.widget.Layout;
+import org.droiddraw.widget.Widget;
+
 
 public class AndroidEditor {
 	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT};
