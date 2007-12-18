@@ -41,18 +41,21 @@ import javax.swing.JComboBox;
 import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 public class JAutoComboBox extends JComboBox {
-  private class AutoTextFieldEditor extends BasicComboBoxEditor {
+	private static final long serialVersionUID = 1L;
+
+private class AutoTextFieldEditor extends BasicComboBoxEditor {
 
   private JAutoTextField getAutoTextFieldEditor() {
       return (JAutoTextField) editor;
     }
 
-    AutoTextFieldEditor(java.util.List list) {
+    AutoTextFieldEditor(java.util.List<String> list) {
       editor = new JAutoTextField(list, JAutoComboBox.this);
     }
   }
 
-  public JAutoComboBox(java.util.List list) {
+  @SuppressWarnings("serial")
+public JAutoComboBox(java.util.List<String> list) {
     isFired = false;
     autoTextFieldEditor = new AutoTextFieldEditor(list);
     setEditable(true);
@@ -83,11 +86,11 @@ public class JAutoComboBox extends JComboBox {
     autoTextFieldEditor.getAutoTextFieldEditor().setStrict(flag);
   }
 
-  public java.util.List getDataList() {
+  public java.util.List<String> getDataList() {
     return autoTextFieldEditor.getAutoTextFieldEditor().getDataList();
   }
 
-  public void setDataList(java.util.List list) {
+  public void setDataList(java.util.List<String> list) {
     autoTextFieldEditor.getAutoTextFieldEditor().setDataList(list);
     setModel(new DefaultComboBoxModel(list.toArray()));
   }

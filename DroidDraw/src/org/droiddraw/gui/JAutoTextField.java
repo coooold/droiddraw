@@ -41,9 +41,11 @@ import javax.swing.JTextField;
 import javax.swing.text.*;
 
 public class JAutoTextField extends JTextField {
-  class AutoDocument extends PlainDocument {
+	private static final long serialVersionUID = 1L;
+class AutoDocument extends PlainDocument {
+	private static final long serialVersionUID = 1L;
 
-    public void replace(int i, int j, String s, AttributeSet attributeset)
+	public void replace(int i, int j, String s, AttributeSet attributeset)
         throws BadLocationException {
       super.remove(i, j);
       insertString(i, s, attributeset);
@@ -93,7 +95,7 @@ public class JAutoTextField extends JTextField {
 
   }
 
-  public JAutoTextField(List list) {
+  public JAutoTextField(List<String> list) {
     isCaseSensitive = false;
     isStrict = true;
     autoComboBox = null;
@@ -106,7 +108,7 @@ public class JAutoTextField extends JTextField {
     }
   }
 
-  JAutoTextField(List list, JAutoComboBox b) {
+  JAutoTextField(List<String> list, JAutoComboBox b) {
     isCaseSensitive = false;
     isStrict = true;
     autoComboBox = null;
@@ -168,11 +170,11 @@ public class JAutoTextField extends JTextField {
     isStrict = flag;
   }
 
-  public List getDataList() {
+  public List<String> getDataList() {
     return dataList;
   }
 
-  public void setDataList(List list) {
+  public void setDataList(List<String> list) {
     if (list == null) {
       throw new IllegalArgumentException("values can not be null");
     } else {
@@ -181,7 +183,7 @@ public class JAutoTextField extends JTextField {
     }
   }
 
-  private List dataList;
+  private List<String> dataList;
 
   private boolean isCaseSensitive;
 
