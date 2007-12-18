@@ -12,7 +12,7 @@ import org.droiddraw.property.ColorProperty;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
-import org.droiddraw.DisplayMetrics;
+import org.droiddraw.util.DisplayMetrics;
 
 public class TextView extends AbstractWidget {
 	int fontSize = 14;

@@ -6,7 +6,7 @@ import org.droiddraw.AndroidEditor;
 import org.droiddraw.property.ColorProperty;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.StringProperty;
-import org.droiddraw.DisplayMetrics;
+import org.droiddraw.util.DisplayMetrics;
 
 
 public abstract class AbstractWidget implements Widget {
