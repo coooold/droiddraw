@@ -34,6 +34,10 @@ import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.droiddraw.gui.DroidDrawPanel;
+import org.droiddraw.gui.ImageResources;
+import org.droiddraw.util.ColorHandler;
+import org.droiddraw.util.StringHandler;
 import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
