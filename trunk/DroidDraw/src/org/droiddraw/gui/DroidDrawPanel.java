@@ -251,7 +251,10 @@ public class DroidDrawPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				StringWriter sw = new StringWriter();
 				AndroidEditor.instance().generate(new PrintWriter(sw));
-				text.setText(sw.getBuffer().toString());
+				if (text != null)
+					text.setText(sw.getBuffer().toString());
+				else
+					jtext.setText(sw.getBuffer().toString());
 			}
 		});
 

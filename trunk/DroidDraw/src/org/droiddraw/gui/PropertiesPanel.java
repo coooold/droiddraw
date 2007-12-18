@@ -85,7 +85,25 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 						jc = new ColorPanel(((ColorProperty)prop).getColorValue());
 					}
 					else {
-						jc = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 10);
+						if (prop.getAtttributeName().equals("android:layout_width") ||
+							prop.getAtttributeName().equals("android:layout_height")) 
+						{
+							Vector<String> v = new Vector<String>();
+							v.add("");
+							v.add("fill_parent");
+							v.add("wrap_content");
+							//JAutoComboBox jat = new JAutoComboBox(v);
+							JAutoTextField jat = new JAutoTextField(v);
+							jat.setStrict(false);
+							jat.setColumns(10);
+							if (prop.getValue() != null) {
+								jat.setText(prop.getValue().toString());
+							}
+							jc = jat;
+						}
+						else {
+							jc = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 10);
+						}
 					}
 					components.put(prop, jc);
 					JPanel p = new JPanel();
