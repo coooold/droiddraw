@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.Vector;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -13,12 +14,14 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.property.ColorProperty;
 
 public class ColorPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	JButton jb;
 	JTextField jt;
+	JAutoComboBox jac;
 	BufferedImage img;
 	Color c;
 	
@@ -29,23 +32,46 @@ public class ColorPanel extends JPanel {
 		g.setColor(c);
 		g.fillRect(0, 0, img.getWidth(), img.getHeight());
 		jb = new JButton(new ImageIcon(img));
-		jt = new JTextField(ColorProperty.makeColor(c), 6);
+		//jt = new JTextField(ColorProperty.makeColor(c), 6);
+		
+		Vector<String> colors = new Vector<String>();
+		colors.add("");
+		for (String key : AndroidEditor.instance().getColors().keySet()) {
+			colors.add("@drawable/"+key);
+		}
+		jt = new JTextField();
+		jac = new JAutoComboBox(colors);
+		jac.setEditable(true);
+		jac.setStrict(false);
+		jac.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Color c = ColorProperty.parseColor(jac.getSelectedItem().toString());
+				if (c != null) {
+					setColor(c);
+				}
+			}
+		});
 		
 		jb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Color nc = chooseColor();
 				if (nc != null) {
-					Graphics g = img.getGraphics();
-					g.setColor(nc);
-					g.fillRect(0, 0, img.getWidth(), img.getHeight());
-					jb.repaint();
-					jt.setText(ColorProperty.makeColor(nc));
-					c = nc;
+					setColor(c);
+					//jt.setText(ColorProperty.makeColor(nc));
+					jac.setSelectedValue(ColorProperty.makeColor(nc));
 				}
 			}
 		});
-		add(jt);
+		add(jac);
 		add(jb);
+	}
+	
+	public void setColor(Color nc) {
+		Graphics g = img.getGraphics();
+		g.setColor(nc);
+		g.fillRect(0, 0, img.getWidth(), img.getHeight());
+		jb.repaint();
+		c = nc;
 	}
 	
 	public Color getColor() {
@@ -53,7 +79,8 @@ public class ColorPanel extends JPanel {
 	}
 	
 	public String getString() {
-		return jt.getText();
+		//return jt.getText();
+		return jac.getSelectedItem().toString();
 	}
 	
 	static JDialog jd;

@@ -15,16 +15,12 @@ public class ColorProperty extends StringProperty {
 		if (col == null || col.length() == 0) {
 			setColorValue(null);
 		}
-		else if (col.startsWith("@")) {
-			int ix = col.indexOf("/");
-			String name = col.substring(ix+1);
-			if (AndroidEditor.instance().getColors() != null)
-				setColorValue(AndroidEditor.instance().getColors().get(name));
-			super.setStringValue(col);
-		}
 		else {
 			try {
 				setColorValue(parseColor(col));
+				if (col.startsWith("@")) {
+					super.setStringValue(col);
+				}
 			}
 			catch (NumberFormatException ex) {
 				ex.printStackTrace();
@@ -33,6 +29,14 @@ public class ColorProperty extends StringProperty {
 	}
 	
 	public static Color parseColor(String col) {
+		if (col.startsWith("@")) {
+			int ix = col.indexOf("/");
+			String name = col.substring(ix+1);
+			if (AndroidEditor.instance().getColors() != null)
+				return AndroidEditor.instance().getColors().get(name);
+			else
+				return null;
+		}
 		int a, r, g, b;
 		switch (col.length()) {
 		case 4:

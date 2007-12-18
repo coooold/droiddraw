@@ -32,7 +32,7 @@ public class AndroidEditor {
 	private static AndroidEditor inst;
 	
 	private AndroidEditor() {
-		this(ScreenMode.QVGA_LANDSCAPE);
+		this(ScreenMode.HVGA_PORTRAIT);
 	}
 	
 	private AndroidEditor(ScreenMode mode) {
@@ -154,6 +154,8 @@ public class AndroidEditor {
 		if (selected == null) {
 			pp.setProperties(l.getProperties(), l);
 		}
+		l.setPropertyByAttName("android:layout_width", "fill_parent");
+		l.setPropertyByAttName("android:layout_height", "fill_parent");
 	}
 	
 	public Layout getLayout() {
