@@ -35,6 +35,7 @@ public class CheckBox extends CompoundButton {
 			g.drawImage(img, getX(), getY(), null);
 			g.setColor(Color.black);
 		}
+		g.setColor(textColor.getColorValue());
 		g.setFont(f);
 		g.drawString(text.getStringValue(), getX()+22, getY()+fontSize+2);
 	}

@@ -1,4 +1,5 @@
 package org.droiddraw;
+import java.awt.Graphics;
 import java.util.Vector;
 
 
@@ -14,6 +15,7 @@ public abstract class AbstractWidget implements Widget {
 	
 	StringProperty widthProp;
 	StringProperty heightProp;
+	ColorProperty background;
 	
 	public AbstractWidget(String tagName) {
 		this.tagName = tagName;
@@ -21,9 +23,12 @@ public abstract class AbstractWidget implements Widget {
 		this.id = new StringProperty("Id", "id", "@+id/widget"+(widget_num++));
 		this.widthProp = new StringProperty("Width", "android:layout_width", "wrap_content");
 		this.heightProp = new StringProperty("Height", "android:layout_height", "wrap_content");
+		this.background = new ColorProperty("Background Color", "android:background", null);
+		
 		this.props.add(id);
 		this.props.add(widthProp);
 		this.props.add(heightProp);
+		this.props.add(background);
 		this.parent = null;
 	}
 	
@@ -162,6 +167,13 @@ public abstract class AbstractWidget implements Widget {
 	
 	public int getBaseline() {
 		return baseline;
+	}
+	
+	public void drawBackground(Graphics g) {
+		if (background.getColorValue() != null) {
+			g.setColor(background.getColorValue());
+			g.fillRect(getX(), getY(), getWidth(), getHeight());
+		}
 	}
 	
 	protected abstract int getContentWidth();

@@ -12,6 +12,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		super(tagName);
 		this.widgets = new Vector<Widget>();
 		addProperty(new StringProperty("xmlns", "xmlns:android", "http://schemas.android.com/apk/res/android", false));
+		background.setColorValue(Color.white);
 		apply();
 	}
 	
@@ -51,10 +52,12 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.translate(getX(), getY());
 		
-		g.setColor(Color.white);
+		g.setColor(background.getColorValue());
 		g.fillRect(0, 0, getWidth(), getHeight());
-		g.setColor(Color.lightGray);
-		g.drawString(tagName, 2, 15);
+		if (widgets.size() == 0) {
+			g.setColor(Color.lightGray);
+			g.drawString(tagName, 2, 15);
+		}
 		g.drawRect(0, 0, getWidth(), getHeight());
 		for (Widget w : widgets) {
 			w.paint(g);

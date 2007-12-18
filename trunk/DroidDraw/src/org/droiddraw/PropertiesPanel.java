@@ -1,6 +1,7 @@
 package org.droiddraw;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -22,6 +23,7 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 
 	Vector<Property> properties;
 	Hashtable<Property, JComponent> components;
+	Hashtable<ColorProperty, Color> colorTable;
 	Viewer viewer;
 	Widget w;
 	JPanel items;
@@ -33,6 +35,7 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 
 	public PropertiesPanel(Vector<Property> properties, Widget w) {
 		this.components = new Hashtable<Property, JComponent>();
+		this.colorTable = new Hashtable<ColorProperty, Color>();
 		this.w =w;
 
 		setProperties(properties, w);
@@ -69,6 +72,9 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 						JComboBox jcb = new JComboBox(((SelectProperty)prop).getOptions());
 						jcb.setSelectedIndex(((SelectProperty)prop).getSelectedIndex());
 						jc = jcb;
+					}
+					else if (prop instanceof ColorProperty) {
+						jc = new ColorPanel(((ColorProperty)prop).getColorValue());
 					}
 					else {
 						jc = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 10);
@@ -110,6 +116,11 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 						JComboBox jcb = (JComboBox)components.get(prop);
 						((SelectProperty)prop).setSelectedIndex(jcb.getSelectedIndex());
 					}
+					else if (prop instanceof ColorProperty) {
+						ColorPanel cp = (ColorPanel)components.get(prop);
+						//((ColorProperty)prop).setColorValue(cp.getColor());
+						((ColorProperty)prop).setStringValue(cp.getString());
+					}
 					else {
 						JTextField jtf = (JTextField)components.get(prop);
 						((StringProperty)prop).setStringValue(jtf.getText());
@@ -122,7 +133,8 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 			((Layout)w).repositionAllWidgets();
 			w.apply();
 		}
-		w.getParent().positionWidget(w);
+		if (w.getParent() != null)
+			w.getParent().positionWidget(w);
 		
 		if (viewer != null)
 			viewer.repaint();

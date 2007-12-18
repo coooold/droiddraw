@@ -1,5 +1,6 @@
 package org.droiddraw;
 
+import java.awt.Color;
 import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -15,6 +16,7 @@ public class AndroidEditor {
 	int sx, sy;
 	PropertiesPanel pp;
 	Hashtable<String, String> strings;
+	Hashtable<String, Color> colors;
 	
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
@@ -28,6 +30,18 @@ public class AndroidEditor {
 	private AndroidEditor(ScreenMode mode) {
 		setScreenMode(mode);
 		this.pp = new PropertiesPanel();
+		this.colors = new Hashtable<String, Color>();
+		colors.put("black", Color.black);
+		colors.put("darkgray", Color.darkGray);
+		colors.put("gray", Color.gray);
+		colors.put("lightgray", Color.lightGray);
+		colors.put("red", Color.red);
+		colors.put("green", Color.green);
+		colors.put("blue",Color.blue);
+		colors.put("yellow", Color.yellow);
+		colors.put("cyan", Color.cyan);
+		colors.put("magenta", Color.magenta);
+		colors.put("white", Color.white);
 	}
 
 	public PropertiesPanel getPropertiesPanel() {
@@ -40,6 +54,16 @@ public class AndroidEditor {
 
 	public void setStrings(Hashtable<String, String> strings) {
 		this.strings = strings;
+	}
+
+	public Hashtable<String, Color> getColors() {
+		return colors;
+	}
+
+	public void setColors(Hashtable<String, Color> colors) {
+		for (String key : colors.keySet()) {
+			colors.put(key, colors.get(key));
+		}
 	}
 
 	public static AndroidEditor instance() {
