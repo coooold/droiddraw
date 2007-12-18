@@ -372,7 +372,8 @@ public class DroidDrawPanel extends JPanel {
 		
 		JPanel out = new JPanel();
 		out.setLayout(new BorderLayout());
-		out.add(text!=null?text:jtext, BorderLayout.CENTER);JPanel gp = new JPanel();
+		out.add(text!=null?text:new JScrollPane(jtext), BorderLayout.CENTER);
+		JPanel gp = new JPanel();
 		gp.add(gen);
 		gp.add(load);
 		out.add(gp, BorderLayout.SOUTH);
@@ -414,7 +415,9 @@ public class DroidDrawPanel extends JPanel {
 		mp.add(new WidgetPanel(new TimePicker()));
 		wp.add(mp);
 		//wp.setSize(wp.getWidth(), 150);
-		JScrollPane jswp = new JScrollPane(wp);
+		JPanel ppp = new JPanel();
+		ppp.add(wp);
+		JScrollPane jswp = new JScrollPane(ppp);
 		//jswp.setPreferredSize(new Dimension(wp.getWidth(), 80));
 		
 		JPanel lp = new JPanel();

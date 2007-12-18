@@ -63,8 +63,13 @@ public class RelativeLayout extends AbstractLayout {
 			return true;
 		}
 		else {
-			return isRelatedTo(rels.get(0).getRelatedTo(), to) ||
-			isRelatedTo(rels.get(1).getRelatedTo(), to);
+			boolean r1 = false;
+			boolean r2 = false;
+			if (rels.size() > 0) 
+				r1 = isRelatedTo(rels.get(0).getRelatedTo(), to);
+			if (rels.size() > 1)
+				r2 = isRelatedTo(rels.get(1).getRelatedTo(), to);
+			return r1 || r2;
 		}
 	}
 

@@ -14,7 +14,7 @@ public class TextView extends AbstractWidget {
 	StringProperty fontSz;
 	SelectProperty face;
 	SelectProperty style;
-	
+	ColorProperty textColor;
 	
 	int pad_x = 6;
 	int pad_y = 4;
@@ -24,7 +24,7 @@ public class TextView extends AbstractWidget {
 	BufferedImage bg;
 	
 	protected static final String[] propertyNames = 
-		new String[] {"android:textSize", "android:textStyle", "android:typeface"};
+		new String[] {"android:textSize", "android:textStyle", "android:typeface", "android:textColor"};
 	
 	public TextView(String str) {
 		super("TextView");
@@ -33,11 +33,13 @@ public class TextView extends AbstractWidget {
 		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"sp");
 		face = new SelectProperty("Font Face", "android:typeface", new String[] {"normal","sans","serif","monospace"}, 0);
 		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"normal", "bold", "italic", "bold_italic"}, 0);
+		textColor = new ColorProperty("Text Color", "android:textColor", Color.black);
 		
 		props.add(text);
 		props.add(fontSz);
 		props.add(face);
 		props.add(style);
+		props.add(textColor);
 		buildFont();
 
 		bg = new BufferedImage(1,1,BufferedImage.TYPE_BYTE_GRAY);
@@ -62,7 +64,7 @@ public class TextView extends AbstractWidget {
 	}
 
 	public void apply() {
-		if (fontSz.getStringValue() != null) {
+		if (fontSz.getStringValue() != null && fontSz.getStringValue().length() > 0) {
 			fontSize = (DisplayMetrics.readSize(fontSz));
 		}
 		buildFont();
@@ -85,8 +87,12 @@ public class TextView extends AbstractWidget {
 	}
 	
 	public void paint(Graphics g) {
+		drawBackground(g);
 		if (text.getStringValue() != null) {
-			g.setColor(Color.black);
+			Color c = textColor.getColorValue();
+			if (c == null)
+				c = Color.black;
+			g.setColor(c);
 			g.setFont(f);
 			g.drawString(text.getStringValue(), getX()+pad_x/2, getY()+fontSize+pad_y/2);
 		}

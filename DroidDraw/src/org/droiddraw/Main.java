@@ -1,6 +1,7 @@
 package org.droiddraw;
 
 import java.awt.BorderLayout;
+import java.awt.FileDialog;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -31,18 +32,22 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
 import org.simplericity.macify.eawt.DefaultApplication;
+import org.xml.sax.SAXException;
 
 
 public class Main implements ApplicationListener {
 	static File saveFile = null;
 	static JFrame jf;
 	static DroidDrawPanel ddp;
-	
+	static JFileChooser jfc = null;
+	static FileDialog fd = null;
+	static boolean osx;
 	
 	protected static void doMacOSXIntegration() {
 		Application a = new DefaultApplication();
@@ -78,7 +83,24 @@ public class Main implements ApplicationListener {
 		});
 	}
 	
-	protected static void doSave(DroidDrawPanel ddp, JFileChooser jfc, JFrame jf) {
+	protected static File doOpen() {
+		if (!osx) {
+			int res = jfc.showOpenDialog(ddp);
+			if (res == JFileChooser.APPROVE_OPTION) {
+				return jfc.getSelectedFile();
+			}
+		}
+		else {
+			fd.setMode(FileDialog.LOAD);
+			fd.setVisible(true);
+			if (fd.getDirectory() != null && fd.getFile() != null) {
+				return new File(fd.getDirectory()+"/"+fd.getFile());
+			}
+		}
+		return null;
+	}
+	
+	protected static void doSave() {
 		int res = jfc.showSaveDialog(ddp);
 		if (res == JFileChooser.APPROVE_OPTION) {
 			File f = jfc.getSelectedFile();
@@ -121,7 +143,7 @@ public class Main implements ApplicationListener {
 		}
 		// END
 		
-		boolean osx = (System.getProperty("os.name").toLowerCase().contains("mac os x"));
+		osx = (System.getProperty("os.name").toLowerCase().contains("mac os x"));
 		if (osx) {
 			doMacOSXIntegration();
 		}
@@ -151,7 +173,9 @@ public class Main implements ApplicationListener {
 		jf = new JFrame("DroidDraw");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		final DroidDrawPanel ddp = new DroidDrawPanel("hvgap", true);
+		ddp = new DroidDrawPanel("hvgap", false);
+		fd = new FileDialog(jf);
+		jfc = new JFileChooser();
 		
 		final FileFilter ff = new FileFilter() {
 			@Override
@@ -164,10 +188,7 @@ public class Main implements ApplicationListener {
 				return "Android Layout file (.xml)";
 			} 
 		};
-
-		final JFileChooser jfc = new JFileChooser();
 		jfc.setFileFilter(ff);
-
 		
 		int ctl_key = InputEvent.CTRL_MASK;
 		if (osx)
@@ -179,10 +200,7 @@ public class Main implements ApplicationListener {
 		it = new JMenuItem("Open");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) { 
-				int res = jfc.showOpenDialog(ddp);
-				if (res == JFileChooser.APPROVE_OPTION) {
-					open(jfc.getSelectedFile());
-				}
+				open(doOpen());
 			}
 		});
 		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ctl_key));
@@ -192,7 +210,7 @@ public class Main implements ApplicationListener {
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) { 
 				if (saveFile == null) {
-					doSave(ddp, jfc, jf);
+					doSave();
 				}
 				else {
 					ddp.save(saveFile);
@@ -205,7 +223,7 @@ public class Main implements ApplicationListener {
 		it = new JMenuItem("Save As...");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				doSave(ddp, jfc, jf);
+				doSave();
 			}
 		});
 		menu.add(it);
@@ -282,10 +300,59 @@ public class Main implements ApplicationListener {
 			}
 		});
 		menu.add(it);
-
-		
 		mb.add(menu);
 		
+		menu = new JMenu("Project");
+		it = new JMenuItem("Load strings");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				File f = doOpen();
+				if (f != null) {
+					try { 
+						AndroidEditor.instance().setStrings(StringHandler.load(new FileInputStream(f)));
+					}
+					catch (IOException ex) {
+						ddp.error(ex.getMessage());
+						ex.printStackTrace();
+					}
+					catch (SAXException ex) {
+						ddp.error(ex.getMessage());
+						ex.printStackTrace();
+					}
+					catch (ParserConfigurationException ex) {
+						ddp.error(ex.getMessage());
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
+		menu.add(it);
+		
+		it = new JMenuItem("Load colors");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				File f = doOpen();
+				if (f != null) {
+					try { 
+						AndroidEditor.instance().setColors(ColorHandler.load(new FileInputStream(f)));
+					}
+					catch (IOException ex) {
+						ddp.error(ex.getMessage());
+						ex.printStackTrace();
+					}
+					catch (SAXException ex) {
+						ddp.error(ex.getMessage());
+						ex.printStackTrace();
+					}
+					catch (ParserConfigurationException ex) {
+						ddp.error(ex.getMessage());
+						ex.printStackTrace();
+					}
+				}
+			}
+		});
+		menu.add(it);
+		mb.add(menu);
 		jf.setJMenuBar(mb);
 		
 		jf.getContentPane().add(ddp);
@@ -301,6 +368,7 @@ public class Main implements ApplicationListener {
 	public void handleOpenApplication(ApplicationEvent arg0) {}
 
 	public void handleOpenFile(ApplicationEvent ev) {
+		System.out.println("foo");
 		String f = ev.getFilename();
 		if (f.endsWith(".xml")) {
 			open(ev.getFilename());

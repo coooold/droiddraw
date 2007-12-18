@@ -47,6 +47,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		this.selectButton = new JToggleButton("Select");
 		this.addButton.addActionListener(this);
 		this.selectButton.addActionListener(this);
+		this.select = true;
 		bg = new ButtonGroup();
 		bg.add(selectButton);
 		bg.add(addButton);
