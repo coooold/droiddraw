@@ -10,7 +10,7 @@ public class LinearLayout extends AbstractLayout {
 	SelectProperty orientation;
 	public static int VERTICAL_PADDING = 2;
 	public static int HORIZONTAL_PADDING = 2;
-	
+
 	int share;
 	private static final String[] OPTIONS = new String[] {"left", "right","center_horizontal", "top", "bottom", "center_vertical"};
 
@@ -56,27 +56,34 @@ public class LinearLayout extends AbstractLayout {
 
 	@Override
 	public void repositionAllWidgets() {
-		boolean vertical = "vertical".equals(orientation.getStringValue());
+		for (Widget w : widgets) {
+			w.apply();
+		}
+
+		repositionAllWidgetsInternal();
+	}
+
+	protected void repositionAllWidgetsInternal() {
 		int y = 0;
 		int x = 0;
 		Vector<Widget> with_weight = new Vector<Widget>();
 		int max_base = 0;
-		
+
+		boolean vertical = "vertical".equals(orientation.getStringValue());
 		for (Widget w : widgets) {
-			w.apply();
 			if (!vertical) {
 				if (! (w instanceof Layout) && w.getBaseline() > max_base) {
 					max_base = w.getBaseline();
 				}
 			}
-			
+
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
 			if (prop != null && "1".equals(prop.getStringValue()))
 				with_weight.add(w);
 			if (vertical)
-				y += w.getHeight();
+				y +=w.getPadding(TOP)+w.getHeight()+w.getPadding(BOTTOM);
 			else
-				x += w.getWidth();
+				x += w.getPadding(LEFT)+w.getWidth()+w.getPadding(RIGHT);
 		}
 		if (with_weight.size() > 0) {
 			if (vertical) {
@@ -95,43 +102,51 @@ public class LinearLayout extends AbstractLayout {
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_gravity");
 			if (prop != null)
 				gravity = prop.getStringValue();
-			
+
 			if (vertical) {
+				int width_w_pad = (w.getPadding(Widget.LEFT)+w.getWidth()+w.getPadding(Widget.RIGHT));
 				if ("right".equals(gravity))
-					x = getWidth()-w.getWidth();
+					x = getWidth()-width_w_pad;
 				else if ("center_horizontal".equals(gravity) || "center".equals(gravity)) 
-					x = getWidth()/2-w.getWidth()/2;
+					x = getWidth()/2-width_w_pad/2;
 				else
-					x = 0;
+					x = w.getPadding(Widget.LEFT);
 			}
 			else {
+				int height_w_pad = (w.getPadding(Widget.TOP)+w.getHeight()+w.getPadding(Widget.BOTTOM));
 				if ("bottom".equals(gravity))
-					y = getHeight()-w.getHeight();
+					y = getHeight()-height_w_pad;
 				else if ("center_vertical".equals(gravity) || "center".equals(gravity))
-					y = (getHeight()-w.getHeight())/2;
+					y = (getHeight()-height_w_pad)/2;
 				else  {
 					if (w instanceof Layout) {
-						y = 0;
+						y = w.getPadding(Widget.TOP);
 					}
 					else {
-						y = max_base-w.getBaseline();
+						y = max_base-w.getBaseline()+w.getPadding(TOP);
 					}
 				}
 			}
-			w.setPosition(x, y);
-			if (vertical) {			
-				y+=w.getHeight();
+			if (vertical) {
+				y+=w.getPadding(Widget.TOP);
 			}
 			else {
-				x+=w.getWidth();
+				x+=w.getPadding(Widget.LEFT);
+			}
+			w.setPosition(x, y);
+			if (vertical) {			
+				y+=w.getHeight()+w.getPadding(Widget.BOTTOM);
+			}
+			else {
+				x+=w.getWidth()+w.getPadding(Widget.RIGHT);
 			}	
 		}
 	}
-	
+
 	@Override
 	public void resizeForRendering() {
 		boolean vertical = "vertical".equals(orientation.getStringValue());
-		
+
 		for (Widget w : widgets) {
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
 			boolean weight = (prop != null && "1".equals(prop.getStringValue()));

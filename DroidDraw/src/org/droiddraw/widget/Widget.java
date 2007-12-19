@@ -5,6 +5,11 @@ import java.util.Vector;
 import org.droiddraw.property.Property;
 
 public interface Widget {
+	public static final int TOP = 0;
+	public static final int LEFT = 1;
+	public static final int BOTTOM = 2;
+	public static final int RIGHT = 3;
+	
 	public boolean clickedOn(int x, int y);
 	public int getX();
 	public int getY();
@@ -26,4 +31,7 @@ public interface Widget {
 	public Layout getParent();
 	public void setParent(Layout w);
 	public int getBaseline();
+	public int getPadding(int which);
+	public void setPadding(int pad);
+	public void setPadding(int pad, int which);
 }

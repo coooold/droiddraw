@@ -54,6 +54,7 @@ public class DroidDrawHandler extends DefaultHandler {
 		all_props.add("android:layout_width");
 		all_props.add("android:layout_height");
 		all_props.add("android:background");
+		all_props.add("android:padding");
 		all_props.add("id");
 		layout_props = new Stack<Vector<String> >();
 		layoutStack = new Stack<Layout>();
