@@ -209,10 +209,10 @@ public class DroidDrawPanel extends JPanel {
 		AndroidEditor ae = AndroidEditor.instance();
 		
 		if (applet) {
-			text = new TextArea(5,50);
+			text = new TextArea(10,50);
 		}
 		else {
-			jtext = new JTextArea(5,50);
+			jtext = new JTextArea(10,50);
 		}
 		
 		AbsoluteLayout al = new AbsoluteLayout();
@@ -447,7 +447,7 @@ public class DroidDrawPanel extends JPanel {
 		JPanel ppp = new JPanel();
 		ppp.add(wp);
 		JScrollPane jswp = new JScrollPane(ppp);
-		//jswp.setPreferredSize(new Dimension(wp.getWidth(), 80));
+		jswp.setMinimumSize(new Dimension(wp.getWidth(), 160));
 		
 		JPanel lp = new JPanel();
 		lp.setLayout(new GridLayout(0,1));
