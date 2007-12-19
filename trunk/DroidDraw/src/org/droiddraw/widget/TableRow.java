@@ -21,12 +21,10 @@ public class TableRow extends LinearLayout {
 	
 	public void setWidths(Vector<Integer> widths) {
 		int ix = 0;
-		int width = 0;
 		for (Widget w : widgets) {
-			w.setPosition(width, w.getY());
-			w.setSizeInternal(widths.get(ix), w.getHeight());
-			width += widths.get(ix);
+			w.setSizeInternal(widths.get(ix)-w.getPadding(LEFT)-w.getPadding(RIGHT), w.getHeight());
 			ix++;
 		}
+		repositionAllWidgetsInternal();
 	}
 }

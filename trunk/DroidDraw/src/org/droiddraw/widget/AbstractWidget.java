@@ -11,6 +11,8 @@ import org.droiddraw.util.DisplayMetrics;
 
 public abstract class AbstractWidget implements Widget {
 	int x, y;
+	int[] padding;
+	
 	int baseline;
 	int width, height;
 	String tagName;
@@ -21,6 +23,8 @@ public abstract class AbstractWidget implements Widget {
 	
 	StringProperty widthProp;
 	StringProperty heightProp;
+	StringProperty pad;
+	
 	ColorProperty background;
 	
 	public AbstractWidget(String tagName) {
@@ -30,11 +34,15 @@ public abstract class AbstractWidget implements Widget {
 		this.widthProp = new StringProperty("Width", "android:layout_width", "wrap_content");
 		this.heightProp = new StringProperty("Height", "android:layout_height", "wrap_content");
 		this.background = new ColorProperty("Background Color", "android:background", null);
+		this.pad = new StringProperty("Padding", "android:padding", "0px");
+		this.padding = new int[4];
 		
 		this.props.add(id);
 		this.props.add(widthProp);
 		this.props.add(heightProp);
 		this.props.add(background);
+		this.props.add(pad);
+		
 		this.parent = null;
 	}
 	
@@ -150,9 +158,13 @@ public abstract class AbstractWidget implements Widget {
 			h = getContentHeight();
 		
 		if (widthProp.getStringValue().equals("fill_parent")) 
-			w = getParent()!=null?getParent().getWidth():AndroidEditor.instance().getScreenX()-AndroidEditor.OFFSET_X;
+			w = getParent()!=null?getParent().getWidth()-padding[LEFT]-padding[RIGHT]:AndroidEditor.instance().getScreenX()-AndroidEditor.OFFSET_X;
 		if (heightProp.getStringValue().equals("fill_parent"))
-			h = getParent()!=null?getParent().getHeight():AndroidEditor.instance().getScreenY()-AndroidEditor.OFFSET_Y;
+			h = getParent()!=null?getParent().getHeight()-padding[TOP]-padding[BOTTOM]:AndroidEditor.instance().getScreenY()-AndroidEditor.OFFSET_Y;
+			
+		try {
+			setPadding(DisplayMetrics.readSize(pad.getStringValue()));	
+		} catch (NumberFormatException ex) {}
 		
 		width = w;
 		height = h;
@@ -180,6 +192,21 @@ public abstract class AbstractWidget implements Widget {
 			g.setColor(background.getColorValue());
 			g.fillRect(getX(), getY(), getWidth(), getHeight());
 		}
+	}
+
+	public void setPadding(int pad) {
+		setPadding(pad, TOP);
+		setPadding(pad, LEFT);
+		setPadding(pad, BOTTOM);
+		setPadding(pad, RIGHT);
+	}
+	
+	public void setPadding(int pad, int which) {
+		padding[which] = pad;
+	}
+	
+	public int getPadding(int which) {
+		return padding[which];
 	}
 	
 	protected abstract int getContentWidth();

@@ -29,7 +29,7 @@ public class TableLayout extends LinearLayout {
 				TableRow row = (TableRow)wt;
 				for (Widget w : row.getWidgets()) {
 					w.apply();
-					int wd = w.getWidth();
+					int wd = w.getPadding(Widget.LEFT)+w.getWidth()+w.getPadding(Widget.RIGHT);
 					if (ix >= max_widths.size()) {
 						max_widths.add(wd);
 					}
@@ -75,7 +75,8 @@ public class TableLayout extends LinearLayout {
 				((TableRow)w).setWidths(max_widths);
 			}
 			else {
-				w.setSizeInternal(getWidth(), w.getHeight());
+				w.setSizeInternal(getWidth()-w.getPadding(Widget.LEFT)-w.getPadding(Widget.RIGHT),
+								  w.getHeight());
 			}
 		}
 	}
