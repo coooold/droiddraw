@@ -56,8 +56,9 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		
 		g.setColor(background.getColorValue());
 		g.fillRect(0, 0, getWidth(), getHeight());
+
+		g.setColor(Color.lightGray);
 		if (widgets.size() == 0) {
-			g.setColor(Color.lightGray);
 			g.drawString(tagName, 2, 15);
 		}
 		g.drawRect(0, 0, getWidth(), getHeight());

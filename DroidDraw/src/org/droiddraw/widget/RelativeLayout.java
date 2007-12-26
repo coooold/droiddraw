@@ -11,6 +11,8 @@ import org.droiddraw.property.StringProperty;
 
 public class RelativeLayout extends AbstractLayout {
 	Hashtable<Widget, Vector<Relation>> relations;
+	boolean repositioning = false;
+	
 	public static final int PADDING = 4;
 
 	public static final String[] propNames = 
@@ -385,10 +387,14 @@ public class RelativeLayout extends AbstractLayout {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void repositionAllWidgets() {
-		Vector<Widget> ws = (Vector<Widget>)widgets.clone();
-		widgets.clear();
-		for (Widget w : ws) {
-			addWidget(w);
+		if (!repositioning) {
+			repositioning = true;
+			Vector<Widget> ws = (Vector<Widget>)widgets.clone();
+			widgets.clear();
+			for (Widget w : ws) {
+				addWidget(w);
+			}
+			repositioning = false;
 		}
 	}
 

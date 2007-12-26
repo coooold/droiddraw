@@ -111,6 +111,10 @@ public class DroidDrawPanel extends JPanel {
 		}
 	}
 	
+	public Dimension getMinimumSize() {
+		return d;
+	}
+
 	public void selectAll() {
 		if (text != null) {
 			text.selectAll();
@@ -118,10 +122,6 @@ public class DroidDrawPanel extends JPanel {
 		else {
 			jtext.selectAll();
 		}
-	}
-	
-	public Dimension getMinimumSize() {
-		return d;
 	}
 	
 	public Dimension getPreferredSize() {
