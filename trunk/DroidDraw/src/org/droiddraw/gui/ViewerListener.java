@@ -21,6 +21,7 @@ import org.droiddraw.widget.Button;
 import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
+import org.droiddraw.widget.FrameLayout;
 import org.droiddraw.widget.ImageButton;
 import org.droiddraw.widget.ImageView;
 import org.droiddraw.widget.Layout;
@@ -30,6 +31,7 @@ import org.droiddraw.widget.ProgressBar;
 import org.droiddraw.widget.RadioButton;
 import org.droiddraw.widget.RadioGroup;
 import org.droiddraw.widget.RelativeLayout;
+import org.droiddraw.widget.ScrollView;
 import org.droiddraw.widget.Spinner;
 import org.droiddraw.widget.TableLayout;
 import org.droiddraw.widget.TableRow;
@@ -138,6 +140,10 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return new TableRow();
 		else if (str.equals("TableLayout"))
 			return new TableLayout();
+		else if (str.equals("FrameLayout"))
+			return new FrameLayout();
+		else if (str.equals("ScrollView"))
+			return new ScrollView();
 		else
 			return null;
 	}
