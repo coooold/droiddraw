@@ -7,6 +7,7 @@ import java.util.Vector;
 
 import javax.swing.JPanel;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.PropertiesPanel;
 import org.droiddraw.property.ColorProperty;
 import org.droiddraw.property.Property;
@@ -86,11 +87,32 @@ public class TextView extends AbstractWidget {
 	}
 	
 	protected int getContentWidth() {
-		return stringLength(text.getStringValue())+pad_x;
+		int l = stringLength(text.getStringValue())+pad_x;
+		if (l > AndroidEditor.instance().getScreenX())
+			l = AndroidEditor.instance().getScreenX()-getX();
+		return l;
+	}
+	
+	protected int getSplit(String txt) {
+		int ix = 1;
+		int w = AndroidEditor.instance().getScreenX();
+		while (ix <=txt.length() && stringLength(txt.substring(0, ix)) < w) {
+			ix++;
+		}
+		return ix-1;
 	}
 	
 	protected int getContentHeight() {
-		return fontSize+pad_y;
+		int h = fontSize+pad_y;
+		String txt = text.getStringValue();
+		int l = stringLength(txt)+pad_x;
+		while (l > AndroidEditor.instance().getScreenX()) {
+			int split = getSplit(txt);
+			txt = txt.substring(split);
+			l = stringLength(txt)+pad_x;
+			h += fontSize+1;
+		}
+		return h;
 	}
 	
 	public void paint(Graphics g) {
@@ -101,7 +123,20 @@ public class TextView extends AbstractWidget {
 				c = Color.black;
 			g.setColor(c);
 			g.setFont(f);
-			g.drawString(text.getStringValue(), getX()+pad_x/2, getY()+fontSize+pad_y/2);
+			
+			int h = fontSize+pad_y/2;
+			String txt = text.getStringValue();
+			int l = stringLength(txt)+pad_x;
+			int w = AndroidEditor.instance().getScreenX();
+			while (l >= w && h < getHeight()) {
+				int split = getSplit(txt);
+				g.drawString(txt.substring(0, split), getX()+pad_x/2, getY()+h);
+				txt = txt.substring(split);
+				l = stringLength(txt)+pad_x;
+				h += fontSize+1;
+			}
+			if (h < getHeight())
+				g.drawString(txt.substring(0, getSplit(txt)), getX()+pad_x/2, getY()+h);
 		}
 	}
 	

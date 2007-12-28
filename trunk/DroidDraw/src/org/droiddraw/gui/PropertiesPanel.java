@@ -140,7 +140,10 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 				else if (prop instanceof StringProperty) {
 					if (prop instanceof SelectProperty) {
 						JComboBox jcb = (JComboBox)components.get(prop);
-						((SelectProperty)prop).setSelectedIndex(jcb.getSelectedIndex());
+						if (jcb == null)
+							System.err.println("Couldn't find select for: "+prop.getAtttributeName());
+						else
+							((SelectProperty)prop).setSelectedIndex(jcb.getSelectedIndex());
 					}
 					else if (prop instanceof ColorProperty) {
 						ColorPanel cp = (ColorPanel)components.get(prop);
@@ -149,7 +152,10 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 					}
 					else {
 						JTextField jtf = (JTextField)components.get(prop);
-						((StringProperty)prop).setStringValue(jtf.getText());
+						if (jtf == null)
+							System.err.println("Couldn't find text for: "+prop.getAtttributeName());
+						else
+							((StringProperty)prop).setStringValue(jtf.getText());
 					}
 				}
 			}
