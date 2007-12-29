@@ -10,6 +10,7 @@ import org.droiddraw.gui.Viewer;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.StringProperty;
 import org.droiddraw.widget.AbstractWidget;
+import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
 
@@ -247,6 +248,9 @@ public class AndroidEditor {
 			((Layout)w.getParent()).addOutputProperties(w, props);
 		for (Property prop : props) {
 			if (prop.getValue() != null && prop.getValue().toString().length() > 0) {
+				// Work around an android bug... *sigh*
+				if (w instanceof CheckBox && prop.getAtttributeName().equals("android:padding"))
+					continue;
 				pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
 			}
 		}
