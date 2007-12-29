@@ -50,12 +50,10 @@ public class LinearLayout extends AbstractLayout {
 	@Override
 	public void positionWidget(Widget w) {
 		widgets.remove(w);
-		boolean repo = false;
 		if (vertical) {
 			int y = w.getY();
 			if (y >= 0) {
 				int ix;
-				int h = 0;
 				for (ix = 0;ix < widgets.size() && y > widgets.get(ix).getY(); ix++);
 				widgets.add(ix, w);
 			}
