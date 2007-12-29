@@ -98,13 +98,14 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	}
 	
 
-	@Override
+	/*
 	public void setPosition(int x, int y) {
 		super.setPosition(x, y);
-		repositionAllWidgets();
-		apply();
+		//repositionAllWidgets();
+		//apply();
 	}
-
+	*/
+	
 	public abstract void positionWidget(Widget w);
 	public abstract void repositionAllWidgets();
 	protected abstract void addEditableProperties(Widget w);

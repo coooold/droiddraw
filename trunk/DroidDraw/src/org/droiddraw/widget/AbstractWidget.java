@@ -172,10 +172,10 @@ public abstract class AbstractWidget implements Widget {
 	
 	public void apply() {
 		readWidthHeight();
-		if (getParent() != null) {
-			getParent().apply();
-		}
 		baseline = getHeight()/2;
+		//if (getParent() != null) {
+		//	getParent().repositionAllWidgets();
+		//}
 	}
 	
 	public void setSizeInternal(int w, int h) {

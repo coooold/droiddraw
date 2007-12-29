@@ -8,6 +8,9 @@ import org.droiddraw.property.StringProperty;
 
 public class LinearLayout extends AbstractLayout {
 	SelectProperty orientation;
+	boolean vertical;
+	int max_base;
+	
 	public static int VERTICAL_PADDING = 2;
 	public static int HORIZONTAL_PADDING = 2;
 
@@ -24,15 +27,35 @@ public class LinearLayout extends AbstractLayout {
 		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 1);
 		addProperty(orientation);
 	}
+	
+	@Override
+	public void apply() {
+		super.apply();
+		if (orientation != null)
+			vertical = "vertical".equals(orientation.getStringValue());
+	}
+
+	
+	
+	@Override
+	public void addWidget(Widget w) {
+		if (!vertical) {
+			if (! (w instanceof Layout) && w.getBaseline() > max_base) {
+				max_base = w.getBaseline();
+			}
+		}
+		super.addWidget(w);
+	}
 
 	@Override
 	public void positionWidget(Widget w) {
 		widgets.remove(w);
-		boolean vertical = "vertical".equals(orientation.getStringValue());
+		boolean repo = false;
 		if (vertical) {
 			int y = w.getY();
 			if (y >= 0) {
 				int ix;
+				int h = 0;
 				for (ix = 0;ix < widgets.size() && y > widgets.get(ix).getY(); ix++);
 				widgets.add(ix, w);
 			}
@@ -54,12 +77,12 @@ public class LinearLayout extends AbstractLayout {
 		repositionAllWidgets();
 	}
 
+	
 	@Override
 	public void repositionAllWidgets() {
 		for (Widget w : widgets) {
 			w.apply();
 		}
-
 		repositionAllWidgetsInternal();
 	}
 
@@ -69,7 +92,6 @@ public class LinearLayout extends AbstractLayout {
 		Vector<Widget> with_weight = new Vector<Widget>();
 		int max_base = 0;
 
-		boolean vertical = "vertical".equals(orientation.getStringValue());
 		for (Widget w : widgets) {
 			if (!vertical) {
 				if (! (w instanceof Layout) && w.getBaseline() > max_base) {
@@ -148,6 +170,9 @@ public class LinearLayout extends AbstractLayout {
 		boolean vertical = "vertical".equals(orientation.getStringValue());
 
 		for (Widget w : widgets) {
+			if (w instanceof Layout) {
+				((Layout)w).resizeForRendering();
+			}
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
 			boolean weight = (prop != null && "1".equals(prop.getStringValue()));
 			if (weight) {
