@@ -38,8 +38,15 @@ public class StringHandler extends DefaultHandler
 
     public void endElement(String uri, String localName, String qName)
     {
-        if(qName.equals("string"))
-            strings.put(name, buff.toString());
+        if(qName.equals("string")) {
+        	String str = buff.toString();
+        	while (str.indexOf("\\u")!=-1) {
+        		int ix = str.indexOf("\\u");
+        		int code = Integer.parseInt(str.substring(ix+2, ix+6), 16);
+        		str = str.substring(0, ix)+(char)code+str.substring(ix+6);
+        	}
+            strings.put(name, str);
+        }
     }
 
     public Hashtable<String,String> getStrings()

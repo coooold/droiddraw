@@ -28,9 +28,15 @@ public class TableLayout extends LinearLayout {
 				int ix = 0;
 				TableRow row = (TableRow)wt;
 				for (Widget w : row.getWidgets()) {
+					if (w.getPropertyByAttName("android:layout_column") != null) {
+						ix = Integer.parseInt(w.getPropertyByAttName("android:layout_column").getValue().toString());
+					}
 					w.apply();
 					int wd = w.getPadding(Widget.LEFT)+w.getWidth()+w.getPadding(Widget.RIGHT);
 					if (ix >= max_widths.size()) {
+						while (max_widths.size() < ix) {
+							max_widths.add(0);
+						}
 						max_widths.add(wd);
 					}
 					else if (max_widths.get(ix) < wd) {
@@ -77,6 +83,9 @@ public class TableLayout extends LinearLayout {
 			else {
 				w.setSizeInternal(getWidth()-w.getPadding(Widget.LEFT)-w.getPadding(Widget.RIGHT),
 								  w.getHeight());
+				if (w instanceof Layout) {
+					((Layout)w).resizeForRendering();
+				}
 			}
 		}
 	}

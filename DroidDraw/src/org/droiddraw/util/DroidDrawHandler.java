@@ -38,6 +38,7 @@ import org.droiddraw.widget.TableRow;
 import org.droiddraw.widget.TextView;
 import org.droiddraw.widget.Ticker;
 import org.droiddraw.widget.TimePicker;
+import org.droiddraw.widget.View;
 import org.droiddraw.widget.Widget;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -80,7 +81,12 @@ public class DroidDrawHandler extends DefaultHandler {
 					l = new RadioGroup();
 					l.setPropertyByAttName("android:checkedButton", atts.getValue("android:checkedButton"));
 				}
-				l.setPropertyByAttName("android:orientation", atts.getValue("android:orientation"));
+				if (atts.getValue("android:orientation") == null) {
+					l.setPropertyByAttName("android:orientation", "horizontal");
+				}
+				else {
+					l.setPropertyByAttName("android:orientation", atts.getValue("android:orientation"));
+				}
 				l_props.add("android:layout_gravity");
 				l_props.add("android:layout_weight");
 			}
@@ -99,6 +105,7 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if (qName.equals("TableRow")) {
 				l = new TableRow();
+				l_props.add("android:layout_column");
 			}
 			else if (qName.equals("Ticker")) {
 				l = new Ticker();
@@ -182,6 +189,9 @@ public class DroidDrawHandler extends DefaultHandler {
 					w.setPropertyByAttName(ProgressBar.propertyNames[i], 
 							atts.getValue(ProgressBar.propertyNames[i]));
 				}
+			}
+			else if (qName.equals("View")) {
+				w = new View();
 			}
 			if (w != null) {
 				addWidget(w, atts);
