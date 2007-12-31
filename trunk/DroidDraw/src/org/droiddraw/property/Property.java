@@ -1,10 +1,15 @@
 package org.droiddraw.property;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Vector;
+
 public abstract class Property {
 	protected String englishName;
 	protected String attName;
 	protected boolean editable;
 	protected boolean def;
+	protected Vector<PropertyChangeListener> listeners;
 	
 	public Property(String englishName, String attName, boolean editable) {
 		this(englishName, attName, editable, true);
@@ -16,6 +21,17 @@ public abstract class Property {
 		this.attName = attName;
 		this.editable = editable;
 		this.def = def;
+		this.listeners = new Vector<PropertyChangeListener>();
+	}
+	
+	public void addPropertyChangeListener(PropertyChangeListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void firePropertyChangedEvent(PropertyChangeEvent evt) {
+		for (PropertyChangeListener l : listeners) {
+			l.propertyChange(evt);
+		}
 	}
 		
 	public boolean getEditable() {

@@ -1,5 +1,7 @@
 package org.droiddraw.property;
 
+import java.beans.PropertyChangeEvent;
+
 public class BooleanProperty extends Property {
 	boolean value;
 	boolean defaultValue;
@@ -32,16 +34,18 @@ public class BooleanProperty extends Property {
 	}
 	
 	public void setBooleanValue(boolean b) {
+		boolean old = value;
 		this.value = b;
+		firePropertyChangedEvent(new PropertyChangeEvent(this, this.getAtttributeName(), old, b));
 	}
 
 	@Override
 	public void setValue(String value) {
 		if ("true".equals(value)) {
-			this.value = true;
+			setBooleanValue(true);
 		}
 		else if ("false".equals(value)) {
-			this.value = false;
+			setBooleanValue(false);
 		}
 	}
 }
