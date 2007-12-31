@@ -9,16 +9,14 @@ public class FrameLayout extends AbstractLayout {
 		super("FrameLayout");
 	}
 	
-	@Override
-	protected void addEditableProperties(Widget w) {}
+	public void addEditableProperties(Widget w) {}
 
 	@Override
 	public void positionWidget(Widget w) {
 		w.setPosition(0, 0);
 	}
 
-	@Override
-	protected void removeEditableProperties(Widget w) {}
+	public void removeEditableProperties(Widget w) {}
 
 	@Override
 	public void repositionAllWidgets() {

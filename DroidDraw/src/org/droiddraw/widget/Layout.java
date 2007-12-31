@@ -11,6 +11,8 @@ public interface Layout extends Widget {
 	public void positionWidget(Widget w);
 	public void repositionAllWidgets();
 	public void addOutputProperties(Widget w, Vector<Property> properties);
+	public void addEditableProperties(Widget w);
+	public void removeEditableProperties(Widget w);
 	public void removeAllWidgets();
 	public int getScreenX();
 	public int getScreenY();

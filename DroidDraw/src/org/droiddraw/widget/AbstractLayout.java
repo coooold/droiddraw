@@ -111,8 +111,6 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	
 	public abstract void positionWidget(Widget w);
 	public abstract void repositionAllWidgets();
-	protected abstract void addEditableProperties(Widget w);
-	protected abstract void removeEditableProperties(Widget w);
 	
 	public int getScreenX() {
 		if (parent != null) {

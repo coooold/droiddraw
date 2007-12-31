@@ -1,5 +1,7 @@
 package org.droiddraw.widget;
 import java.awt.Graphics;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Vector;
 
 import org.droiddraw.AndroidEditor;
@@ -18,6 +20,8 @@ public abstract class AbstractWidget implements Widget {
 	int width, height;
 	String tagName;
 	Vector<Property> props;
+	PropertyChangeListener listener;
+	
 	protected StringProperty id;
 	protected static int widget_num = 0;
 	Layout parent;
@@ -52,6 +56,10 @@ public abstract class AbstractWidget implements Widget {
 		this.parent = null;
 	}
 	
+	public void setPropertyChangeListener(PropertyChangeListener l) {
+		this.listener = l;
+	}
+	
 	public Layout getParent() {
 		return parent;
 	}
@@ -76,10 +84,14 @@ public abstract class AbstractWidget implements Widget {
 		if (!props.contains(p)) {
 			props.add(p);
 		}
+		if (listener != null)
+			listener.propertyChange(new PropertyChangeEvent(this, "properties", null, props));
 	}
 	
 	public void removeProperty(Property p) {
 		props.remove(p);
+		if (listener != null)
+			listener.propertyChange(new PropertyChangeEvent(this, "properties", null, props));
 	}
 	
 	public Property getPropertyByAttName(String attName) {

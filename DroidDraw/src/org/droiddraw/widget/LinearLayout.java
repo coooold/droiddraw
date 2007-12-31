@@ -53,7 +53,7 @@ public class LinearLayout extends AbstractLayout {
 		widgets.remove(w);
 		if (vertical) {
 			int y = w.getY();
-			if (y >= 0) {
+			if (y >= -100) {
 				int ix;
 				for (ix = 0;ix < widgets.size() && y > widgets.get(ix).getY(); ix++);
 				widgets.add(ix, w);
@@ -157,9 +157,15 @@ public class LinearLayout extends AbstractLayout {
 			w.setPosition(x, y);
 			if (vertical) {			
 				y+=w.getHeight()+w.getPadding(Widget.BOTTOM);
+				if (with_weight.contains(w)) {
+					y+=share;
+				}
 			}
 			else {
 				x+=w.getWidth()+w.getPadding(Widget.RIGHT);
+				if (with_weight.contains(w)) {
+					x+=share;
+				}
 			}	
 		}
 	}
@@ -167,7 +173,6 @@ public class LinearLayout extends AbstractLayout {
 	@Override
 	public void resizeForRendering() {
 		boolean vertical = "vertical".equals(orientation.getStringValue());
-
 		for (Widget w : widgets) {
 			if (w instanceof Layout) {
 				((Layout)w).resizeForRendering();
@@ -175,7 +180,7 @@ public class LinearLayout extends AbstractLayout {
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
 			boolean weight = (prop != null && "1".equals(prop.getStringValue()));
 			if (weight) {
-				if (vertical)
+				if (vertical) 
 					w.setSizeInternal(w.getWidth(), w.getHeight()+share);
 				else
 					w.setSizeInternal(w.getWidth()+share, w.getHeight());

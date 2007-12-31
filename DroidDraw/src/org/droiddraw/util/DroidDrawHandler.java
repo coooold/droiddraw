@@ -109,6 +109,7 @@ public class DroidDrawHandler extends DefaultHandler {
 			else if (qName.equals("TableRow")) {
 				l = new TableRow();
 				l_props.add("android:layout_column");
+				l_props.add("android:layout_span");
 			}
 			else if (qName.equals("Ticker")) {
 				l = new Ticker();
@@ -227,7 +228,7 @@ public class DroidDrawHandler extends DefaultHandler {
 		}
 		Layout layout = layoutStack.peek();
 		if (layout instanceof LinearLayout) {
-			w.setPosition(-1,-1);
+			w.setPosition(-Integer.MAX_VALUE,-Integer.MAX_VALUE);
 		}
 		else
 			w.setPosition(x, y);

@@ -142,6 +142,7 @@ public class AndroidEditor {
 			}
 		}
 	}
+
 	
 	public void setLayout(Layout l) {
 		if (this.layout != null) {
