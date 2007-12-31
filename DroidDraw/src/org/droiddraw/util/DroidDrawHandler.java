@@ -145,6 +145,9 @@ public class DroidDrawHandler extends DefaultHandler {
 			else if (qName.equals("TextView")) {
 				String txt = atts.getValue("android:text");
 				w = new TextView(txt);
+				if (atts.getValue("android:textAlign") != null) {
+					w.setPropertyByAttName("android:textAlign", atts.getValue("android:textAlign"));
+				}
 			}
 			else if (qName.equals("EditText")) {
 				String txt = atts.getValue("android:text");

@@ -22,6 +22,7 @@ public class TextView extends AbstractWidget {
 	StringProperty fontSz;
 	SelectProperty face;
 	SelectProperty style;
+	SelectProperty align;
 	ColorProperty textColor;
 	
 	int pad_x = 6;
@@ -45,12 +46,13 @@ public class TextView extends AbstractWidget {
 		face = new SelectProperty("Font Face", "android:typeface", new String[] {"normal","sans","serif","monospace"}, 0);
 		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"normal", "bold", "italic", "bold_italic"}, 0);
 		textColor = new ColorProperty("Text Color", "android:textColor", Color.black);
-		
+		align = new SelectProperty("Text Alignment", "android:textAlign", new String[] {"end","center","start"}, 2);
 		props.add(text);
 		props.add(fontSz);
 		props.add(face);
 		props.add(style);
 		props.add(textColor);
+		props.add(align);
 		buildFont();
 
 		bg = new BufferedImage(1,1,BufferedImage.TYPE_BYTE_GRAY);
@@ -131,15 +133,22 @@ public class TextView extends AbstractWidget {
 			String txt = text.getStringValue();
 			int l = stringLength(txt)+pad_x;
 			int w = AndroidEditor.instance().getScreenX();
+			int x = getX()+pad_x/2;
+			if (align.getStringValue().equals("end")) {
+				x = getX()+getWidth()-l+pad_x/2;
+			}
+			if (align.getStringValue().equals("center")) {
+				x = getX()+getWidth()/2-l/2;
+			}
 			while (l >= w && h < getHeight()) {
 				int split = getSplit(txt);
-				g.drawString(txt.substring(0, split), getX()+pad_x/2, getY()+h);
+				g.drawString(txt.substring(0, split), x, getY()+h);
 				txt = txt.substring(split);
 				l = stringLength(txt)+pad_x;
 				h += fontSize+1;
 			}
 			if (h < getHeight())
-				g.drawString(txt.substring(0, getSplit(txt)), getX()+pad_x/2, getY()+h);
+				g.drawString(txt.substring(0, getSplit(txt)), x, getY()+h);
 		}
 	}
 	

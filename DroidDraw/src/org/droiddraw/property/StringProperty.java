@@ -1,5 +1,7 @@
 package org.droiddraw.property;
 
+import java.beans.PropertyChangeEvent;
+
 import org.droiddraw.AndroidEditor;
 
 public class StringProperty extends Property {
@@ -40,7 +42,9 @@ public class StringProperty extends Property {
 	}
 	
 	public void setStringValue(String value) {
+		String old = this.value;
 		this.value = value;
+		firePropertyChangedEvent(new PropertyChangeEvent(this, this.getAtttributeName(), old, value));
 	}
 
 	@Override

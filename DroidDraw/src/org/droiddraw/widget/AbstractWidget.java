@@ -107,6 +107,16 @@ public abstract class AbstractWidget implements Widget {
 		this.y = y;
 	}
 
+	public void setWidth(int width) {
+		this.widthProp.setStringValue(width+"px");
+		apply();
+	}
+	
+	public void setHeight(int height) {
+		this.heightProp.setStringValue(height+"px");
+		apply();
+	}
+	
 	public void setSize(int width, int height) {
 		this.widthProp.setStringValue(width+"px");
 		this.heightProp.setStringValue(height+"px");

@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -105,6 +107,25 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 							jc = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 10);
 						}
 					}
+					prop.addPropertyChangeListener(new PropertyChangeListener() {
+						public void propertyChange(PropertyChangeEvent evt) {
+							Property p = (Property)evt.getSource();
+							JComponent jc = components.get(p);
+							if (p instanceof BooleanProperty) {
+								((JCheckBox)jc).setSelected(((Boolean)evt.getNewValue()).booleanValue());
+							}
+							else if (p instanceof ColorProperty) {
+								// TODO
+							}
+							else if (p instanceof SelectProperty) {
+								// TODO
+							}
+							else if (p instanceof StringProperty) {
+								((JTextField)jc).setText(evt.getNewValue().toString());
+							}
+							
+						}
+					});
 					components.put(prop, jc);
 					JPanel p = new JPanel();
 					p.setLayout(fl);

@@ -227,7 +227,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			}
 			else if (mode == E) {
 				Widget w = AndroidEditor.instance().getSelected();
-				w.setSize(x-(l.getScreenX()+w.getX()), w.getHeight());
+				w.setWidth(x-(l.getScreenX()+w.getX()));
 			}
 			else if (mode == SE) {
 				Widget wd = AndroidEditor.instance().getSelected();
@@ -241,7 +241,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			}
 			else if (mode == S) {
 				Widget w = AndroidEditor.instance().getSelected();
-				w.setSize(w.getWidth(), y-(l.getScreenY()+w.getY()));	
+				w.setHeight(y-(l.getScreenY()+w.getY()));	
 			}
 			l.positionWidget(selected);
 			l.apply();
