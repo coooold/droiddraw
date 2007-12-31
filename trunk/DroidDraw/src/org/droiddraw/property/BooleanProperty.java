@@ -2,14 +2,21 @@ package org.droiddraw.property;
 
 public class BooleanProperty extends Property {
 	boolean value;
+	boolean defaultValue;
 	
 	public BooleanProperty(String englishName, String attName, boolean defaultValue) {
 		this(englishName, attName, defaultValue, true);
+		this.defaultValue = defaultValue;
 	}
 	
 	public BooleanProperty(String englishName, String attName, boolean defaultValue, boolean editable) {
 		super(englishName, attName, editable);
 		this.value = defaultValue;
+	}
+	
+	@Override
+	protected boolean isDefaultInternal() {
+		return value == defaultValue;
 	}
 
 	@Override

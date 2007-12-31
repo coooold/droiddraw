@@ -4,9 +4,11 @@ import org.droiddraw.AndroidEditor;
 
 public class StringProperty extends Property {
 	String value;
-
+	String defaultValue;
+	
 	public StringProperty(String englishName, String attName, String defaultValue) {
 		this(englishName, attName, defaultValue, true);
+		this.defaultValue = defaultValue;
 	}
 	
 	public StringProperty(String englishName, String attName, String defaultValue, boolean editable) {
@@ -14,6 +16,11 @@ public class StringProperty extends Property {
 		this.value = defaultValue;
 	}
 
+	@Override
+	protected boolean isDefaultInternal() {
+		return value.equals(defaultValue);
+	}
+	
 	@Override
 	public Object getValue() {
 		return getStringValue();

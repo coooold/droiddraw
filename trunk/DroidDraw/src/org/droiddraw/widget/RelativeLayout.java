@@ -407,49 +407,49 @@ public class RelativeLayout extends AbstractLayout {
 		if (rels != null) {
 			for (Relation r : rels) {
 				if (r.getRelation().equals(RelationType.LEFT)) {
-					properties.add(new StringProperty("relation", "android:layout_alignLeft", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_alignLeft", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.TO_LEFT)) {
-					properties.add(new StringProperty("relation", "android:layout_toLeft", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_toLeft", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.RIGHT)) {
-					properties.add(new StringProperty("relation", "android:layout_alignRight", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_alignRight", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.TO_RIGHT)) {
-					properties.add(new StringProperty("relation", "android:layout_toRight", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_toRight", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.ABOVE)) {
-					properties.add(new StringProperty("relation", "android:layout_above", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_above", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.BELOW)) {
-					properties.add(new StringProperty("relation", "android:layout_below", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_below", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.TOP)) {
-					properties.add(new StringProperty("relation", "android:layout_alignTop", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_alignTop", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.BOTTOM)) {
-					properties.add(new StringProperty("relation", "android:layout_alignBottom", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_alignBottom", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.CENTER_VERTICAL)) {
-					properties.add(new BooleanProperty("relation", "android:layout_centerVertical", true));
+					properties.add(new BooleanProperty("relation", "android:layout_centerVertical", true, false));
 				}
 				else if (r.getRelation().equals(RelationType.CENTER_HORIZONTAL)) {
-					properties.add(new BooleanProperty("relation", "android:layout_centerHorizontal", true));
+					properties.add(new BooleanProperty("relation", "android:layout_centerHorizontal", true, false));
 				}
 				else if (r.getRelation().equals(RelationType.PARENT_BOTTOM)) {
-					properties.add(new BooleanProperty("relation", "android:layout_alignParentBottom", true));
+					properties.add(new BooleanProperty("relation", "android:layout_alignParentBottom", true, false));
 				}
 				else if (r.getRelation().equals(RelationType.PARENT_TOP)) {
-					properties.add(new BooleanProperty("relation", "android:layout_alignParentTop", true));
+					properties.add(new BooleanProperty("relation", "android:layout_alignParentTop", true, false));
 				}
 				else if (r.getRelation().equals(RelationType.PARENT_LEFT)) {
-					properties.add(new BooleanProperty("relation", "android:layout_alignParentLeft", true));
+					properties.add(new BooleanProperty("relation", "android:layout_alignParentLeft", true, false));
 				}
 				else if (r.getRelation().equals(RelationType.PARENT_RIGHT)) {
-					properties.add(new BooleanProperty("relation", "android:layout_alignParentRight", true));
+					properties.add(new BooleanProperty("relation", "android:layout_alignParentRight", true, false));
 				}
 				else if (r.getRelation().equals(RelationType.BASELINE)) {
-					properties.add(new StringProperty("relation", "android:layout_alignBaseline", r.getRelatedTo().getId()));
+					properties.add(new StringProperty("relation", "android:layout_alignBaseline", r.getRelatedTo().getId(), false));
 				}
 			}
 		}

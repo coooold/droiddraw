@@ -6,11 +6,19 @@ import org.droiddraw.AndroidEditor;
 
 public class ColorProperty extends StringProperty {
 	Color c;
+	Color defaultColor;
+	
 	public ColorProperty(String englishName, String attName, Color defaultValue) {
 		super(englishName, attName, makeColor(defaultValue));
 		this.c = defaultValue;
+		this.defaultColor = defaultValue;
 	}
 
+	@Override
+	protected boolean isDefaultInternal() {
+		return c.equals(defaultColor);
+	}
+	
 	public void setStringValue(String col) {
 		if (col == null || col.length() == 0) {
 			setColorValue(null);

@@ -37,7 +37,10 @@ public class TextView extends AbstractWidget {
 	public TextView(String str) {
 		super("TextView");
 		
-		text = new StringProperty("Text", "android:text", str!=null?str:"");
+		text = new StringProperty("Text", "android:text", "");
+		if (str != null) {
+			text.setStringValue(str);
+		}
 		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"sp");
 		face = new SelectProperty("Font Face", "android:typeface", new String[] {"normal","sans","serif","monospace"}, 0);
 		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"normal", "bold", "italic", "bold_italic"}, 0);
