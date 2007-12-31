@@ -1,5 +1,6 @@
 package org.droiddraw.widget;
 import java.awt.Graphics;
+import java.beans.PropertyChangeListener;
 import java.util.Vector;
 
 import org.droiddraw.property.Property;
@@ -28,6 +29,8 @@ public interface Widget {
 	public Property getPropertyByAttName(String attName);
 	public void addProperty(Property p);
 	public void removeProperty(Property p);
+	public void setPropertyChangeListener(PropertyChangeListener l);
+	
 	public String getTagName();
 	public String getId();
 	public Layout getParent();

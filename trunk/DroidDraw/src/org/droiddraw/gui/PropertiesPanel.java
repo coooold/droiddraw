@@ -18,6 +18,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.droiddraw.property.BooleanProperty;
@@ -28,7 +29,7 @@ import org.droiddraw.property.StringProperty;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
 
-public class PropertiesPanel extends JPanel implements ActionListener {
+public class PropertiesPanel extends JPanel implements ActionListener, PropertyChangeListener {
 	private static final long serialVersionUID = 1L;
 
 	Vector<Property> properties;
@@ -55,11 +56,15 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 	public void setProperties(Vector<Property> properties, Widget w) {
 		this.properties = properties;
 		this.removeAll();
+		this.w = w;
+		if (w == null)
+			return;
+		w.setPropertyChangeListener(this);
 		items = new JPanel();
 		items.setLayout(new GridLayout(0,2));
 		//items.setBorder(BorderFactory.createTitledBorder("Properties"));
 		components.clear();
-		this.w = w;
+		
 		if (properties.size() > 0) {
 			items.add(new JLabel("Properties for: "));
 			items.add(new JLabel(w.getTagName()));
@@ -137,7 +142,7 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 		this.setLayout(new BorderLayout());
 		JPanel p = new JPanel();
 		p.add(items);
-		this.add(p, BorderLayout.CENTER);
+		this.add(new JScrollPane(p), BorderLayout.CENTER);
 		if (properties.size() > 0) {
 			JButton apply = new JButton("Apply");
 			apply.addActionListener(this);
@@ -145,6 +150,8 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 			p.add(apply);
 			this.add(p, BorderLayout.SOUTH);
 		}
+		this.repaint();
+		this.invalidate();
 	}
 
 	public void setViewer(Viewer v) {
@@ -191,5 +198,12 @@ public class PropertiesPanel extends JPanel implements ActionListener {
 		
 		if (viewer != null)
 			viewer.repaint();
+	}
+
+	@SuppressWarnings("unchecked")
+	public void propertyChange(PropertyChangeEvent evt) {
+		if (w.equals(evt.getSource())) {
+			setProperties((Vector<Property>)evt.getNewValue(), w);
+		}
 	}
 }

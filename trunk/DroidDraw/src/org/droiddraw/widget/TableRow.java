@@ -118,8 +118,15 @@ public class TableRow extends LinearLayout {
 			if (prop != null) {
 				ix = (Integer.parseInt(prop.getStringValue()));
 			}
-			w.setSizeInternal(widths.get(ix)-w.getPadding(LEFT)-w.getPadding(RIGHT), w.getHeight());
-			ix++;
+			prop = (StringProperty)w.getPropertyByAttName("android:layout_span");
+			int wd = widths.get(ix++);
+			if (prop != null) {
+				int span = (Integer.parseInt(prop.getStringValue()));
+				for (int i=1;i<span;i++) {
+					wd+=widths.get(ix++);
+				}
+			}
+			w.setSizeInternal(wd-w.getPadding(LEFT)-w.getPadding(RIGHT), w.getHeight());
 		}
 		this.widths = widths;
 		repositionAllWidgetsInternal();
@@ -135,4 +142,17 @@ public class TableRow extends LinearLayout {
 		}
 		return super.getContentWidth();
 	}
+
+	@Override
+	public void addEditableProperties(Widget w) {
+		w.addProperty(new StringProperty("Column Span", "android:layout_span", "1"));
+		super.addEditableProperties(w);
+	}
+
+	@Override
+	public void removeEditableProperties(Widget w) {
+		w.removeProperty(new StringProperty("Column Span", "android:layout_span", "1"));
+		super.removeEditableProperties(w);
+	}
+	
 }

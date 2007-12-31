@@ -103,12 +103,5 @@ public class TableLayout extends LinearLayout {
 		}
 		else
 			return 100;
-	}
-	
-	@Override
-	public int getContentHeight() {
-		return super.getContentHeight()+10;
-	}
-	
-	
+	}	
 }
