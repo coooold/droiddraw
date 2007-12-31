@@ -65,7 +65,8 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		}
 		g.drawRect(0, 0, getWidth(), getHeight());
 		for (Widget w : widgets) {
-			w.paint(g);
+			if (w.isVisible())
+				w.paint(g);
 		}
 		g2d.translate(-getX(),-getY());
 	}

@@ -5,6 +5,7 @@ import java.util.Vector;
 import org.droiddraw.AndroidEditor;
 import org.droiddraw.property.ColorProperty;
 import org.droiddraw.property.Property;
+import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
 import org.droiddraw.util.DisplayMetrics;
 
@@ -24,7 +25,7 @@ public abstract class AbstractWidget implements Widget {
 	StringProperty widthProp;
 	StringProperty heightProp;
 	StringProperty pad;
-	
+	SelectProperty visibility;
 	ColorProperty background;
 	
 	public AbstractWidget(String tagName) {
@@ -38,6 +39,7 @@ public abstract class AbstractWidget implements Widget {
 		this.heightProp.setStringValue("wrap_content");
 		this.background = new ColorProperty("Background Color", "android:background", null);
 		this.pad = new StringProperty("Padding", "android:padding", "0px");
+		this.visibility = new SelectProperty("Visible", "android:visibility", new String[] {"visible", "invisible", "gone"}, 0);
 		this.padding = new int[4];
 		
 		this.props.add(id);
@@ -45,6 +47,7 @@ public abstract class AbstractWidget implements Widget {
 		this.props.add(heightProp);
 		this.props.add(background);
 		this.props.add(pad);
+		this.props.add(visibility);
 		
 		this.parent = null;
 	}
@@ -210,6 +213,10 @@ public abstract class AbstractWidget implements Widget {
 	
 	public int getPadding(int which) {
 		return padding[which];
+	}
+	
+	public boolean isVisible() {
+		return visibility.getStringValue().equals("visible");
 	}
 	
 	protected abstract int getContentWidth();
