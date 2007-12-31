@@ -47,6 +47,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 public class DroidDrawHandler extends DefaultHandler {
 	Vector<String> all_props;
+
 	Stack<Vector<String>> layout_props;
 	Stack<Layout> layoutStack;
 	
@@ -57,6 +58,8 @@ public class DroidDrawHandler extends DefaultHandler {
 		all_props.add("android:background");
 		all_props.add("android:padding");
 		all_props.add("id");
+		all_props.add("android:visibility");
+		
 		layout_props = new Stack<Vector<String> >();
 		layoutStack = new Stack<Layout>();
 	}
