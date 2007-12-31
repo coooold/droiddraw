@@ -247,7 +247,7 @@ public class AndroidEditor {
 		if (w != layout)
 			((Layout)w.getParent()).addOutputProperties(w, props);
 		for (Property prop : props) {
-			if (prop.getValue() != null && prop.getValue().toString().length() > 0) {
+			if (prop.getValue() != null && prop.getValue().toString().length() > 0 && !prop.isDefault()) {
 				// Work around an android bug... *sigh*
 				if (w instanceof CheckBox && prop.getAtttributeName().equals("android:padding"))
 					continue;

@@ -54,9 +54,11 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.translate(getX(), getY());
 		
-		g.setColor(background.getColorValue());
-		g.fillRect(0, 0, getWidth(), getHeight());
-
+		if (background.getColorValue() != null) {
+			g.setColor(background.getColorValue());
+			g.fillRect(0, 0, getWidth(), getHeight());
+		}
+		
 		g.setColor(Color.lightGray);
 		if (widgets.size() == 0) {
 			g.drawString(tagName, 2, 15);
