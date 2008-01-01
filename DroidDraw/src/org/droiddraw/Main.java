@@ -44,6 +44,10 @@ import org.simplericity.macify.eawt.ApplicationListener;
 import org.simplericity.macify.eawt.DefaultApplication;
 import org.xml.sax.SAXException;
 
+import edu.stanford.ejalbert.BrowserLauncher;
+import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
+import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
+
 
 public class Main implements ApplicationListener {
 	static File saveFile = null;
@@ -297,6 +301,19 @@ public class Main implements ApplicationListener {
 	
 		menu.addSeparator();
 		
+		it = new JMenuItem("Clear Screen");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int res = JOptionPane.showConfirmDialog(jf, "This will delete your entire GUI.  Proceed?", "Clear Screen?", JOptionPane.YES_NO_OPTION);
+				if (res == JOptionPane.YES_OPTION) {
+					AndroidEditor.instance().getLayout().removeAllWidgets();
+					AndroidEditor.instance().select(AndroidEditor.instance().getLayout());
+					ddp.repaint();
+				}
+			}
+		});
+		menu.add(it);
+		
 		it = new JMenuItem("Set Ids from Labels");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -307,7 +324,7 @@ public class Main implements ApplicationListener {
 		mb.add(menu);
 		
 		menu = new JMenu("Project");
-		it = new JMenuItem("Load strings");
+		it = new JMenuItem("Load string resources");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				File f = doOpen();
@@ -332,7 +349,7 @@ public class Main implements ApplicationListener {
 		});
 		menu.add(it);
 		
-		it = new JMenuItem("Load colors");
+		it = new JMenuItem("Load color resources");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				File f = doOpen();
@@ -356,6 +373,31 @@ public class Main implements ApplicationListener {
 			}
 		});
 		menu.add(it);
+		mb.add(menu);
+		
+		menu = new JMenu("Help");
+		it = new JMenuItem("Tutorial");
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ctl_key));
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					BrowserLauncher l = new BrowserLauncher();
+					l.openURLinBrowser("http://www.droiddraw.org/tutorial.html");
+				}
+				catch (UnsupportedOperatingSystemException ex) {ex.printStackTrace();}
+				catch (BrowserLaunchingInitializingException ex) {ex.printStackTrace();}
+			}
+		});
+		menu.add(it);
+		
+		if (!osx) {
+			it = new JMenuItem("About");
+			it.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					about();
+				}
+			});
+		}
 		mb.add(menu);
 		jf.setJMenuBar(mb);
 		
