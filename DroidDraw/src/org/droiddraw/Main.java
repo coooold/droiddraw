@@ -414,7 +414,6 @@ public class Main implements ApplicationListener {
 	public void handleOpenApplication(ApplicationEvent arg0) {}
 
 	public void handleOpenFile(ApplicationEvent ev) {
-		System.out.println("foo");
 		String f = ev.getFilename();
 		if (f.endsWith(".xml")) {
 			open(ev.getFilename());
