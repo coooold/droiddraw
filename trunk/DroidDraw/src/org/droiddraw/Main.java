@@ -397,7 +397,22 @@ public class Main implements ApplicationListener {
 					about();
 				}
 			});
+			menu.add(it);
 		}
+		
+		it = new JMenuItem("Donate");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					BrowserLauncher l = new BrowserLauncher();
+					l.openURLinBrowser("https://www.paypal.com/us/cgi-bin/webscr?cmd=_xclick&business=brendan.d.burns@gmail.com&item_name=Support%20DroidDraw&currency_code=USD");
+				}
+				catch (UnsupportedOperatingSystemException ex) {ex.printStackTrace();}
+				catch (BrowserLaunchingInitializingException ex) {ex.printStackTrace();}
+			}
+		});
+		menu.add(it);
+		
 		mb.add(menu);
 		jf.setJMenuBar(mb);
 		
