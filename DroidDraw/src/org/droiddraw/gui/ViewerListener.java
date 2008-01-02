@@ -8,9 +8,12 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JComboBox;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 
 import org.droiddraw.AndroidEditor;
@@ -49,7 +52,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	boolean add;
 	boolean select;
 	boolean shift;
-	
+
 	int mode;
 
 	private static final int NORMAL = 0;
@@ -65,7 +68,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	JToggleButton selectButton;
 	ButtonGroup bg;
 	DroidDrawPanel ddp;
-	
+
 	public ViewerListener(AndroidEditor app, DroidDrawPanel ddp, Viewer viewer) {
 		this.ddp = ddp;
 		this.app = app;
@@ -96,7 +99,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		String str = (String)widgetType.getSelectedItem();
 		return createWidget(str);
 	}
-	
+
 	public static Widget createWidget(String str) {
 		if (str.equals("Button"))
 			return new Button("Button");
@@ -154,29 +157,43 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	public void mouseEntered(MouseEvent arg0) { }
 	public void mouseExited(MouseEvent arg0) { }
 	public void mousePressed(MouseEvent e) { 
-		int x = e.getX()-viewer.getOffX();
-		int y = e.getY()-viewer.getOffY();
-
+		final int x = e.getX()-viewer.getOffX();
+		final int y = e.getY()-viewer.getOffY();
+		final MouseEvent ev = e;
 		if (select) {
-			if (e.getClickCount() > 1) {
-				Widget w = app.findWidget(x, y);
-				if (w != null) {
-					if (w != app.getSelected()) {
-						app.select(w);
-					}
-					ddp.editSelected();
+			final Vector<Widget> ws = app.findWidgets(x, y);
+			Widget w = null;
+			if (ws.contains(app.getSelected())) {
+				w = app.getSelected();
+			}
+			else {
+				switch (ws.size()) {
+				case 0:
+					break;
+				case 1:
+					w = ws.get(0);
+					break;
+				default:
+					JPopupMenu menu = new JPopupMenu();
+				JMenuItem it = new JMenuItem("Select a widget:");
+				it.setEnabled(false);
+				menu.add(it);
+				menu.addSeparator();
+
+				for (int i=0;i<ws.size();i++) {
+					it = new JMenuItem(ws.get(i).getTagName());
+					final int id = i;
+					it.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent arg0) {
+							doSelect(ws.get(id), ev.getClickCount(), x, y);
+						}
+					});
+					menu.add(it);
+				}
+				menu.show(viewer, x, y);			
 				}
 			}
-			else if (mode == NORMAL ){
-				Widget w = app.findWidget(x,y);
-				if (w != null) {
-					off_x = (w.getParent()!=null?w.getParent().getScreenX():0)+w.getX()-x;
-					off_y = (w.getParent()!=null?w.getParent().getScreenY():0)+w.getY()-y;
-				}
-				app.selectWidget(x, y);
-				viewer.requestFocus();
-				viewer.repaint();
-			}
+			doSelect(w, e.getClickCount(), x, y);
 		}
 		else {
 			Widget w = createWidget();
@@ -184,8 +201,65 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		}
 	}
 
-	public void addWidget(Widget w, int x, int y) {
-		Layout l = app.findLayout(x, y);
+	protected void doSelect(Widget w, int clickCount, int x, int y) {
+		if (clickCount > 1) {
+			if (w != null) {
+				if (w != app.getSelected()) {
+					app.select(w);
+				}
+				ddp.editSelected();
+			}
+		}
+		else if (mode == NORMAL ){
+			if (w != null) {
+				off_x = (w.getParent()!=null?w.getParent().getScreenX():0)+w.getX()-x;
+				off_y = (w.getParent()!=null?w.getParent().getScreenY():0)+w.getY()-y;
+			}
+			app.select(w);
+			viewer.requestFocus();
+			viewer.repaint();
+		}
+	}
+	
+	public void addWidget(Widget ww, int xx, int yy) {
+		final int x = xx;
+		final int y = yy;
+		final Widget w = ww;
+		final Vector<Layout> ls = app.findLayouts(x, y);
+		Layout l = null;
+
+		switch (ls.size()) {
+		case 0:
+			return;
+		case 1:
+			l = ls.get(0);
+			break;
+		default:
+			JPopupMenu menu = new JPopupMenu();
+		JMenuItem it = new JMenuItem("Select a layout:");
+		it.setEnabled(false);
+		menu.add(it);
+		menu.addSeparator();
+
+		for (int i=0;i<ls.size();i++) {
+			it = new JMenuItem(ls.get(i).getTagName());
+			final int id = i;
+			it.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					addWidget(w, ls.get(id), x, y);
+				}
+			});
+			menu.add(it);
+		}
+		menu.show(viewer, x, y);			
+		}
+		if (l != null) {
+			addWidget(w, l, x, y);
+		}
+	}
+
+	protected void addWidget(Widget w, Layout l, int x, int y) 
+	{
 		if (l instanceof AbsoluteLayout)
 			w.setPosition((x/grid_x)*grid_x-l.getScreenX(), (y/grid_y)*grid_y-l.getScreenY());
 		else
@@ -199,7 +273,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		viewer.requestFocus();
 		viewer.repaint();
 	}
-	
+
 	public void mouseReleased(MouseEvent e) {
 		e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
@@ -210,7 +284,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 
 		Widget selected = app.getSelected();
 		if (selected == null) {
-			app.selectWidget(x, y);
+			Vector<Widget> ws = app.findWidgets(x, y);
+			app.select(ws.get(0));
 			selected = app.getSelected();
 		}
 		if (selected != null) {
@@ -252,7 +327,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	public void mouseMoved(MouseEvent ev) { 
 		int ex = ev.getX();
 		int ey = ev.getY();
-		
+
 		Widget selected = AndroidEditor.instance().getSelected();
 		mode = 0;
 		Cursor c = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);

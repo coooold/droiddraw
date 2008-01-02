@@ -184,9 +184,11 @@ public class AndroidEditor {
 	}
 
 	public void removeWidget(Widget w) {
-		w.getParent().removeWidget(w);
-		if (selected == w) {
-			selected = null;
+		if (w != null) {
+			w.getParent().removeWidget(w);
+			if (selected == w) {
+				selected = null;
+			}
 		}
 	}
 	
@@ -195,43 +197,43 @@ public class AndroidEditor {
 		selected = null;
 	}
 	
-	public Layout findLayout(int x, int y) {
+	public Vector<Layout> findLayouts(int x, int y) {
 		return findLayout(layout, x, y);
 	}
 	
-	protected Layout findLayout(Layout l, int x, int y) {
-		for (Widget w : l.getWidgets()) {
-			if (w.clickedOn(x, y) && w instanceof Layout) {
-				return findLayout((Layout)w, x, y);
+	protected Vector<Layout> findLayout(Layout l, int x, int y) {
+		Vector<Layout> res = new Vector<Layout>();
+		if (l.clickedOn(x, y)) {
+			for (Widget w : l.getWidgets()) {
+				if (w instanceof Layout) {
+					Vector<Layout> tmp = findLayout((Layout)w, x, y);
+					for (Layout lt : tmp) {
+						res.add(lt);
+					}
+				}
 			}
+			res.add(l);
 		}
-		return l;
+		return res;
 	}
 	
-	public Widget findWidget(int x, int y) {
-		return findWidget(layout, x, y);
+	public Vector<Widget> findWidgets(int x, int y) {
+		return findWidgets(layout, x, y);
 	}
 	
-	public Widget findWidget(Layout l, int x, int y) {
+	public Vector<Widget> findWidgets(Layout l, int x, int y) {
+		Vector<Widget> res = new Vector<Widget>();
 		for (Widget w : l.getWidgets()) {
 			if (w.clickedOn(x, y)) {
 				if (w instanceof Layout) {
-					return findWidget((Layout)w, x, y);
+					Vector<Widget> tmp = findWidgets((Layout)w, x, y);
+					for (Widget wt : tmp) 
+						res.add(wt);
 				}
-				return w;
+				res.add(w);
 			}
 		}
-		return l;
-	}
-	
-	public void selectWidget(int x, int y) {
-		Widget res = findWidget(x, y);
-		if (res == selected) {
-			selected = null;
-		}
-		else {
-			this.select(res);
-		}
+		return res;
 	}
 
 	public void generate(PrintWriter pw) {

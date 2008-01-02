@@ -80,7 +80,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 				if (w.getX()+width_w_pad > maxX)
 					maxX = w.getX()+width_w_pad;
 			}
-			return maxX+10;
+			return maxX;
 		}
 		else
 			return 100;
