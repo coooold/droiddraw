@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.property.BooleanProperty;
 import org.droiddraw.property.ColorProperty;
 import org.droiddraw.property.Property;
@@ -168,8 +169,9 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 				else if (prop instanceof StringProperty) {
 					if (prop instanceof SelectProperty) {
 						JComboBox jcb = (JComboBox)components.get(prop);
-						if (jcb == null)
-							System.err.println("Couldn't find select for: "+prop.getAtttributeName());
+						if (jcb == null) {
+							AndroidEditor.instance().error("Couldn't find select for: "+prop.getAtttributeName());
+						}
 						else
 							((SelectProperty)prop).setSelectedIndex(jcb.getSelectedIndex());
 					}
@@ -181,7 +183,7 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 					else {
 						JTextField jtf = (JTextField)components.get(prop);
 						if (jtf == null)
-							System.err.println("Couldn't find text for: "+prop.getAtttributeName());
+							AndroidEditor.instance().error("Couldn't find text for: "+prop.getAtttributeName());
 						else
 							((StringProperty)prop).setStringValue(jtf.getText());
 					}

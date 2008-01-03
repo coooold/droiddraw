@@ -128,7 +128,7 @@ public class Main implements ApplicationListener {
 	{
 		URL u = ClassLoader.getSystemClassLoader().getResource("ui/"+name+".png");
 		if (u == null) {
-			System.err.println("Couldn't open image : "+name);
+			AndroidEditor.instance().error("Couldn't open image : "+name);
 			return;
 		}
 		InputStream is = u.openStream();
@@ -146,7 +146,7 @@ public class Main implements ApplicationListener {
 			try {
 				AndroidEditor.instance().setStrings(StringHandler.load(new FileInputStream("src/strings.xml")));
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				AndroidEditor.instance().error(ex);
 			}
 		}
 		// END
@@ -333,16 +333,13 @@ public class Main implements ApplicationListener {
 						AndroidEditor.instance().setStrings(StringHandler.load(new FileInputStream(f)));
 					}
 					catch (IOException ex) {
-						ddp.error(ex.getMessage());
-						ex.printStackTrace();
+						AndroidEditor.instance().error(ex);
 					}
 					catch (SAXException ex) {
-						ddp.error(ex.getMessage());
-						ex.printStackTrace();
+						AndroidEditor.instance().error(ex);
 					}
 					catch (ParserConfigurationException ex) {
-						ddp.error(ex.getMessage());
-						ex.printStackTrace();
+						AndroidEditor.instance().error(ex);
 					}
 				}
 			}
@@ -358,16 +355,13 @@ public class Main implements ApplicationListener {
 						AndroidEditor.instance().setColors(ColorHandler.load(new FileInputStream(f)));
 					}
 					catch (IOException ex) {
-						ddp.error(ex.getMessage());
-						ex.printStackTrace();
+						AndroidEditor.instance().error(ex);
 					}
-					catch (SAXException ex) {
-						ddp.error(ex.getMessage());
-						ex.printStackTrace();
+					catch (SAXException ex) {				
+						AndroidEditor.instance().error(ex);
 					}
 					catch (ParserConfigurationException ex) {
-						ddp.error(ex.getMessage());
-						ex.printStackTrace();
+						AndroidEditor.instance().error(ex);
 					}
 				}
 			}
@@ -384,8 +378,8 @@ public class Main implements ApplicationListener {
 					BrowserLauncher l = new BrowserLauncher();
 					l.openURLinBrowser("http://www.droiddraw.org/tutorial.html");
 				}
-				catch (UnsupportedOperatingSystemException ex) {ex.printStackTrace();}
-				catch (BrowserLaunchingInitializingException ex) {ex.printStackTrace();}
+				catch (UnsupportedOperatingSystemException ex) {AndroidEditor.instance().error(ex);}
+				catch (BrowserLaunchingInitializingException ex) {AndroidEditor.instance().error(ex);}
 			}
 		});
 		menu.add(it);
@@ -407,8 +401,8 @@ public class Main implements ApplicationListener {
 					BrowserLauncher l = new BrowserLauncher();
 					l.openURLinBrowser("https://www.paypal.com/us/cgi-bin/webscr?cmd=_xclick&business=brendan.d.burns@gmail.com&item_name=Support%20DroidDraw&currency_code=USD");
 				}
-				catch (UnsupportedOperatingSystemException ex) {ex.printStackTrace();}
-				catch (BrowserLaunchingInitializingException ex) {ex.printStackTrace();}
+				catch (UnsupportedOperatingSystemException ex) {AndroidEditor.instance().error(ex);}
+				catch (BrowserLaunchingInitializingException ex) {AndroidEditor.instance().error(ex);}
 			}
 		});
 		menu.add(it);

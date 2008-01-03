@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import org.droiddraw.gui.PropertiesPanel;
 import org.droiddraw.gui.Viewer;
 import org.droiddraw.property.Property;
@@ -69,6 +71,15 @@ public class AndroidEditor {
 		return colors;
 	}
 
+	public void error(String message) {
+		JOptionPane.showMessageDialog(viewer, message, "Error", JOptionPane.WARNING_MESSAGE);
+	}
+	
+	public void error(Exception ex) {
+		error(ex.getMessage());
+		ex.printStackTrace();
+	}
+	
 	public void setColors(Hashtable<String, Color> colors) {
 		for (String key : colors.keySet()) {
 			colors.put(key, colors.get(key));
