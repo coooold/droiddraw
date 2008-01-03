@@ -148,4 +148,13 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 			}
 		}
 	}
+	
+	public boolean containsWidget(Widget w) {
+		for (Widget wt : widgets) {
+			if (wt.equals(w)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

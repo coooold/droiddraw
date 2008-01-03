@@ -151,15 +151,16 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return null;
 	}
 
-	public void mouseClicked(MouseEvent ev) { 
+	public void mousePressed(MouseEvent ev) { 
 	}
 
 	public void mouseEntered(MouseEvent arg0) { }
 	public void mouseExited(MouseEvent arg0) { }
-	public void mousePressed(MouseEvent e) { 
+	public void mouseClicked(MouseEvent e) { 
 		final int x = e.getX()-viewer.getOffX();
 		final int y = e.getY()-viewer.getOffY();
 		final MouseEvent ev = e;
+
 		if (select) {
 			final Vector<Widget> ws = app.findWidgets(x, y);
 			Widget w = null;
@@ -174,23 +175,28 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 					w = ws.get(0);
 					break;
 				default:
-					JPopupMenu menu = new JPopupMenu();
-				JMenuItem it = new JMenuItem("Select a widget:");
-				it.setEnabled(false);
-				menu.add(it);
-				menu.addSeparator();
+					if (e.isControlDown() || e.getButton() == MouseEvent.BUTTON3) {
+						JPopupMenu menu = new JPopupMenu();
+						JMenuItem it = new JMenuItem("Select a widget:");
+						it.setEnabled(false);
+						menu.add(it);
+						menu.addSeparator();
 
-				for (int i=0;i<ws.size();i++) {
-					it = new JMenuItem(ws.get(i).getTagName());
-					final int id = i;
-					it.addActionListener(new ActionListener() {
-						public void actionPerformed(ActionEvent arg0) {
-							doSelect(ws.get(id), ev.getClickCount(), x, y);
-						}
-					});
-					menu.add(it);
-				}
-				menu.show(viewer, x, y);			
+						for (int i=0;i<ws.size();i++) {
+							it = new JMenuItem(ws.get(i).getTagName());
+							final int id = i;
+							it.addActionListener(new ActionListener() {
+								public void actionPerformed(ActionEvent arg0) {
+									doSelect(ws.get(id), ev.getClickCount(), x, y);
+								}
+							});
+							menu.add(it);
+						}	
+						menu.show(viewer, x, y);			
+					}
+					else {
+						w = ws.get(0);
+					}
 				}
 			}
 			doSelect(w, e.getClickCount(), x, y);
@@ -220,7 +226,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			viewer.repaint();
 		}
 	}
-	
+
 	public void addWidget(Widget ww, int xx, int yy) {
 		final int x = xx;
 		final int y = yy;
@@ -281,6 +287,16 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	public void mouseDragged(MouseEvent e) {
 		int x = e.getX()-viewer.getOffX();
 		int y = e.getY()-viewer.getOffY();
+		if (x < 0) {
+			x = 0;
+		}
+		if (y < 0) {
+			y = 0;
+		}
+		if (x > app.getScreenX())
+			x = app.getScreenX();
+		if (y > app.getScreenY())
+			y = app.getScreenY();
 
 		Widget selected = app.getSelected();
 		if (selected == null) {
@@ -291,7 +307,27 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			}
 		}
 		if (selected != null) {
-			Layout l = (Layout)(selected.getParent());
+			Vector<Layout> ls = app.findLayouts(x, y);
+			Layout l = null;
+			if (ls.size() > 0) {
+				int ix = 0;
+				do {
+					l = ls.get(ix++);
+				} while (l.equals(selected) && ix < ls.size());
+			}
+			else 
+				l = (Layout)(selected.getParent());
+			if (!l.containsWidget(selected)) {
+				((Layout)selected.getParent()).removeWidget(selected);
+				l.addWidget(selected);
+			}
+			if (!l.clickedOn(e.getX(), e.getY())) {
+				l.removeWidget(selected);
+				if (ls.size() > 0) {
+					l = ls.get(0);
+				}
+				l.addWidget(selected);
+			}
 			if (mode == NORMAL) {
 				e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 				int nx = (x+off_x);
