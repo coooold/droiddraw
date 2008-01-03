@@ -31,6 +31,7 @@ public class TextView extends AbstractWidget {
 	PropertiesPanel p;
 	Font f;
 	BufferedImage bg;
+	Vector<String> texts;
 	
 	public static final String[] propertyNames = 
 		new String[] {"android:textSize", "android:textStyle", "android:typeface", "android:textColor"};
@@ -54,7 +55,8 @@ public class TextView extends AbstractWidget {
 		props.add(textColor);
 		props.add(align);
 		buildFont();
-
+		
+		texts = new Vector<String>();
 		bg = new BufferedImage(1,1,BufferedImage.TYPE_BYTE_GRAY);
 		apply();
 	}
@@ -81,8 +83,31 @@ public class TextView extends AbstractWidget {
 			fontSize = (DisplayMetrics.readSize(fontSz));
 		}
 		buildFont();
+		buildLineBreaks();
 		super.apply();
 		this.baseline = fontSize+pad_y/2;
+	}
+	
+	protected void buildLineBreaks() {
+		String txt = text.getStringValue();
+		texts.clear();
+		int width = AndroidEditor.instance().getScreenX()-getX()-getPadding(LEFT)+getPadding(RIGHT);
+		if (width < 0) {
+			texts.add(txt);
+			return;
+		}
+		
+		int l = stringLength(txt);
+		while (l > width) {
+			int bk = 1;
+			while (stringLength(txt.substring(0,bk)) < width) bk++;
+			bk--;
+			String sub = txt.substring(0, bk);
+			texts.add(sub);
+			txt = txt.substring(bk);
+			l = stringLength(txt);
+		}
+		texts.add(txt);
 	}
 	
 	protected int stringLength(String str) {
@@ -98,25 +123,8 @@ public class TextView extends AbstractWidget {
 		return l;
 	}
 	
-	protected int getSplit(String txt) {
-		int ix = 1;
-		int w = AndroidEditor.instance().getScreenX();
-		while (ix <=txt.length() && stringLength(txt.substring(0, ix)) < w) {
-			ix++;
-		}
-		return ix-1;
-	}
-	
 	protected int getContentHeight() {
-		int h = fontSize+pad_y;
-		String txt = text.getStringValue();
-		int l = stringLength(txt)+pad_x;
-		while (l > AndroidEditor.instance().getScreenX()) {
-			int split = getSplit(txt);
-			txt = txt.substring(split);
-			l = stringLength(txt)+pad_x;
-			h += fontSize+1;
-		}
+		int h = texts.size()*(fontSize+1)+pad_y;
 		return h;
 	}
 	
@@ -132,7 +140,6 @@ public class TextView extends AbstractWidget {
 			int h = fontSize+pad_y/2;
 			String txt = text.getStringValue();
 			int l = stringLength(txt)+pad_x;
-			int w = AndroidEditor.instance().getScreenX();
 			int x = getX()+pad_x/2;
 			if (align.getStringValue().equals("end")) {
 				x = getX()+getWidth()-l+pad_x/2;
@@ -140,15 +147,12 @@ public class TextView extends AbstractWidget {
 			if (align.getStringValue().equals("center")) {
 				x = getX()+getWidth()/2-l/2;
 			}
-			while (l >= w && h < getHeight()) {
-				int split = getSplit(txt);
-				g.drawString(txt.substring(0, split), x, getY()+h);
-				txt = txt.substring(split);
-				l = stringLength(txt)+pad_x;
+			for (String s : texts) {
+				g.drawString(s, x, getY()+h);
 				h += fontSize+1;
+				if (h > getHeight())
+					break;
 			}
-			if (h < getHeight())
-				g.drawString(txt.substring(0, getSplit(txt)), x, getY()+h);
 		}
 	}
 	

@@ -76,7 +76,8 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		if (widgets.size() > 0) {
 			int maxX = 0;
 			for (Widget w : widgets) {
-				int width_w_pad = w.getPadding(LEFT)+w.getWidth()+w.getPadding(RIGHT);
+				/*LEFT padding already in X value*/ 
+				int width_w_pad = w.getWidth()+w.getPadding(RIGHT);
 				if (w.getX()+width_w_pad > maxX)
 					maxX = w.getX()+width_w_pad;
 			}
@@ -90,7 +91,8 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		if (widgets.size() > 0) {
 			int maxY = 0;
 			for (Widget w : widgets) {
-				int height_w_pad = w.getPadding(TOP)+w.getHeight()+w.getPadding(BOTTOM);
+				/*TOP padding already in Y value*/ 
+				int height_w_pad = w.getHeight()+w.getPadding(BOTTOM);
 				if (w.getY()+height_w_pad > maxY)
 					maxY = w.getY()+height_w_pad;
 			}
