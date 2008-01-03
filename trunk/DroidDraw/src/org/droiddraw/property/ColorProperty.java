@@ -31,7 +31,7 @@ public class ColorProperty extends StringProperty {
 				}
 			}
 			catch (NumberFormatException ex) {
-				ex.printStackTrace();
+				AndroidEditor.instance().error(ex);
 			}
 		}
 	}

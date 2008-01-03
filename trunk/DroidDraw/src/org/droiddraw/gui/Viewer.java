@@ -119,9 +119,9 @@ public class Viewer extends JPanel implements DropTargetListener {
 			vl.addWidget(ViewerListener.createWidget((String)data), l.x-getOffX(), l.y-getOffY());
 			e.dropComplete(true);
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			AndroidEditor.instance().error(ex);
 		} catch (UnsupportedFlavorException ex) {
-			ex.printStackTrace();
+			AndroidEditor.instance().error(ex);
 		}
 	}
 

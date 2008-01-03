@@ -18,6 +18,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.widget.Widget;
 
 public class WidgetPanel extends JPanel implements DragGestureListener, DragSourceListener {
@@ -56,7 +57,7 @@ public class WidgetPanel extends JPanel implements DragGestureListener, DragSour
 			ds.startDrag(e, DragSource.DefaultCopyDrop, img, new Point(x,y), t, this);
 			//ds.startDrag(e, DragSource.DefaultCopyDrop, t, this);
 		} catch (InvalidDnDOperationException ex) {
-			ex.printStackTrace();
+			AndroidEditor.instance().error(ex);
 		}
 	}
 	

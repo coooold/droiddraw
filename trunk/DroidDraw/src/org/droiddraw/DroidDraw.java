@@ -20,7 +20,7 @@ public class DroidDraw extends JApplet {
 		try {
 			UIManager.setLookAndFeel(clazz);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			AndroidEditor.instance().error(ex);
 		}
 	}
 	
@@ -50,7 +50,7 @@ public class DroidDraw extends JApplet {
 				URL url = new URL(getCodeBase(), "strings.xml");
 				ae.setStrings(StringHandler.load(url.openStream()));
 			} catch (Exception ex) {
-				ex.printStackTrace();
+				AndroidEditor.instance().error(ex);
 			}
 		}
 		// END

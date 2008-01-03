@@ -1,7 +1,6 @@
 package org.droiddraw.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -21,7 +20,6 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -136,8 +134,7 @@ public class DroidDrawPanel extends JPanel {
 		try {
 			AndroidEditor.instance().generate(new PrintWriter(new FileWriter(f)));
 		} catch (IOException ex) {
-			ex.printStackTrace();
-			error(ex.getMessage(), "Error saving...");
+			AndroidEditor.instance().error(ex);
 		}
 	}
 	
@@ -145,8 +142,7 @@ public class DroidDrawPanel extends JPanel {
 		try {
 			this.open(new FileReader(f));
 		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-			error(ex.getMessage());
+			AndroidEditor.instance().error(ex);
 		}
 	}
 	
@@ -168,32 +164,21 @@ public class DroidDrawPanel extends JPanel {
 			repaint();
 		} 
 		catch (IOException ex) {
-			ex.printStackTrace();
-			error(ex.getMessage());
+			AndroidEditor.instance().error(ex);
 		}
 		catch (SAXException ex) {
-			ex.printStackTrace();
-			error(ex.getMessage());
+			AndroidEditor.instance().error(ex);
 		}
 		catch (ParserConfigurationException ex) {
-			ex.printStackTrace();
-			error(ex.getMessage());
+			AndroidEditor.instance().error(ex);
 		}
-	}
-	
-	public void error(String message) {
-		this.error(message, "Error");
-	}
-	
-	public void error(String message, String title) {
-		JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
 	}
 	
 	protected static final void switchToLookAndFeel(String clazz) {
 		try {
 			UIManager.setLookAndFeel(clazz);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			AndroidEditor.instance().error(ex);
 		}
 	}
 	
@@ -337,7 +322,6 @@ public class DroidDrawPanel extends JPanel {
 		p.add(tb);
 		
 		JButton load = new JButton("Load");
-		final Component c = this;
 		load.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
@@ -353,27 +337,15 @@ public class DroidDrawPanel extends JPanel {
 					viewer.repaint();
 				} 
 				catch (Exception ex) {
-					JOptionPane.showMessageDialog(c, ex.getMessage(), ex.toString(), JOptionPane.ERROR_MESSAGE);
-					ex.printStackTrace();
+					AndroidEditor.instance().error(ex);
 				}
 			}
 		});
 		
-		//sl.putConstraint(SpringLayout.WEST, gen, 5, SpringLayout.WEST, p);
-		//sl.putConstraint(SpringLayout.NORTH, gen, 0, SpringLayout.SOUTH, tb);
-		//sl.putConstraint(SpringLayout.NORTH, load, 0, SpringLayout.SOUTH, tb);
-		//sl.putConstraint(SpringLayout.EAST, gen, 0, SpringLayout.EAST, layout);
-		//sl.putConstraint(SpringLayout.WEST, gen, 0, SpringLayout.WEST, layout);
-		//sl.putConstraint(SpringLayout.EAST, layout, 0, SpringLayout.EAST, tb);
-		//sl.putConstraint(SpringLayout.SOUTH, p, 5, SpringLayout.SOUTH, gen);
-		//p.add(load);
-		//p.add(gen);
 		
 		p.setSize(200, 300);
 		p.validate();
-		//bp.add(p);
 		
-		//layout.setBorder(BorderFactory.createTitledBorder("Layout"));
 		jp.setLayout(new BorderLayout());
 		
 		JComboBox screen_size = new JComboBox(new String[] {"QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait"});
