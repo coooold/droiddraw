@@ -14,6 +14,7 @@ public interface Layout extends Widget {
 	public void addEditableProperties(Widget w);
 	public void removeEditableProperties(Widget w);
 	public void removeAllWidgets();
+	public boolean containsWidget(Widget w);
 	public int getScreenX();
 	public int getScreenY();
 	
