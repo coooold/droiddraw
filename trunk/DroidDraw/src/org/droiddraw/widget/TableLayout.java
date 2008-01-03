@@ -89,19 +89,4 @@ public class TableLayout extends LinearLayout {
 			}
 		}
 	}
-
-	@Override
-	public int getContentWidth() {
-		if (widgets.size() > 0) {
-			int maxX = 0;
-			for (Widget w : widgets) {
-				int width_w_pad = w.getPadding(LEFT)+w.getWidth()+w.getPadding(RIGHT);
-				if (w.getX()+width_w_pad > maxX)
-					maxX = w.getX()+width_w_pad;
-			}
-			return maxX;
-		}
-		else
-			return 100;
-	}	
 }

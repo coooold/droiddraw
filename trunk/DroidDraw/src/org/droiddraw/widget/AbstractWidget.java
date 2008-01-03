@@ -218,7 +218,7 @@ public abstract class AbstractWidget implements Widget {
 	public void drawBackground(Graphics g) {
 		if (background.getColorValue() != null) {
 			g.setColor(background.getColorValue());
-			g.fillRect(getX(), getY(), getWidth(), getHeight());
+			g.fillRect(getX()-getPadding(LEFT), getY()-getPadding(TOP), getWidth()+getPadding(LEFT)+getPadding(RIGHT), getHeight()+getPadding(TOP)+getPadding(BOTTOM));
 		}
 	}
 

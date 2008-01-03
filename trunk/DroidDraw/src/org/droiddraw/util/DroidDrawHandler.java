@@ -273,5 +273,6 @@ public class DroidDrawHandler extends DefaultHandler {
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser parser = factory.newSAXParser();
 		parser.parse(in, ddh);
+		AndroidEditor.instance().getLayout().repositionAllWidgets();
 	}
 }
