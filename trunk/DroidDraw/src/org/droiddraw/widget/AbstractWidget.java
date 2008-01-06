@@ -226,7 +226,7 @@ public abstract class AbstractWidget implements Widget {
 			}
 			h = h-getY()-padding[BOTTOM];
 		}
-		
+
 		width = w;
 		height = h;
 	}
