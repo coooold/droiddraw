@@ -27,7 +27,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		w.setParent(this);
 		addEditableProperties(w);
 		positionWidget(w);
-		apply();
+		this.readWidthHeight();
 		if (getParent() != null) {
 			getParent().repositionAllWidgets();
 		}

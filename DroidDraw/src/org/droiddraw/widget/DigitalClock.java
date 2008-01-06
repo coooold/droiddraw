@@ -17,7 +17,6 @@ public class DigitalClock extends TextView {
 	
 	public void paint(Graphics g) {
 		setDate();
-		apply();
 		super.paint(g);
 	}
 }

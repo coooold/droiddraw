@@ -16,6 +16,10 @@ import org.droiddraw.property.StringProperty;
 import org.droiddraw.util.DisplayMetrics;
 
 public class TextView extends AbstractWidget {
+	public static final int START = 0;
+	public static final int CENTER = 1;
+	public static final int END = 2;
+	
 	int fontSize = 14;
 	
 	StringProperty text;
@@ -31,7 +35,6 @@ public class TextView extends AbstractWidget {
 	PropertiesPanel p;
 	Font f;
 	BufferedImage bg;
-	Vector<String> texts;
 	
 	boolean osx;
 	
@@ -60,7 +63,6 @@ public class TextView extends AbstractWidget {
 		osx = (System.getProperty("os.name").toLowerCase().contains("mac os x"));
 		buildFont();
 		
-		texts = new Vector<String>();
 		bg = new BufferedImage(1,1,BufferedImage.TYPE_BYTE_GRAY);
 		apply();
 	}
@@ -86,22 +88,22 @@ public class TextView extends AbstractWidget {
 	}
 
 	public void apply() {
+		super.apply();
 		if (fontSz.getStringValue() != null && fontSz.getStringValue().length() > 0) {
 			fontSize = (DisplayMetrics.readSize(fontSz));
 		}
 		buildFont();
-		buildLineBreaks();
-		super.apply();
+		this.readWidthHeight();
 		this.baseline = fontSize+pad_y/2;
 	}
 	
-	protected void buildLineBreaks() {
-		String txt = text.getStringValue();
-		texts.clear();
-		int width = AndroidEditor.instance().getScreenX()-getX()-getPadding(LEFT)+getPadding(RIGHT);
+	protected Vector<String> buildLineBreaks(String textVal) {
+		String txt = textVal;
+		Vector<String> texts = new Vector<String>();
+		int width = getWidth();
 		if (width < 0) {
 			texts.add(txt);
-			return;
+			return texts;
 		}
 		
 		int l = stringLength(txt);
@@ -109,12 +111,16 @@ public class TextView extends AbstractWidget {
 			int bk = 1;
 			while (stringLength(txt.substring(0,bk)) < width) bk++;
 			bk--;
+			if (bk == 0) {
+				return texts;
+			}
 			String sub = txt.substring(0, bk);
 			texts.add(sub);
 			txt = txt.substring(bk);
 			l = stringLength(txt);
 		}
 		texts.add(txt);
+		return texts;
 	}
 	
 	protected int stringLength(String str) {
@@ -131,12 +137,46 @@ public class TextView extends AbstractWidget {
 	}
 	
 	protected int getContentHeight() {
+		Vector<String> texts = buildLineBreaks(text.getStringValue());
+		if (texts.size() == 0) return fontSize+pad_y;
 		int h = texts.size()*(fontSize+1)+pad_y;
 		return h;
 	}
 	
+	protected void drawText(Graphics g, int x, int h) {
+		int aln = START;
+		if (align.getStringValue().equals("end")) {
+			aln = END;
+		}
+		else if (align.getStringValue().equals("center")) {
+			aln = CENTER;
+		}
+		this.drawText(g, x, h, aln);
+	}
+		
+	protected void drawText(Graphics g, int dx, int h, int align) {
+		int x = 0;
+		for (String s : buildLineBreaks(text.getStringValue())) {
+			int l = stringLength(s);
+			if (align == END) {
+				x = getX()+getWidth()-l-pad_x/2+dx;
+			}
+			else if (align == CENTER) {
+				x = getX()+getWidth()/2-l/2+dx;
+			}	
+			else {
+				x = getX()+pad_x/2+dx;
+			}	
+			g.drawString(s, x, getY()+h);
+			h += fontSize+1;
+			if (h > getHeight())
+				break;
+		}
+	}
+	
 	public void paint(Graphics g) {
 		drawBackground(g);
+		
 		if (text.getStringValue() != null) {
 			Color c = textColor.getColorValue();
 			if (c == null)
@@ -145,21 +185,7 @@ public class TextView extends AbstractWidget {
 			g.setFont(f);
 			
 			int h = fontSize+pad_y/2;
-			String txt = text.getStringValue();
-			int l = stringLength(txt)+pad_x;
-			int x = getX()+pad_x/2;
-			if (align.getStringValue().equals("end")) {
-				x = getX()+getWidth()-l+pad_x/2;
-			}
-			if (align.getStringValue().equals("center")) {
-				x = getX()+getWidth()/2-l/2;
-			}
-			for (String s : texts) {
-				g.drawString(s, x, getY()+h);
-				h += fontSize+1;
-				if (h > getHeight())
-					break;
-			}
+			drawText(g, 0, h);
 		}
 	}
 	

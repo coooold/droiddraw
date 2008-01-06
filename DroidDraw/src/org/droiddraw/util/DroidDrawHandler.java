@@ -233,11 +233,10 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 		}
 		Layout layout = layoutStack.peek();
-		//if (layout instanceof LinearLayout) {
-		//	w.setPosition(-Integer.MAX_VALUE,-Integer.MAX_VALUE);
-		//}
-		//else
 		w.apply();
+		if (layout instanceof LinearLayout) {
+			w.setPosition(layout.getWidth(),layout.getHeight());
+		}
 		layout.addWidget(w);
 		if (layout instanceof AbsoluteLayout) {
 			int x = DisplayMetrics.readSize(atts.getValue("android:layout_x"));

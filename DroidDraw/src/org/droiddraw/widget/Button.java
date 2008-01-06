@@ -43,8 +43,10 @@ public class Button extends TextView {
 			g.setColor(Color.black);
 		}
 		g.setFont(f);
-		int w = g.getFontMetrics(f).stringWidth(text.getStringValue());
+		//int w = g.getFontMetrics(f).stringWidth(text.getStringValue());
 		g.setColor(textColor.getColorValue());
-		g.drawString(text.getStringValue(), getX()+getWidth()/2-w/2, getY()+fontSize+2);
+		
+		drawText(g, 0, fontSize+2, CENTER);
+		//g.drawString(text.getStringValue(), getX()+getWidth()/2-w/2, getY()+fontSize+2);
 	}
 }

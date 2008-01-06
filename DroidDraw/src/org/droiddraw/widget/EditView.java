@@ -94,7 +94,8 @@ public class EditView extends TextView {
 			s = text.getStringValue();
 		}
 		g.setColor(textColor.getColorValue());
-		g.drawString(s, getX()+pad_x/2, getY()+fontSize+pad_y/2-1);
+		//g.drawString(s, getX()+pad_x/2, getY()+fontSize+pad_y/2-1);
+		this.drawText(g, 0, fontSize+pad_y/2-1);
 		g.setColor(Color.black);
 		g.drawLine(getX()+pad_x/2-2, getY()+4, getX()+pad_x/2-2, getY()+fontSize+pad_y/2+1);
 	}
