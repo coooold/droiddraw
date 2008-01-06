@@ -24,6 +24,7 @@ import javax.swing.JTextField;
 import org.droiddraw.AndroidEditor;
 import org.droiddraw.property.BooleanProperty;
 import org.droiddraw.property.ColorProperty;
+import org.droiddraw.property.IntProperty;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
@@ -81,8 +82,18 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 					components.put(prop, jcb);
 					items.add(jcb);
 				}	
+				else if (prop instanceof IntProperty) {
+					items.add(new JLabel(prop.getEnglishName()));
+					JTextField jf = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 5);	
+					JPanel jp = new JPanel();
+					jp.setLayout(fl);
+					jp.add(jf);
+					components.put(prop, jf);
+					items.add(jp);
+				}
 				else if (prop instanceof StringProperty) {
 					items.add(new JLabel(prop.getEnglishName()));
+					
 					JComponent jc;
 					if (prop instanceof SelectProperty) {
 						JComboBox jcb = new JComboBox(((SelectProperty)prop).getOptions());
@@ -165,6 +176,14 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 				if (prop instanceof BooleanProperty) {
 					JCheckBox jcb = (JCheckBox)components.get(prop);
 					((BooleanProperty)prop).setBooleanValue(jcb.isSelected());
+				}
+				else if (prop instanceof IntProperty) {
+					JTextField jf = (JTextField)components.get(prop);
+					try {
+						((IntProperty)prop).setIntValue(Integer.parseInt(jf.getText()));
+					} catch (NumberFormatException ex) {
+						AndroidEditor.instance().error(ex);
+					}
 				}
 				else if (prop instanceof StringProperty) {
 					if (prop instanceof SelectProperty) {

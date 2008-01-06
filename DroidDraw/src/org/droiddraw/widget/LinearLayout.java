@@ -90,11 +90,21 @@ public class LinearLayout extends AbstractLayout {
 		int x = 0;
 		Vector<Widget> with_weight = new Vector<Widget>();
 		int max_base = 0;
-
+		int max_base_bottom = 0;
+		
 		for (Widget w : widgets) {
 			if (!vertical) {
-				if (! (w instanceof Layout) && w.getBaseline() > max_base) {
-					max_base = w.getBaseline();
+				if (! (w instanceof Layout)) {
+					if (!w.propertyHasValueByAttName("android:layout_gravity", "bottom")) {
+						if (w.getBaseline() > max_base) {
+							max_base = w.getBaseline();
+						}
+					}
+					else {
+						if (w.getHeight()-w.getBaseline() > max_base_bottom) {
+							max_base_bottom = w.getHeight()-w.getBaseline();
+						}
+					}
 				}
 			}
 
@@ -134,11 +144,10 @@ public class LinearLayout extends AbstractLayout {
 					x = w.getPadding(Widget.LEFT);
 			}
 			else {
-				int height_w_pad = (w.getPadding(Widget.TOP)+w.getHeight()+w.getPadding(Widget.BOTTOM));
 				if ("bottom".equals(gravity))
-					y = getHeight()-height_w_pad;
+					y = getHeight()-max_base_bottom-w.getBaseline();
 				else if ("center_vertical".equals(gravity) || "center".equals(gravity))
-					y = (getHeight()-height_w_pad)/2;
+					y = getHeight()/2-w.getBaseline();
 				else  {
 					if (w instanceof Layout) {
 						y = w.getPadding(Widget.TOP);

@@ -27,6 +27,7 @@ public interface Widget {
 	public Vector<Property> getProperties();
 	public void setPropertyByAttName(String attName, String value);
 	public Property getPropertyByAttName(String attName);
+	public boolean propertyHasValueByAttName(String attName, Object value);
 	public void addProperty(Property p);
 	public void removeProperty(Property p);
 	public void setPropertyChangeListener(PropertyChangeListener l);

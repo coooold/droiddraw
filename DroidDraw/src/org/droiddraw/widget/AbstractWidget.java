@@ -103,6 +103,15 @@ public abstract class AbstractWidget implements Widget {
 		return null;
 	}
 	
+	public boolean propertyHasValueByAttName(String attName, Object value) {
+		for (Property prop : props) {
+			if (prop.getAtttributeName().equals(attName) && prop.getValue().equals(value)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 
 	public void setPropertyByAttName(String attName, String value) {
 		Property p = getPropertyByAttName(attName);
@@ -180,19 +189,43 @@ public abstract class AbstractWidget implements Widget {
 			h = getHeight();
 		}
 		
-		if (widthProp.getStringValue().equals("wrap_content"))
-			w = getContentWidth();
-		if (heightProp.getStringValue().equals("wrap_content"))
-			h = getContentHeight();
-		
-		if (widthProp.getStringValue().equals("fill_parent")) 
-			w = getParent()!=null?getParent().getWidth()-padding[LEFT]-padding[RIGHT]:AndroidEditor.instance().getScreenX()-AndroidEditor.OFFSET_X;
-		if (heightProp.getStringValue().equals("fill_parent"))
-			h = getParent()!=null?getParent().getHeight()-padding[TOP]-padding[BOTTOM]:AndroidEditor.instance().getScreenY()-AndroidEditor.OFFSET_Y;
-			
 		try {
 			setPadding(DisplayMetrics.readSize(pad.getStringValue()));	
 		} catch (NumberFormatException ex) {}
+		
+		if (widthProp.getStringValue().equals("wrap_content")) {
+			w = getContentWidth();
+		}
+		if (heightProp.getStringValue().equals("wrap_content")) {
+			h = getContentHeight();
+		}
+		
+		if (widthProp.getStringValue().equals("fill_parent")) {
+			if (getParent() != null) {
+				StringProperty prop = (StringProperty)parent.getPropertyByAttName("android:layout_width");
+				if (prop.getStringValue().equals("wrap_content"))
+					w = getContentWidth();
+				else
+					w = getParent().getWidth();
+			}
+			else {
+				w = AndroidEditor.instance().getScreenX()-AndroidEditor.OFFSET_X;
+			}
+			w = w-getX()-padding[RIGHT];
+		}
+		if (heightProp.getStringValue().equals("fill_parent")) {
+			if (getParent() != null) {
+				StringProperty prop = (StringProperty)parent.getPropertyByAttName("android:layout_height");
+				if (prop.getStringValue().equals("wrap_content"))
+					h = getContentHeight();
+				else
+					h = getParent().getHeight();
+			}
+			else {
+				h = AndroidEditor.instance().getScreenY();
+			}
+			h = h-getY()-padding[BOTTOM];
+		}
 		
 		width = w;
 		height = h;
@@ -201,6 +234,10 @@ public abstract class AbstractWidget implements Widget {
 	public void apply() {
 		readWidthHeight();
 		baseline = getHeight()/2;
+		if (getParent() == null) {
+			setPosition(getPadding(LEFT)+AndroidEditor.OFFSET_X, getPadding(TOP)+AndroidEditor.OFFSET_Y);
+		}
+
 		//if (getParent() != null) {
 		//	getParent().repositionAllWidgets();
 		//}

@@ -41,6 +41,7 @@ import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
 import org.droiddraw.widget.FrameLayout;
+import org.droiddraw.widget.GridView;
 import org.droiddraw.widget.ImageButton;
 import org.droiddraw.widget.ImageView;
 import org.droiddraw.widget.Layout;
@@ -81,7 +82,6 @@ public class DroidDrawPanel extends JPanel {
 			String txt = text.getText();
 			int start = text.getSelectionStart();
 			int end = text.getSelectionEnd();
-			System.out.println(start+":"+end);
 			if (end < txt.length())
 				text.setText(txt.substring(0, start)+txt.substring(end+1));
 			else 
@@ -414,6 +414,7 @@ public class DroidDrawPanel extends JPanel {
 		mp.add(new WidgetPanel(new TextView("TextView")));
 		mp.add(new WidgetPanel(new Ticker()));
 		mp.add(new WidgetPanel(new TimePicker()));
+		mp.add(new WidgetPanel(new GridView()));
 		wp.add(mp);
 		//wp.setSize(wp.getWidth(), 150);
 		JPanel ppp = new JPanel();

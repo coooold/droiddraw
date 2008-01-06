@@ -33,6 +33,8 @@ public class TextView extends AbstractWidget {
 	BufferedImage bg;
 	Vector<String> texts;
 	
+	boolean osx;
+	
 	public static final String[] propertyNames = 
 		new String[] {"android:textSize", "android:textStyle", "android:typeface", "android:textColor"};
 	
@@ -54,6 +56,8 @@ public class TextView extends AbstractWidget {
 		props.add(style);
 		props.add(textColor);
 		props.add(align);
+		
+		osx = (System.getProperty("os.name").toLowerCase().contains("mac os x"));
 		buildFont();
 		
 		texts = new Vector<String>();
@@ -62,7 +66,10 @@ public class TextView extends AbstractWidget {
 	}
 
 	protected void buildFont() {
-		f = new Font(face.getStringValue(),Font.PLAIN,fontSize);
+		if (osx)
+			f = new Font("Arial", Font.PLAIN, fontSize);
+		else
+			f = new Font(face.getStringValue(),Font.PLAIN,fontSize);
 		if (style.getStringValue() != null && style.getStringValue().contains("bold")) {
 			f = f.deriveFont(f.getStyle() | Font.BOLD);
 		}
