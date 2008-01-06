@@ -45,6 +45,9 @@ public class StringHandler extends DefaultHandler
         		int code = Integer.parseInt(str.substring(ix+2, ix+6), 16);
         		str = str.substring(0, ix)+(char)code+str.substring(ix+6);
         	}
+        	while (str.indexOf("\\n")!=-1) {
+        		str = str.replace("\\n", "\n");
+        	}
             strings.put(name, str);
         }
     }
