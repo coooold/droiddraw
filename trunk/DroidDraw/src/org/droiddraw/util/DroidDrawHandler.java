@@ -22,6 +22,7 @@ import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
 import org.droiddraw.widget.FrameLayout;
+import org.droiddraw.widget.GridView;
 import org.droiddraw.widget.ImageButton;
 import org.droiddraw.widget.ImageView;
 import org.droiddraw.widget.Layout;
@@ -125,7 +126,7 @@ public class DroidDrawHandler extends DefaultHandler {
 					}
 				}
 				l.apply();
-				AndroidEditor.instance().setLayout(l);
+				AndroidEditor.instance().setLayout(l, false);
 			}
 			else {
 				addWidget(l, atts);
@@ -200,6 +201,13 @@ public class DroidDrawHandler extends DefaultHandler {
 			else if (qName.equals("View")) {
 				w = new View();
 			}
+			else if (qName.equals("GridView")) {
+				w = new GridView();
+				for (int i=0;i<GridView.propertyNames.length;i++) {
+					w.setPropertyByAttName(GridView.propertyNames[i], 
+							atts.getValue(GridView.propertyNames[i]));
+				}
+			}
 			if (w != null) {
 				addWidget(w, atts);
 			}
@@ -213,9 +221,7 @@ public class DroidDrawHandler extends DefaultHandler {
 				w.setPropertyByAttName(TextView.propertyNames[i], atts.getValue(TextView.propertyNames[i]));
 			}
 		}
-		int x = DisplayMetrics.readSize(atts.getValue("android:layout_x"));
-		int y = DisplayMetrics.readSize(atts.getValue("android:layout_y"));
-	
+		
 		for (String prop : all_props) {
 			if (atts.getValue(prop) != null) {
 				w.setPropertyByAttName(prop, atts.getValue(prop));	
@@ -227,13 +233,19 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 		}
 		Layout layout = layoutStack.peek();
-		if (layout instanceof LinearLayout) {
-			w.setPosition(-Integer.MAX_VALUE,-Integer.MAX_VALUE);
-		}
-		else
-			w.setPosition(x, y);
+		//if (layout instanceof LinearLayout) {
+		//	w.setPosition(-Integer.MAX_VALUE,-Integer.MAX_VALUE);
+		//}
+		//else
 		w.apply();
 		layout.addWidget(w);
+		if (layout instanceof AbsoluteLayout) {
+			int x = DisplayMetrics.readSize(atts.getValue("android:layout_x"));
+			int y = DisplayMetrics.readSize(atts.getValue("android:layout_y"));
+			w.setPropertyByAttName("android:layout_x", atts.getValue("android:layout_x"));
+			w.setPropertyByAttName("android:layout_y", atts.getValue("android:layout_y"));
+			w.setPosition(x, y);
+		}
 	}
 	
 	

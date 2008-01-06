@@ -52,17 +52,14 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D)g;
+	
+		drawBackground(g);
 		g2d.translate(getX(), getY());
-		
-		if (background.getColorValue() != null) {
-			g.setColor(background.getColorValue());
-			g.fillRect(0, 0, getWidth(), getHeight());
-		}
 		
 		g.setColor(Color.lightGray);
 		if (widgets.size() == 0) {
 			g.drawString(tagName, 2, 15);
-		}
+		}	
 		g.drawRect(0, 0, getWidth(), getHeight());
 		for (Widget w : widgets) {
 			if (w.isVisible())
@@ -77,6 +74,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 			int maxX = 0;
 			for (Widget w : widgets) {
 				/*LEFT padding already in X value*/ 
+				w.apply();
 				int width_w_pad = w.getWidth()+w.getPadding(RIGHT);
 				if (w.getX()+width_w_pad > maxX)
 					maxX = w.getX()+width_w_pad;

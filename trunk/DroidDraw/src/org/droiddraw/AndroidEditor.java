@@ -54,7 +54,7 @@ public class AndroidEditor {
 		colors.put("magenta", Color.magenta);
 		colors.put("white", Color.white);
 	}
-
+	
 	public PropertiesPanel getPropertiesPanel() {
 		return pp;
 	}
@@ -156,6 +156,15 @@ public class AndroidEditor {
 
 	
 	public void setLayout(Layout l) {
+		setLayout(l, true);
+	}
+	
+	public void setLayout(Layout l, boolean fill) {
+		if (fill) {
+			l.setPropertyByAttName("android:layout_width", "fill_parent");
+			l.setPropertyByAttName("android:layout_height", "fill_parent");
+		}
+		
 		if (this.layout != null) {
 			Vector<Widget> widgets = layout.getWidgets();
 			for (Widget w : widgets) {
@@ -167,8 +176,6 @@ public class AndroidEditor {
 		if (selected == null) {
 			pp.setProperties(l.getProperties(), l);
 		}
-		l.setPropertyByAttName("android:layout_width", "fill_parent");
-		l.setPropertyByAttName("android:layout_height", "fill_parent");
 	}
 	
 	public Layout getLayout() {

@@ -1,6 +1,7 @@
 package org.droiddraw.widget;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Image;
 
@@ -12,6 +13,7 @@ public class Spinner extends AbstractWidget {
 	NineWayImage img;
 	NineWayImage arrows;
 	BooleanProperty onTop;
+	Font f;
 	
 	public Spinner() {
 		super("Spinner");
@@ -25,6 +27,8 @@ public class Spinner extends AbstractWidget {
 		
 		onTop = new BooleanProperty("Selector on Top", "android:drawSelectorOnTop", false);
 		props.add(onTop);
+		
+		f = new Font("Arial", Font.PLAIN, 14);
 		
 		apply();
 	}
@@ -45,7 +49,8 @@ public class Spinner extends AbstractWidget {
 			arrows.paint(g, getX(), getY(), getWidth(), getHeight());
 		}
 		g.setColor(Color.black);
-		g.drawString("Spinner", getX()+15, getY()+16);
+		g.setFont(f);
+		g.drawString("Spinner", getX()+10, getY()+16);
 	}
 
 }
