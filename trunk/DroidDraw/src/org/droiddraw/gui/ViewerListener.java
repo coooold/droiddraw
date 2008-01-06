@@ -25,6 +25,7 @@ import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
 import org.droiddraw.widget.FrameLayout;
+import org.droiddraw.widget.Gallery;
 import org.droiddraw.widget.GridView;
 import org.droiddraw.widget.ImageButton;
 import org.droiddraw.widget.ImageView;
@@ -150,6 +151,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return new ScrollView();
 		else if (str.equals("GridView"))
 			return new GridView();
+		else if (str.equals("Gallery"))
+			return new Gallery();
 		else
 			return null;
 	}

@@ -22,6 +22,7 @@ import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
 import org.droiddraw.widget.FrameLayout;
+import org.droiddraw.widget.Gallery;
 import org.droiddraw.widget.GridView;
 import org.droiddraw.widget.ImageButton;
 import org.droiddraw.widget.ImageView;
@@ -206,6 +207,13 @@ public class DroidDrawHandler extends DefaultHandler {
 				for (int i=0;i<GridView.propertyNames.length;i++) {
 					w.setPropertyByAttName(GridView.propertyNames[i], 
 							atts.getValue(GridView.propertyNames[i]));
+				}
+			}
+			else if (qName.equals("Gallery")) {
+				w = new Gallery();
+				for (int i=0;i<Gallery.propertyNames.length;i++) {
+					w.setPropertyByAttName(Gallery.propertyNames[i], 
+							atts.getValue(Gallery.propertyNames[i]));
 				}
 			}
 			if (w != null) {
