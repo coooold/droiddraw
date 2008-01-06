@@ -41,6 +41,7 @@ import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
 import org.droiddraw.widget.FrameLayout;
+import org.droiddraw.widget.Gallery;
 import org.droiddraw.widget.GridView;
 import org.droiddraw.widget.ImageButton;
 import org.droiddraw.widget.ImageView;
@@ -415,6 +416,10 @@ public class DroidDrawPanel extends JPanel {
 		mp.add(new WidgetPanel(new Ticker()));
 		mp.add(new WidgetPanel(new TimePicker()));
 		mp.add(new WidgetPanel(new GridView()));
+		Gallery g = new Gallery();
+		g.setWidth(100);
+		g.setHeight(40);
+		mp.add(new WidgetPanel(g));
 		wp.add(mp);
 		//wp.setSize(wp.getWidth(), 150);
 		JPanel ppp = new JPanel();
