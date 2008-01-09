@@ -8,6 +8,8 @@ import org.droiddraw.property.StringProperty;
 
 public class LinearLayout extends AbstractLayout {
 	SelectProperty orientation;
+	SelectProperty gravity;
+	
 	boolean vertical;
 	int max_base;
 	
@@ -26,7 +28,9 @@ public class LinearLayout extends AbstractLayout {
 		super("LinearLayout");
 		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 0);
 		this.orientation.setSelectedIndex(1);
+		this.gravity = new SelectProperty("Gravity", "android:gravity", new String[] {"top", "bottom", "left", "right"}, 0);
 		addProperty(orientation);
+		addProperty(gravity);
 	}
 	
 	@Override
@@ -86,16 +90,22 @@ public class LinearLayout extends AbstractLayout {
 	}
 
 	protected void repositionAllWidgetsInternal() {
-		int y = 0;
-		int x = 0;
+		int y;
+		int x;
 		Vector<Widget> with_weight = new Vector<Widget>();
 		int max_base = 0;
 		int max_base_bottom = 0;
+		if (gravity == null) 
+			return;
+		String lGrav = gravity.getStringValue();
 		
+		y = 0;
+		x = 0;
 		for (Widget w : widgets) {
 			if (!vertical) {
 				if (! (w instanceof Layout)) {
-					if (!w.propertyHasValueByAttName("android:layout_gravity", "bottom")) {
+					if (!w.propertyHasValueByAttName("android:layout_gravity", "bottom") ||
+					 	(!gravity.isDefault() && lGrav.equals("bottom"))) {
 						if (w.getBaseline() > max_base) {
 							max_base = w.getBaseline();
 						}
@@ -116,15 +126,15 @@ public class LinearLayout extends AbstractLayout {
 			else
 				x += w.getPadding(LEFT)+w.getWidth()+w.getPadding(RIGHT);
 		}
+		int extra=0;
+		if (vertical) {
+			extra = getHeight()-y;
+		}
+		else {
+			extra = getWidth()-x;
+		}
 		if (with_weight.size() > 0) {
-			if (vertical) {
-				int extra = getHeight()-y;
-				share = extra/with_weight.size();
-			}
-			else {
-				int extra = getWidth()-x;
-				share = extra/with_weight.size();
-			}
+			share = extra/with_weight.size();
 		}
 		y=0;
 		x=0;
@@ -163,7 +173,17 @@ public class LinearLayout extends AbstractLayout {
 			else {
 				x+=w.getPadding(Widget.LEFT);
 			}
-			w.setPosition(x, y);
+			w.setPosition(x,y);
+			if (with_weight.size() == 0) {
+				if (vertical) {
+					if (lGrav.equals("bottom")) {
+						w.setPosition(x, y+extra);
+					}
+				}
+				else if (lGrav.equals("right")) {
+					w.setPosition(x+extra, y);
+				}
+			}
 			if (vertical) {			
 				y+=w.getHeight()+w.getPadding(Widget.BOTTOM);
 				if (with_weight.contains(w)) {

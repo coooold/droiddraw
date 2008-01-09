@@ -80,12 +80,14 @@ public class DroidDrawHandler extends DefaultHandler {
 			if (qName.equals("AbsoluteLayout")) 
 				l = new AbsoluteLayout();
 			else if (qName.equals("LinearLayout") || (qName.equals("RadioGroup"))) {
-				if (qName.equals("LinearLayout"))
+				if (qName.equals("LinearLayout")) {
 					l = new LinearLayout();
+				}
 				else if (qName.equals("RadioGroup")) {
 					l = new RadioGroup();
 					l.setPropertyByAttName("android:checkedButton", atts.getValue("android:checkedButton"));
 				}
+				l.setPropertyByAttName("android:gravity", atts.getValue("android:gravity"));
 				if (atts.getValue("android:orientation") == null) {
 					l.setPropertyByAttName("android:orientation", "horizontal");
 				}
