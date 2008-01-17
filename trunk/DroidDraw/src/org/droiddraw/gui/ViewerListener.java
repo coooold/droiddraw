@@ -323,14 +323,14 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			}
 			else 
 				l = (Layout)(selected.getParent());
-			if (!(selected instanceof Layout && ((Layout)selected).containsWidget(l))) {
-				if (l != selected.getParent()) {
+			if (l != selected.getParent()) {
+				if (!(selected instanceof Layout) || !((Layout)selected).containsWidget(l)){
 					((Layout)selected.getParent()).removeWidget(selected);
 					l.addWidget(selected);
 				}
-			}
-			else {
-				l = selected.getParent();
+				else {
+					l = selected.getParent();
+				}
 			}
 
 			if (mode == NORMAL) {
