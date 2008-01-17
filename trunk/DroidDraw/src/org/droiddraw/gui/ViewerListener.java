@@ -208,8 +208,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			doSelect(w, e.getClickCount(), x, y);
 		}
 		else {
-			Widget w = createWidget();
-			addWidget(w, x, y);
+			//Widget w = createWidget();
+			//addWidget(w, x, y);
 		}
 	}
 
@@ -313,8 +313,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			}
 		}
 		if (selected != null) {
+			Layout l = selected.getParent();
 			Vector<Layout> ls = app.findLayouts(x, y);
-			Layout l = null;
 			if (ls.size() > 0) {
 				int ix = 0;
 				do {
@@ -323,17 +323,16 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			}
 			else 
 				l = (Layout)(selected.getParent());
-			if (!l.containsWidget(selected)) {
-				((Layout)selected.getParent()).removeWidget(selected);
-				l.addWidget(selected);
-			}
-			if (!l.clickedOn(e.getX(), e.getY())) {
-				l.removeWidget(selected);
-				if (ls.size() > 0) {
-					l = ls.get(0);
+			if (!(selected instanceof Layout && ((Layout)selected).containsWidget(l))) {
+				if (l != selected.getParent()) {
+					((Layout)selected.getParent()).removeWidget(selected);
+					l.addWidget(selected);
 				}
-				l.addWidget(selected);
 			}
+			else {
+				l = selected.getParent();
+			}
+
 			if (mode == NORMAL) {
 				e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 				int nx = (x+off_x);
