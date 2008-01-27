@@ -66,6 +66,21 @@ public abstract class AbstractWidget implements Widget {
 	
 	public void setParent(Layout parent) {
 		this.parent = parent;
+		((AbstractWidget)parent).parentTest(this);
+	}
+	
+	public void parentTest(Widget w) {
+		try {
+			if (w == this)
+				throw new IllegalArgumentException("BAD!");
+		}
+		catch (Exception ex) {
+			ex.printStackTrace();
+			System.exit(0);
+		}
+		if (getParent() != null) {
+			((AbstractWidget)getParent()).parentTest(w);
+		}
 	}
 	
 	public String getId() {

@@ -33,7 +33,10 @@ public class ImageButton extends ImageView {
 		if (img != null) {
 			img.paint(g, getX(), getY(), getWidth(), getHeight());
 		}
-		if (paint != null) {
+		if (super.img != null) {
+			g.drawImage(super.img, getX()+10, getY()+10, getWidth()-20, getHeight()-20, null);
+		}
+		else if (paint != null) {
 			g.drawImage(paint, getX()+10, getY()+10, getWidth()-20, getHeight()-20, null);
 		}
 	}

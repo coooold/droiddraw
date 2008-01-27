@@ -32,17 +32,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
-import org.droiddraw.util.ColorHandler;
 import org.droiddraw.util.StringHandler;
 import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
 import org.simplericity.macify.eawt.DefaultApplication;
-import org.xml.sax.SAXException;
 
 import edu.stanford.ejalbert.BrowserLauncher;
 import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
@@ -56,6 +53,8 @@ public class Main implements ApplicationListener {
 	static JFileChooser jfc = null;
 	static FileDialog fd = null;
 	static boolean osx;
+	static FileFilter xmlFilter = null;
+	static FileFilter dirFilter = null;
 	
 	protected static void doMacOSXIntegration() {
 		Application a = new DefaultApplication();
@@ -93,6 +92,7 @@ public class Main implements ApplicationListener {
 	
 	protected static File doOpen() {
 		if (!osx) {
+			jfc.setFileFilter(xmlFilter);
 			int res = jfc.showOpenDialog(ddp);
 			if (res == JFileChooser.APPROVE_OPTION) {
 				return jfc.getSelectedFile();
@@ -105,6 +105,28 @@ public class Main implements ApplicationListener {
 				return new File(fd.getDirectory()+"/"+fd.getFile());
 			}
 		}
+		return null;
+	}
+	
+	protected static File doOpenDir() {
+		//if (!osx) {
+			jfc.setFileFilter(dirFilter);
+			jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+			int res = jfc.showOpenDialog(ddp);
+			if (res == JFileChooser.APPROVE_OPTION) {
+				return jfc.getSelectedFile();
+			}
+		//}
+		//else {
+		//	fd.setMode(FileDialog.LOAD);
+		//	fd.setFilenameFilter(new FilenameFilter() {
+		//		public boolean accept(File arg0, String arg1) {
+		//			return arg0.isDirectory();
+		//		}
+		//	});
+		//	fd.setVisible(true);
+		//	return new File(fd.getDirectory()+"/"+fd.getFile());
+		//}
 		return null;
 	}
 	
@@ -185,7 +207,7 @@ public class Main implements ApplicationListener {
 		fd = new FileDialog(jf);
 		jfc = new JFileChooser();
 		
-		final FileFilter ff = new FileFilter() {
+		xmlFilter = new FileFilter() {
 			@Override
 			public boolean accept(File arg) {
 				return arg.getName().endsWith(".xml") || arg.isDirectory();
@@ -196,7 +218,19 @@ public class Main implements ApplicationListener {
 				return "Android Layout file (.xml)";
 			} 
 		};
-		jfc.setFileFilter(ff);
+		
+		dirFilter = new FileFilter() {
+			@Override
+			public boolean accept(File arg) {
+				return arg.isDirectory();
+			}
+
+			@Override
+			public String getDescription() {
+				return "Directory";
+			} 
+		};
+		jfc.setFileFilter(xmlFilter);
 		
 		int ctl_key = InputEvent.CTRL_MASK;
 		if (osx)
@@ -329,18 +363,7 @@ public class Main implements ApplicationListener {
 			public void actionPerformed(ActionEvent arg0) {
 				File f = doOpen();
 				if (f != null) {
-					try { 
-						AndroidEditor.instance().setStrings(StringHandler.load(new FileInputStream(f)));
-					}
-					catch (IOException ex) {
-						AndroidEditor.instance().error(ex);
-					}
-					catch (SAXException ex) {
-						AndroidEditor.instance().error(ex);
-					}
-					catch (ParserConfigurationException ex) {
-						AndroidEditor.instance().error(ex);
-					}
+					AndroidEditor.instance().setStrings(f);
 				}
 			}
 		});
@@ -351,17 +374,45 @@ public class Main implements ApplicationListener {
 			public void actionPerformed(ActionEvent arg0) {
 				File f = doOpen();
 				if (f != null) {
-					try { 
-						AndroidEditor.instance().setColors(ColorHandler.load(new FileInputStream(f)));
+					AndroidEditor.instance().setColors(f);
+				}
+			}
+		});
+		menu.add(it);
+		
+		it = new JMenuItem("Set drawables directory");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				File f = doOpenDir();
+				if (f != null) {
+					AndroidEditor.instance().setDrawableDirectory(f);
+				}
+			}
+		});
+		menu.add(it);
+		
+		menu.addSeparator();
+		
+		it = new JMenuItem("Load resource directory");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				File f = doOpenDir();
+				if (f != null) {
+					File drawable = new File(f, "drawable");
+					if (drawable.exists() && drawable.isDirectory()) {
+						AndroidEditor.instance().setDrawableDirectory(f);
 					}
-					catch (IOException ex) {
-						AndroidEditor.instance().error(ex);
-					}
-					catch (SAXException ex) {				
-						AndroidEditor.instance().error(ex);
-					}
-					catch (ParserConfigurationException ex) {
-						AndroidEditor.instance().error(ex);
+					
+					f = new File(f, "values");
+					if (f.exists() && f.isDirectory()) {
+						File strings = new File(f, "strings.xml");
+						if (strings.exists()) {
+							AndroidEditor.instance().setStrings(strings);
+						}
+						File colors = new File(f, "colors.xml");
+						if (colors.exists()) {
+							AndroidEditor.instance().setColors(colors);
+						}
 					}
 				}
 			}
