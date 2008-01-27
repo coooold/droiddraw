@@ -40,6 +40,7 @@ public class AndroidEditor {
 	File colorFile = null;
 	Hashtable<String, Color> colors;
 	File drawable_dir;
+	URLOpener opener;
 	
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
@@ -376,5 +377,13 @@ public class AndroidEditor {
 			}
 		}
 		pw.println("</"+w.getTagName()+">");
+	}
+	
+	public void setURLOpener(URLOpener open) {
+		this.opener = open;
+	}
+
+	public URLOpener getURLOpener() {
+		return opener;
 	}
 }

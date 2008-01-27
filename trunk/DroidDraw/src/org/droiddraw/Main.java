@@ -44,7 +44,7 @@ import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
 import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 
 
-public class Main implements ApplicationListener {
+public class Main implements ApplicationListener, URLOpener {
 	static File saveFile = null;
 	static JFrame jf;
 	static DroidDrawPanel ddp;
@@ -188,6 +188,9 @@ public class Main implements ApplicationListener {
 		}*/
 		// END
 		
+
+		AndroidEditor.instance().setURLOpener(new Main());
+		
 		osx = (System.getProperty("os.name").toLowerCase().contains("mac os x"));
 		if (osx) {
 			doMacOSXIntegration();
@@ -214,6 +217,7 @@ public class Main implements ApplicationListener {
 		loadImage("spinnerbox_arrow_middle.9");
 		loadImage("paint");
 		loadImage("droiddraw_small");
+		loadImage("paypal");
 		
 		jf = new JFrame("DroidDraw");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -507,5 +511,14 @@ public class Main implements ApplicationListener {
 	}
 
 	public void handleReopenApplication(ApplicationEvent arg0) {
+	}
+
+	public void openURL(String url) {
+		try {
+			BrowserLauncher l = new BrowserLauncher();
+			l.openURLinBrowser("https://www.paypal.com/us/cgi-bin/webscr?cmd=_xclick&business=brendan.d.burns@gmail.com&item_name=Support%20DroidDraw&currency_code=USD");
+		}
+		catch (UnsupportedOperatingSystemException ex) {AndroidEditor.instance().error(ex);}
+		catch (BrowserLaunchingInitializingException ex) {AndroidEditor.instance().error(ex);}
 	}
 }
