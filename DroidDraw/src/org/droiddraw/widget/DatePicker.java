@@ -23,8 +23,7 @@ public class DatePicker extends AbstractWidget {
 	}
 
 	public void paint(Graphics g) {
-		g.setColor(Color.white);
-		g.fillRect(0, 0, getWidth(), getHeight());
+		drawBackground(g);
 		Date d = new Date();
 		Calendar c = Calendar.getInstance();
 		c.setTime(d);
