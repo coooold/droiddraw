@@ -451,8 +451,10 @@ public class DroidDrawPanel extends JPanel {
 		jtb.addTab("Widgets", jswp);
 		jtb.addTab("Layouts", jslp);
 		jtb.addTab("Properties", AndroidEditor.instance().getPropertiesPanel());
-		jtb.addTab("Strings", new StringsPanel());
-		jtb.addTab("Colors", new ColorsPanel());
+		if (!applet) {
+			jtb.addTab("Strings", new StringsPanel());
+			jtb.addTab("Colors", new ColorsPanel());
+		}
 		
 		//add(out, BorderLayout.CENTER);
 		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jtb, out);

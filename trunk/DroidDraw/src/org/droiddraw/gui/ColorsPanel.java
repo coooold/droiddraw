@@ -36,10 +36,11 @@ public class ColorsPanel extends AbstractDataPanel {
 				Object value, boolean isSelected, boolean hasFocus, int row,
 				int column) {
 			Color color = (Color)value;
-			JLabel lb = new JLabel("#"+Integer.toString(color.getAlpha(), 16)+
+			JLabel lb = new JLabel("#"+
 					Integer.toString(color.getRed(), 16)+
 					Integer.toString(color.getGreen(), 16)+
-					Integer.toString(color.getBlue(), 16));
+					Integer.toString(color.getBlue(), 16)+
+					Integer.toString(color.getAlpha(), 16));
 			lb.setOpaque(true);
 			lb.setBackground(color);
 
@@ -170,5 +171,10 @@ public class ColorsPanel extends AbstractDataPanel {
 				AndroidEditor.instance().error(ex);
 			}
 		}
+	}
+	
+	@Override
+	protected void addValue(String name) {
+		AndroidEditor.instance().getColors().put(name, new Color(128,128,128));
 	}
 }

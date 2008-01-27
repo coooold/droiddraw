@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
@@ -100,6 +101,16 @@ public abstract class AbstractDataPanel extends JPanel {
 		});
 		
 		create = new JButton("New");
+		create.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String name = JOptionPane.showInputDialog(dataTable, "Enter a name for this new value:");
+				if (name != null) {
+					addValue(name);
+					model.fireTableDataChanged();
+				}
+			}
+		});
+		
 		delete = new JButton("Delete");
 		
 		delete.addActionListener(new ActionListener() {
@@ -129,4 +140,5 @@ public abstract class AbstractDataPanel extends JPanel {
 	protected abstract void parentDeleteRow(int row);
 	
 	protected abstract void doSave();
+	protected abstract void addValue(String name);
 }
