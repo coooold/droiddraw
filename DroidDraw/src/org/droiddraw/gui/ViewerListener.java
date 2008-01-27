@@ -22,6 +22,7 @@ import org.droiddraw.widget.AnalogClock;
 import org.droiddraw.widget.AutoCompleteTextView;
 import org.droiddraw.widget.Button;
 import org.droiddraw.widget.CheckBox;
+import org.droiddraw.widget.DatePicker;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
 import org.droiddraw.widget.FrameLayout;
@@ -153,6 +154,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return new GridView();
 		else if (str.equals("Gallery"))
 			return new Gallery();
+		else if (str.equals("DatePicker"))
+			return new DatePicker();
 		else
 			return null;
 	}

@@ -19,6 +19,7 @@ import org.droiddraw.widget.AnalogClock;
 import org.droiddraw.widget.AutoCompleteTextView;
 import org.droiddraw.widget.Button;
 import org.droiddraw.widget.CheckBox;
+import org.droiddraw.widget.DatePicker;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
 import org.droiddraw.widget.FrameLayout;
@@ -217,6 +218,9 @@ public class DroidDrawHandler extends DefaultHandler {
 					w.setPropertyByAttName(Gallery.propertyNames[i], 
 							atts.getValue(Gallery.propertyNames[i]));
 				}
+			}
+			else if (qName.equals("DatePicker")) {
+				w = new DatePicker();
 			}
 			if (w != null) {
 				addWidget(w, atts);

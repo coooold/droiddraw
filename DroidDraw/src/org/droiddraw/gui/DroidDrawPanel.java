@@ -38,6 +38,7 @@ import org.droiddraw.widget.AnalogClock;
 import org.droiddraw.widget.AutoCompleteTextView;
 import org.droiddraw.widget.Button;
 import org.droiddraw.widget.CheckBox;
+import org.droiddraw.widget.DatePicker;
 import org.droiddraw.widget.DigitalClock;
 import org.droiddraw.widget.EditView;
 import org.droiddraw.widget.FrameLayout;
@@ -400,6 +401,9 @@ public class DroidDrawPanel extends JPanel {
 		mp.add(new WidgetPanel(new Button("Button")));
 		mp.add(new WidgetPanel(new CheckBox("CheckBox")));
 		mp.add(new WidgetPanel(new DigitalClock()));
+		DatePicker dp = new DatePicker();
+		dp.setSize(140, 40);
+		mp.add(new WidgetPanel(dp));
 		wp.add(mp);
 		mp = new JPanel();
 		mp.add(new WidgetPanel(new EditView("EditText")));
