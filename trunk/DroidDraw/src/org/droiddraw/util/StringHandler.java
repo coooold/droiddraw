@@ -2,6 +2,8 @@ package org.droiddraw.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Hashtable;
 import javax.xml.parsers.*;
 import org.xml.sax.*;
@@ -72,5 +74,20 @@ public class StringHandler extends DefaultHandler
         parser.parse(in, sh);
         return sh.getStrings();
     }
+    
+    public static void dump(Writer w, Hashtable<String, String> strings) 
+	throws IOException
+	{
+		PrintWriter pw = new PrintWriter(w);
+		pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+		pw.println("<resources>");
+		for (String key : strings.keySet()) {
+			String value = strings.get(key);
+			pw.println("<string name=\""+key+"\">"+value+"</string>");
+		}
+		pw.println("</resources>");
+		pw.flush();
+		w.flush();
+	}
 
 }

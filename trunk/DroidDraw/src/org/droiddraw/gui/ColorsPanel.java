@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -20,6 +23,8 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 
 import org.droiddraw.AndroidEditor;
+import org.droiddraw.Main;
+import org.droiddraw.util.ColorHandler;
 
 public class ColorsPanel extends AbstractDataPanel {
 	private static final long serialVersionUID = 1L;
@@ -141,6 +146,29 @@ public class ColorsPanel extends AbstractDataPanel {
 			Color val = colors.get(key);
 			colors.remove(key);
 			colors.put((String)value, val);
+		}
+	}
+
+	@Override
+	protected void parentDeleteRow(int row) {
+		String key = (String)parentValueAt(row, 0);
+		Hashtable<String,Color> colors = AndroidEditor.instance().getColors();
+		colors.remove(key);
+	}
+	
+	@Override
+	protected void doSave() {
+		File out = AndroidEditor.instance().getColorFile();
+		if (out == null) {
+			out = Main.doSaveBasic();
+		}
+		if (out != null) {
+			try {
+				ColorHandler.dump(new FileWriter(out), AndroidEditor.instance().getColors());
+			}
+			catch (IOException ex) {
+				AndroidEditor.instance().error(ex);
+			}
 		}
 	}
 }

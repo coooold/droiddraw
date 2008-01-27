@@ -15,7 +15,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -35,7 +34,6 @@ import javax.swing.filechooser.FileFilter;
 
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
-import org.droiddraw.util.StringHandler;
 import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
@@ -130,15 +128,32 @@ public class Main implements ApplicationListener {
 		return null;
 	}
 	
-	protected static void doSave() {
-		int res = jfc.showSaveDialog(ddp);
-		if (res == JFileChooser.APPROVE_OPTION) {
-			File f = jfc.getSelectedFile();
-			if (f.exists()) {
-				res = JOptionPane.showConfirmDialog(ddp, f.getName()+" exists. Overwrite?", "Overwrite", JOptionPane.OK_CANCEL_OPTION);
-				if (res == JOptionPane.CANCEL_OPTION)
-					return;
+	public static File doSaveBasic() {
+		File f = null;
+		if (!osx) {
+			int res = jfc.showSaveDialog(ddp);
+			if (res == JFileChooser.APPROVE_OPTION) {
+				f = jfc.getSelectedFile();
 			}
+		}
+		else {
+			fd.setMode(FileDialog.SAVE);
+			fd.setVisible(true);
+			if (fd.getFile() != null) {
+				f = new File(fd.getDirectory()+"/"+fd.getFile());
+			}
+		}
+		if (f != null && f.exists()) {
+			int res = JOptionPane.showConfirmDialog(ddp, f.getName()+" exists. Overwrite?", "Overwrite", JOptionPane.OK_CANCEL_OPTION);
+			if (res == JOptionPane.CANCEL_OPTION)
+				return null;
+		}
+		return f;
+	}
+	
+	protected static void doSave() {
+		File f = doSaveBasic();
+		if (f != null) {
 			jf.setTitle("DroidDraw: "+f.getName());
 			ddp.save(f);
 			saveFile = f;
@@ -164,13 +179,13 @@ public class Main implements ApplicationListener {
 		
 		// This is so that I can test out the Google examples...
 		// START
-		if (args.length > 0) {
+		/*if (args.length > 0) {
 			try {
 				AndroidEditor.instance().setStrings(StringHandler.load(new FileInputStream("src/strings.xml")));
 			} catch (Exception ex) {
 				AndroidEditor.instance().error(ex);
 			}
-		}
+		}*/
 		// END
 		
 		osx = (System.getProperty("os.name").toLowerCase().contains("mac os x"));

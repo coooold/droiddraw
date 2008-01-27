@@ -1,5 +1,8 @@
 package org.droiddraw.gui;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -8,6 +11,8 @@ import javax.swing.DefaultCellEditor;
 import javax.swing.JTextField;
 
 import org.droiddraw.AndroidEditor;
+import org.droiddraw.Main;
+import org.droiddraw.util.StringHandler;
 
 public class StringsPanel extends AbstractDataPanel {
 	private static final long serialVersionUID = 1L;
@@ -20,7 +25,9 @@ public class StringsPanel extends AbstractDataPanel {
 	
 	protected int parentRowCount() {
 		Hashtable<String,String> strings = AndroidEditor.instance().getStrings();
-		return strings.size();
+		if (strings != null)
+			return strings.size();
+		return 0;
 	}
 
 	protected Object parentValueAt(int row, int col) {
@@ -47,6 +54,29 @@ public class StringsPanel extends AbstractDataPanel {
 			String val = strings.get(key);
 			strings.remove(key);
 			strings.put((String)value, val);
+		}
+	}
+	
+	@Override
+	protected void parentDeleteRow(int row) {
+		String key = (String)parentValueAt(row, 0);
+		Hashtable<String,String> strings = AndroidEditor.instance().getStrings();
+		strings.remove(key);
+	}
+	
+	@Override
+	protected void doSave() {
+		File out = AndroidEditor.instance().getStringFile();
+		if (out == null) {
+			out = Main.doSaveBasic();
+		}
+		if (out != null) {
+			try {
+				StringHandler.dump(new FileWriter(out), AndroidEditor.instance().getStrings());
+			}
+			catch (IOException ex) {
+				AndroidEditor.instance().error(ex);
+			}
 		}
 	}
 }
