@@ -23,6 +23,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	}
 	
 	public void addWidget(Widget w) {
+		assert (w != this);
 		widgets.add(w);
 		w.setParent(this);
 		addEditableProperties(w);
@@ -74,7 +75,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 			int maxX = 0;
 			for (Widget w : widgets) {
 				/*LEFT padding already in X value*/ 
-				w.apply();
+				//w.apply();
 				int width_w_pad = w.getWidth()+w.getPadding(RIGHT);
 				if (w.getX()+width_w_pad > maxX)
 					maxX = w.getX()+width_w_pad;
@@ -113,7 +114,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	public abstract void repositionAllWidgets();
 	
 	public int getScreenX() {
-		if (parent != null) {
+		if (parent != null && parent != this) {
 			return ((Layout)parent).getScreenX()+getX();
 		}
 		else {
@@ -122,7 +123,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	}
 	
 	public int getScreenY() {
-		if (parent != null) {
+		if (parent != null && parent != this) {
 			return ((Layout)parent).getScreenY()+getY();
 		}
 		else {
@@ -151,6 +152,11 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		for (Widget wt : widgets) {
 			if (wt.equals(w)) {
 				return true;
+			}
+			else if (wt instanceof Layout) {
+				if (((Layout)wt).containsWidget(w)) {
+					return true;
+				}
 			}
 		}
 		return false;

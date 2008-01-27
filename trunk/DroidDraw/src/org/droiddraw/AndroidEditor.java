@@ -1,20 +1,29 @@
 package org.droiddraw;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.droiddraw.gui.PropertiesPanel;
 import org.droiddraw.gui.Viewer;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.StringProperty;
+import org.droiddraw.util.ColorHandler;
+import org.droiddraw.util.StringHandler;
 import org.droiddraw.widget.AbstractWidget;
 import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
+import org.xml.sax.SAXException;
 
 
 public class AndroidEditor {
@@ -28,6 +37,7 @@ public class AndroidEditor {
 	PropertiesPanel pp;
 	Hashtable<String, String> strings;
 	Hashtable<String, Color> colors;
+	File drawable_dir;
 	
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
@@ -58,6 +68,46 @@ public class AndroidEditor {
 	public PropertiesPanel getPropertiesPanel() {
 		return pp;
 	}
+
+	public void setDrawableDirectory(File dir) {
+		this.drawable_dir = dir;
+	}
+	
+	public File getDrawableDirectory() {
+		return this.drawable_dir;
+	}
+	
+	public BufferedImage findDrawable(String src) {
+		if (this.getDrawableDirectory() == null) {
+			return null;
+		}
+		int ix = src.indexOf("/");
+		String file = src.substring(ix+1);
+		System.out.println("Looking for: "+file);
+		File f = new File(this.getDrawableDirectory(), file+".png"); 
+		if (!f.exists()) {
+			try {
+				System.out.println(f.getCanonicalPath()+" doesn't exist!");
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+			f = new File(this.getDrawableDirectory(), file+".bmp");
+		}
+		if (!f.exists()) {
+			f = new File(this.getDrawableDirectory(), file+".jpg");
+		}
+		if (!f.exists()) {
+			return null;
+		}
+		try {
+			System.out.println("Reading in: "+f.getCanonicalPath());
+			return ImageIO.read(f);
+		}
+		catch (IOException ex) {
+			error(ex);
+		}
+		return null;
+	}
 	
 	public Hashtable<String, String> getStrings() {
 		return strings;
@@ -67,6 +117,37 @@ public class AndroidEditor {
 		this.strings = strings;
 	}
 
+	public void setStrings(File f) {
+		try { 
+			setStrings(StringHandler.load(new FileInputStream(f)));
+		}
+		catch (IOException ex) {
+			error(ex);
+		}
+		catch (SAXException ex) {
+			error(ex);
+		}
+		catch (ParserConfigurationException ex) {
+			error(ex);
+		}
+	}
+	
+	public void setColors(File f) {
+		try { 
+			setColors(ColorHandler.load(new FileInputStream(f)));
+		}
+		catch (IOException ex) {
+			error(ex);
+		}
+		catch (SAXException ex) {
+			error(ex);
+		}
+		catch (ParserConfigurationException ex) {
+			error(ex);
+		}
+	}
+	
+	
 	public Hashtable<String, Color> getColors() {
 		return colors;
 	}
