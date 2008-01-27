@@ -460,6 +460,8 @@ public class DroidDrawPanel extends JPanel {
 			jtb.addTab("Colors", new ColorsPanel());
 		}
 		
+		jtb.addTab("Support", new DonatePanel());
+	
 		//add(out, BorderLayout.CENTER);
 		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jtb, out);
 		final JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jp, ctl);
