@@ -54,6 +54,7 @@ public class AndroidEditor {
 		setScreenMode(mode);
 		this.pp = new PropertiesPanel();
 		this.colors = new Hashtable<String, Color>();
+		this.strings = new Hashtable<String, String>();
 		colors.put("black", Color.black);
 		colors.put("darkgray", Color.darkGray);
 		colors.put("gray", Color.gray);

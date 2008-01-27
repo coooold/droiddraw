@@ -79,4 +79,9 @@ public class StringsPanel extends AbstractDataPanel {
 			}
 		}
 	}
+	
+	@Override
+	protected void addValue(String name) {
+		AndroidEditor.instance().getStrings().put(name, "");
+	}
 }
