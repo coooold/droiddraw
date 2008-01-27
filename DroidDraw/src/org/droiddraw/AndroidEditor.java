@@ -35,7 +35,9 @@ public class AndroidEditor {
 	ScreenMode screen;
 	int sx, sy;
 	PropertiesPanel pp;
+	File stringFile = null;
 	Hashtable<String, String> strings;
+	File colorFile = null;
 	Hashtable<String, Color> colors;
 	File drawable_dir;
 	
@@ -117,9 +119,14 @@ public class AndroidEditor {
 		this.strings = strings;
 	}
 
+	public File getStringFile() {
+		return stringFile;
+	}
+	
 	public void setStrings(File f) {
 		try { 
 			setStrings(StringHandler.load(new FileInputStream(f)));
+			stringFile = f;
 		}
 		catch (IOException ex) {
 			error(ex);
@@ -132,9 +139,14 @@ public class AndroidEditor {
 		}
 	}
 	
+	public File getColorFile() {
+		return colorFile;
+	}
+	
 	public void setColors(File f) {
 		try { 
 			setColors(ColorHandler.load(new FileInputStream(f)));
+			colorFile = f;
 		}
 		catch (IOException ex) {
 			error(ex);

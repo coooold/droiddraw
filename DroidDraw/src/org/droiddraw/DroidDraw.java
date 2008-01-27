@@ -3,14 +3,12 @@ package org.droiddraw;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.MediaTracker;
-import java.net.URL;
 
 import javax.swing.JApplet;
 import javax.swing.UIManager;
 
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
-import org.droiddraw.util.StringHandler;
 import org.droiddraw.widget.Layout;
 
 public class DroidDraw extends JApplet {
@@ -41,18 +39,18 @@ public class DroidDraw extends JApplet {
 	@Override
 	public void init() {
 		super.init();
-		final AndroidEditor ae = AndroidEditor.instance();
 		
 		// This is so that I can test out the Google examples...
 		// START
+		/*
 		if ("true".equals(this.getParameter("load_strings"))) {
 			try {
 				URL url = new URL(getCodeBase(), "strings.xml");
-				ae.setStrings(StringHandler.load(url.openStream()));
+				AndroidEditor.instance().setStrings(StringHandler.load(url.openStream()));
 			} catch (Exception ex) {
 				AndroidEditor.instance().error(ex);
 			}
-		}
+		}*/
 		// END
 		
 		String screen = this.getParameter("Screen");
