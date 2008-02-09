@@ -458,6 +458,7 @@ public class DroidDrawPanel extends JPanel {
 		if (!applet) {
 			jtb.addTab("Strings", new StringsPanel());
 			jtb.addTab("Colors", new ColorsPanel());
+			jtb.addTab("Arrays", new ArrayPanel());
 		}
 		
 		jtb.addTab("Support", new DonatePanel());
