@@ -52,6 +52,7 @@ public abstract class AbstractWidget implements Widget {
 		this.props.add(background);
 		this.props.add(pad);
 		this.props.add(visibility);
+		this.baseline = 14;
 		
 		this.parent = null;
 	}
@@ -248,7 +249,6 @@ public abstract class AbstractWidget implements Widget {
 	
 	public void apply() {
 		readWidthHeight();
-		baseline = getHeight()/2;
 		if (getParent() == null) {
 			setPosition(getPadding(LEFT)+AndroidEditor.OFFSET_X, getPadding(TOP)+AndroidEditor.OFFSET_Y);
 		}

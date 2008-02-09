@@ -14,9 +14,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 
 import javax.imageio.ImageIO;
@@ -34,6 +37,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
+import org.droiddraw.util.LayoutUploader;
 import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
@@ -50,7 +54,7 @@ public class Main implements ApplicationListener, URLOpener {
 	static DroidDrawPanel ddp;
 	static JFileChooser jfc = null;
 	static FileDialog fd = null;
-	static boolean osx;
+	static public boolean osx;
 	static FileFilter xmlFilter = null;
 	static FileFilter dirFilter = null;
 	
@@ -399,6 +403,17 @@ public class Main implements ApplicationListener, URLOpener {
 		});
 		menu.add(it);
 		
+		it = new JMenuItem("Load array resources");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				File f = doOpen();
+				if (f != null) {
+					AndroidEditor.instance().setArrays(f);
+				}
+			}
+		});
+		menu.add(it);
+		
 		it = new JMenuItem("Set drawables directory");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -409,6 +424,8 @@ public class Main implements ApplicationListener, URLOpener {
 			}
 		});
 		menu.add(it);
+		
+		
 		
 		menu.addSeparator();
 		
@@ -432,11 +449,38 @@ public class Main implements ApplicationListener, URLOpener {
 						if (colors.exists()) {
 							AndroidEditor.instance().setColors(colors);
 						}
+						File arrays = new File(f, "arrays.xml");
+						if (arrays.exists()) {
+							AndroidEditor.instance().setArrays(arrays);
+						}
 					}
 				}
 			}
 		});
 		menu.add(it);
+		menu.addSeparator();
+		
+		it = new JMenuItem("Send layout to device");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try {
+					ByteArrayOutputStream ba = new ByteArrayOutputStream();
+					PrintWriter pw = new PrintWriter(ba);
+					AndroidEditor.instance().generate(pw);
+					pw.flush();
+					ba.flush();
+					if (LayoutUploader.upload("127.0.0.1", 6100, new ByteArrayInputStream(ba.toByteArray())))
+						JOptionPane.showMessageDialog(jf, "Upload suceeded");
+					else
+						JOptionPane.showMessageDialog(jf, "Upload failed.  Is AnDroidDraw running?");
+				}
+				catch (IOException ex) {
+					AndroidEditor.instance().error(ex);
+				}
+			}
+		});
+		menu.add(it);
+		
 		mb.add(menu);
 		
 		menu = new JMenu("Help");

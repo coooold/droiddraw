@@ -308,13 +308,13 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			y = app.getScreenY();
 
 		Widget selected = app.getSelected();
-		if (selected == null) {
-			Vector<Widget> ws = app.findWidgets(x, y);
-			if (ws.size() > 0) {
-				app.select(ws.get(0));
-				selected = app.getSelected();
-			}
+		Vector<Widget> ws = app.findWidgets(x, y);
+		
+		if (!ws.contains(selected) && ws.size() > 0) {
+			app.select(ws.get(0));
+			selected = app.getSelected();
 		}
+		
 		if (selected != null) {
 			Layout l = selected.getParent();
 			Vector<Layout> ls = app.findLayouts(x, y);

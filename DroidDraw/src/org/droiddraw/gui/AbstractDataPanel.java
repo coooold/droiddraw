@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
@@ -58,6 +59,7 @@ public abstract class AbstractDataPanel extends JPanel {
 		@Override
 		public void setValueAt(Object value, int rowIndex, int columnIndex) {
 			parentSetValueAt(value, rowIndex, columnIndex);
+			this.fireTableCellUpdated(rowIndex, columnIndex);
 		}
 		
 		public void deleteRow(int row) {
@@ -84,8 +86,9 @@ public abstract class AbstractDataPanel extends JPanel {
 		//dataTable.setShowGrid(true);
 		
 		setLayout(new BorderLayout());
-		add(dataTable, BorderLayout.CENTER);
-		
+		add(new JScrollPane(dataTable), BorderLayout.CENTER);
+		//add(dataTable.getTableHeader(), BorderLayout.NORTH);
+	    
 		JPanel jp = new JPanel();
 		jp.setLayout(new FlowLayout());
 		JButton save;

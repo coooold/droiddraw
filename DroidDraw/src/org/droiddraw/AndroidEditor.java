@@ -17,6 +17,7 @@ import org.droiddraw.gui.PropertiesPanel;
 import org.droiddraw.gui.Viewer;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.StringProperty;
+import org.droiddraw.util.ArrayHandler;
 import org.droiddraw.util.ColorHandler;
 import org.droiddraw.util.StringHandler;
 import org.droiddraw.widget.AbstractWidget;
@@ -39,6 +40,9 @@ public class AndroidEditor {
 	Hashtable<String, String> strings;
 	File colorFile = null;
 	Hashtable<String, Color> colors;
+	File arrayFile = null;
+	Hashtable<String, Vector<String>> arrays;
+	
 	File drawable_dir;
 	URLOpener opener;
 	
@@ -56,6 +60,7 @@ public class AndroidEditor {
 		this.pp = new PropertiesPanel();
 		this.colors = new Hashtable<String, Color>();
 		this.strings = new Hashtable<String, String>();
+		this.arrays = new Hashtable<String, Vector<String>>();
 		colors.put("black", Color.black);
 		colors.put("darkgray", Color.darkGray);
 		colors.put("gray", Color.gray);
@@ -385,5 +390,37 @@ public class AndroidEditor {
 
 	public URLOpener getURLOpener() {
 		return opener;
+	}
+
+	public File getArrayFile() {
+		return arrayFile;
+	}
+
+	public void setArrayFile(File arrayFile) {
+		this.arrayFile = arrayFile;
+	}
+
+	public Hashtable<String, Vector<String>> getArrays() {
+		return arrays;
+	}
+
+	public void setArrays(Hashtable<String, Vector<String>> arrays) {
+		this.arrays = arrays;
+	}
+	
+	public void setArrays(File f) {
+		setArrayFile(f);
+		try {
+			setArrays(ArrayHandler.load(new FileInputStream(f)));
+		}
+		catch (IOException ex) {
+			error(ex);
+		}
+		catch (SAXException ex) {
+			error(ex);
+		}
+		catch (ParserConfigurationException ex) {
+			error(ex);
+		}
 	}
 }

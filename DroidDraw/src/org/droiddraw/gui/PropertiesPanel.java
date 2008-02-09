@@ -138,7 +138,8 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 								// TODO
 							}
 							else if (p instanceof StringProperty) {
-								((JTextField)jc).setText(evt.getNewValue().toString());
+								if (jc != null)
+									((JTextField)jc).setText(evt.getNewValue().toString());
 							}
 							
 						}
