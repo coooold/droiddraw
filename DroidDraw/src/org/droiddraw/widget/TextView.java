@@ -50,7 +50,7 @@ public class TextView extends AbstractWidget {
 		}
 		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"sp");
 		face = new SelectProperty("Font Face", "android:typeface", new String[] {"normal","sans","serif","monospace"}, 0);
-		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"normal", "bold", "italic", "bold_italic"}, 0);
+		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"normal", "bold", "italic", "bold|italic"}, 0);
 		textColor = new ColorProperty("Text Color", "android:textColor", Color.black);
 		align = new SelectProperty("Text Alignment", "android:textAlign", new String[] {"end","center","start"}, 2);
 		props.add(text);

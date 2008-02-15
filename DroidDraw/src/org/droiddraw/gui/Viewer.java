@@ -15,10 +15,12 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
+import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
 import org.droiddraw.AndroidEditor;
+import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
 
 public class Viewer extends JPanel implements DropTargetListener {
@@ -28,9 +30,10 @@ public class Viewer extends JPanel implements DropTargetListener {
 	AndroidEditor app;
 	ViewerListener vl;
 	Image img;
-	
 	DropTarget dt;
 
+	
+	
 	public Viewer(AndroidEditor app, DroidDrawPanel ddp, Image img) {
 		this.app = app;
 		//this.d = new Dimension(app.getScreenX(),app.getScreenY());
@@ -43,7 +46,7 @@ public class Viewer extends JPanel implements DropTargetListener {
 		
 		dt = new DropTarget(this, DnDConstants.ACTION_MOVE, this, true );
 	}
-
+	
 	public void resetScreen(Image img) {
 		//this.d = new Dimension(app.getScreenX(),app.getScreenY());
 		this.img = img;
@@ -69,6 +72,19 @@ public class Viewer extends JPanel implements DropTargetListener {
 		return 0;
 	}
 
+	public void paint(Graphics g, Layout l) 
+	{
+		l.clearRendering();
+		l.resizeForRendering();
+		WidgetPainter wp = WidgetRegistry.getPainter(l.getClass());
+		if (wp != null) {
+			wp.paint(l, g);
+		}
+		else {
+			l.paint(g);
+		}
+	}
+	
 	public void paint(Graphics g) {
 		g.setColor(Color.lightGray);
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -83,9 +99,7 @@ public class Viewer extends JPanel implements DropTargetListener {
 		if (img != null)
 			g.drawImage(img, 0, 0, this);
 		
-		app.getLayout().clearRendering();
-		app.getLayout().resizeForRendering();
-		app.getLayout().paint(g);
+		paint(g, app.getLayout());
 		
 		Widget w = app.getSelected();
 

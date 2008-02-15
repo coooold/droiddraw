@@ -35,7 +35,7 @@ public abstract class AbstractWidget implements Widget {
 	public AbstractWidget(String tagName) {
 		this.tagName = tagName;
 		this.props = new Vector<Property>();
-		this.id = new StringProperty("Id", "id", "");
+		this.id = new StringProperty("Id", "android:id", "");
 		this.id.setStringValue("@+id/widget"+(widget_num++));
 		this.widthProp = new StringProperty("Width", "android:layout_width", "");
 		this.widthProp.setStringValue("wrap_content");
