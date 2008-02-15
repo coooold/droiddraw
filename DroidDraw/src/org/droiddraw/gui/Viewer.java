@@ -15,7 +15,6 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
-import java.util.Hashtable;
 
 import javax.swing.JPanel;
 
