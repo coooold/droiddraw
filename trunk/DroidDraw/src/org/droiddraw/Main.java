@@ -37,7 +37,10 @@ import javax.swing.filechooser.FileFilter;
 
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
+import org.droiddraw.gui.LayoutPainter;
+import org.droiddraw.gui.WidgetRegistry;
 import org.droiddraw.util.LayoutUploader;
+import org.droiddraw.widget.AbstractLayout;
 import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
@@ -192,6 +195,8 @@ public class Main implements ApplicationListener, URLOpener {
 		}*/
 		// END
 		
+		
+		WidgetRegistry.registerPainter(AbstractLayout.class, new LayoutPainter());
 
 		AndroidEditor.instance().setURLOpener(new Main());
 		
