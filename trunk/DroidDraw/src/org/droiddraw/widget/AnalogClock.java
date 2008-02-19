@@ -21,19 +21,19 @@ public class AnalogClock extends AbstractWidget {
 		super("AnalogClock");
 		apply();
 		if (face == null) {
-			Image img = ImageResources.instance().getImage("clock_dial");
+			Image img = ImageResources.instance().getImage("light/clock_dial");
 			if (img != null) {
 				face = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_4BYTE_ABGR);
 				face.getGraphics().drawImage(img, 0, 0, null);
 				face_scale = face;
 			}
-			img = ImageResources.instance().getImage("clock_hand_hour");
+			img = ImageResources.instance().getImage("light/clock_hand_hour");
 			if (img != null) {
 				hour = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_4BYTE_ABGR);
 				hour.getGraphics().drawImage(img, 0, 0, null);
 				hour_scale = hour;
 			}
-			img = ImageResources.instance().getImage("clock_hand_minute");
+			img = ImageResources.instance().getImage("light/clock_hand_minute");
 			if (img != null) {
 				minute = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_4BYTE_ABGR);
 				minute.getGraphics().drawImage(img, 0, 0, null);

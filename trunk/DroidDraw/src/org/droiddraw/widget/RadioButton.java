@@ -4,23 +4,58 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.ImageResources;
 
 public class RadioButton extends CompoundButton {
+	Image on;
+	Image off;
+	
 	public RadioButton(String text) {
 		super(text);
 		this.tagName = "RadioButton";
 		
-		pad_x = 24;
 		pad_y = 6;
 		
 		apply();
 	}
 
 	@Override
+	public void apply() {
+		String theme = AndroidEditor.instance().getTheme();
+		if (theme == null || theme.equals("default")) {
+			off =  ImageResources.instance().getImage("def/btn_radio_off");
+			on = ImageResources.instance().getImage("def/btn_radio_on");
+		}
+		else if (theme.equals("light")) {
+			off = ImageResources.instance().getImage("light/radiobutton_off_background");
+			on = ImageResources.instance().getImage("light/radiobutton_on_background");
+		}
+		
+		if (off != null) {
+			pad_x = off.getWidth(null);
+		}
+		else {
+			pad_x = 24;
+		}
+		super.apply();
+	}
+	
+	@Override
+	protected int getContentHeight() {
+		if (off != null) {
+			return off.getHeight(null);
+		}
+		else {
+			return super.getContentHeight();
+		}
+	}
+	
+	@Override
 	public void paint(Graphics g) {
-		Image img = ImageResources.instance().getImage("radiobutton_off_background");
-		if (img == null) {
+		int off_x, off_y;
+		
+		if (off == null || on == null) {
 			g.setColor(Color.white);
 			g.fillOval(getX()+2, getY()+2, 16, 16);
 		
@@ -30,16 +65,26 @@ public class RadioButton extends CompoundButton {
 			if ("true".equals(this.getPropertyByAttName("android:checked").getValue())) {
 				g.fillOval(getX()+6,getY()+6,8,8);
 			}
+
+			off_x = 20;
+			off_y = 18;
 		}
 		else {
+			Image img = off;
 			if ("true".equals(this.getPropertyByAttName("android:checked").getValue())) {
-				img = ImageResources.instance().getImage("radiobutton_on_background");
+				img = on;
 			}
 			g.drawImage(img, getX(), getY(), null);
 			g.setColor(Color.black);
+
+			off_x = img.getWidth(null);
+			off_y = img.getHeight(null);
 		}
+		
+		baseline = (off_y+fontSize)/2;
+		
 		g.setColor(textColor.getColorValue());
 		g.setFont(f);
-		g.drawString(text.getStringValue(), getX()+22, getY()+fontSize+2);
+		g.drawString(text.getStringValue(), getX()+off_x, getY()+baseline-4);
 	}
 }

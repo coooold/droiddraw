@@ -42,8 +42,15 @@ public class StringProperty extends Property {
 	}
 	
 	public void setStringValue(String value) {
+		this.setStringValue(value, false);
+	}
+	
+	public void setStringValue(String value, boolean setDefault) {
 		String old = this.value;
 		this.value = value;
+		if (setDefault) {
+			this.defaultValue = value;
+		}
 		firePropertyChangedEvent(new PropertyChangeEvent(this, this.getAtttributeName(), old, value));
 	}
 

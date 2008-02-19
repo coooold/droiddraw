@@ -3,24 +3,36 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.NineWayImage;
 
 
 public class Button extends TextView {
 	NineWayImage img;
+	Image img_base;
 	
 	public Button(String txt) {
 		super(txt);
 		// This is a hack and bad oo, I know...
 		this.tagName = "Button";
 		
-		pad_x = 30;
-		pad_y = 10;
+		pad_x = 0;
+		pad_y = 0;
 	
-		Image img = ImageResources.instance().getImage("button_background_normal.9");
-		if (img != null) {
-			this.img = new NineWayImage(img, 10, 10);
+		img_base = null;
+		String theme = AndroidEditor.instance().getTheme();
+		if (theme == null || theme.equals("default")) {
+			img_base = ImageResources.instance().getImage("def/btn_default_normal.9");
+			if (img_base != null) {
+				this.img = new NineWayImage(img_base, 10, 10);
+			}
+		}
+		else if (theme.equals("light")) {
+			img_base = ImageResources.instance().getImage("light/button_background_normal.9");
+			if (img_base != null) {
+				this.img = new NineWayImage(img_base, 10, 10);
+			}
 		}
 		apply();
 	}
@@ -30,6 +42,25 @@ public class Button extends TextView {
 		this.baseline = fontSize+2;
 	}
 	
+	@Override
+	protected int getContentHeight() {
+		if (img_base != null) {
+			return img_base.getHeight(null)-4;
+		}
+		else {
+			return 10;
+		}
+	}
+
+	@Override
+	protected int getContentWidth() {
+		int w = super.getContentWidth();
+		if (img_base != null && w < img_base.getWidth(null)) {
+			return img_base.getWidth(null);
+		}
+		return w;
+	}
+
 	public void paint(Graphics g) {
 		if (img == null) {
 			g.setColor(Color.white);
@@ -46,7 +77,7 @@ public class Button extends TextView {
 		//int w = g.getFontMetrics(f).stringWidth(text.getStringValue());
 		g.setColor(textColor.getColorValue());
 		
-		drawText(g, 0, fontSize+2, CENTER);
+		drawText(g, 0, getHeight()/2+fontSize/2-5, CENTER);
 		//g.drawString(text.getStringValue(), getX()+getWidth()/2-w/2, getY()+fontSize+2);
 	}
 }
