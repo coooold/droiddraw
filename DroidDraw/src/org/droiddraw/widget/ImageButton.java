@@ -3,16 +3,31 @@ package org.droiddraw.widget;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.NineWayImage;
 
 public class ImageButton extends ImageView {
 	NineWayImage img;
+	Image img_base;
+	int cw;
 	
 	public ImageButton() {
-		Image i = ImageResources.instance().getImage("button_background_normal.9");
-		if (i != null) {
-			this.img = new NineWayImage(i, 10, 10);
+		img_base = null;
+		String theme = AndroidEditor.instance().getTheme();
+		if (theme == null || theme.equals("default")) {
+			img_base = ImageResources.instance().getImage("def/btn_default_normal.9");
+			if (img_base != null) {
+				this.img = new NineWayImage(img_base, 10, 10);
+			}
+			cw = 50;
+		}
+		else if (theme.equals("light")) {
+			img_base = ImageResources.instance().getImage("light/button_background_normal.9");
+			if (img_base != null) {
+				this.img = new NineWayImage(img_base, 10, 10);
+			}
+			cw = 50;
 		}
 		this.tagName = "ImageButton";
 		apply();
@@ -20,12 +35,12 @@ public class ImageButton extends ImageView {
 
 	@Override
 	protected int getContentHeight() {
-		return 50;
+		return cw;
 	}
 
 	@Override
 	protected int getContentWidth() {
-		return 50;
+		return cw;
 	}
 
 	@Override

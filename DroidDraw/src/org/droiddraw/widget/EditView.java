@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.util.Vector;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.NineWayImage;
 import org.droiddraw.property.BooleanProperty;
@@ -29,8 +30,6 @@ public class EditView extends TextView {
 		// This is a hack and bad oo, I know...
 		this.tagName="EditText";
 		
-		pad_x = 18;
-		pad_y = 12;
 		
 		password = new BooleanProperty("Password", "android:password", false);
 		capitalize = new SelectProperty("Capitalize", "android:capitalize", new String[] {"sentences", "words"}, 0);
@@ -46,10 +45,28 @@ public class EditView extends TextView {
 		props.add(capitalize);
 		props.add(digits);
 		
-		Image img = ImageResources.instance().getImage("editbox_background_normal.9");
-		if (img != null) {
-			this.img = new NineWayImage(img, 10, 10);
+		Image img = null;
+		
+		String theme = AndroidEditor.instance().getTheme();
+		if (theme == null || theme.equals("default")) {
+			fontSz.setStringValue("18sp");
+			fontSize = 18;
+			img = ImageResources.instance().getImage("def/textfield.9");
+			if (img != null) {
+				this.img = new NineWayImage(img, 10, 10);
+			}
+			pad_x = 20;
+			pad_y = 30;
 		}
+		else if (theme.equals("light")) {
+			img = ImageResources.instance().getImage("light/editbox_background_normal.9");
+			if (img != null) {
+				this.img = new NineWayImage(img, 10, 10);
+			}
+			pad_x = 18;
+			pad_y = 12;
+		}
+		
 		apply();
 	}
 	
@@ -97,6 +114,6 @@ public class EditView extends TextView {
 		//g.drawString(s, getX()+pad_x/2, getY()+fontSize+pad_y/2-1);
 		this.drawText(g, 0, fontSize+pad_y/2-1);
 		g.setColor(Color.black);
-		g.drawLine(getX()+pad_x/2-2, getY()+4, getX()+pad_x/2-2, getY()+fontSize+pad_y/2+1);
+		g.fillRect(getX()+pad_x/2-4, getY()+15, 1, fontSize+5);
 	}
 }

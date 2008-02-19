@@ -208,25 +208,39 @@ public class Main implements ApplicationListener, URLOpener {
 		loadImage("emu2");
 		loadImage("emu3");
 		loadImage("emu4");
-		loadImage("checkbox_off_background");
-		loadImage("checkbox_on_background");
-		loadImage("clock_dial");
-		loadImage("clock_hand_hour");
-		loadImage("clock_hand_minute");
-		loadImage("radiobutton_off_background");
-		loadImage("radiobutton_on_background");
-		loadImage("button_background_normal.9");
-		loadImage("editbox_background_normal.9");
-		loadImage("progress_circular_background");
-		loadImage("progress_particle");
-		loadImage("progress_circular_indeterminate");
-		loadImage("arrow_up_float");
-		loadImage("arrow_down_float");
-		loadImage("spinnerbox_background_focus_yellow.9");
-		loadImage("spinnerbox_arrow_middle.9");
 		loadImage("paint");
 		loadImage("droiddraw_small");
 		loadImage("paypal");
+		
+		loadImage("light/checkbox_off_background");
+		loadImage("light/checkbox_on_background");
+		loadImage("light/clock_dial");
+		loadImage("light/clock_hand_hour");
+		loadImage("light/clock_hand_minute");
+		loadImage("light/radiobutton_off_background");
+		loadImage("light/radiobutton_on_background");
+		loadImage("light/button_background_normal.9");
+		loadImage("light/editbox_background_normal.9");
+		loadImage("light/progress_circular_background");
+		loadImage("light/progress_particle");
+		loadImage("light/progress_circular_indeterminate");
+		loadImage("light/arrow_up_float");
+		loadImage("light/arrow_down_float");
+		loadImage("light/spinnerbox_background_focus_yellow.9");
+		loadImage("light/spinnerbox_arrow_middle.9");
+		
+		loadImage("def/btn_check_off");
+		loadImage("def/btn_check_on");
+		
+		loadImage("def/btn_radio_off");
+		loadImage("def/btn_radio_on");
+		
+		loadImage("def/textfield.9");
+		loadImage("def/btn_default_normal.9");
+		loadImage("def/progress_wheel_medium");
+		
+		loadImage("def/spinner_normal.9");
+		loadImage("def/btn_dropdown_neither.9");
 		
 		jf = new JFrame("DroidDraw");
 		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

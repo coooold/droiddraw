@@ -46,6 +46,9 @@ public class AndroidEditor {
 	File drawable_dir;
 	URLOpener opener;
 	
+	String theme;
+	
+	
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
 	
@@ -422,5 +425,13 @@ public class AndroidEditor {
 		catch (ParserConfigurationException ex) {
 			error(ex);
 		}
+	}
+
+	public String getTheme() {
+		return theme;
+	}
+
+	public void setTheme(String theme) {
+		this.theme = theme;
 	}
 }

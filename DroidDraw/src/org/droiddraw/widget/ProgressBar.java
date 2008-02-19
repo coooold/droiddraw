@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.property.BooleanProperty;
 import org.droiddraw.property.StringProperty;
@@ -21,10 +22,15 @@ public class ProgressBar extends AbstractWidget {
 		addProperty(indeterminate);
 		addProperty(new StringProperty("Max. Value", "android:max", "100"));
 		apply();
-	
-		base = ImageResources.instance().getImage("progress_circular_background");
-		dot = ImageResources.instance().getImage("progress_particle");
-		indet = ImageResources.instance().getImage("progress_circular_indeterminate");
+		String theme = AndroidEditor.instance().getTheme();
+		if (theme == null || theme.equals("default")) {
+			base = ImageResources.instance().getImage("def/progress_wheel_medium");
+		}
+		else {
+			base = ImageResources.instance().getImage("light/progress_circular_background");
+			dot = ImageResources.instance().getImage("light/progress_particle");
+			indet = ImageResources.instance().getImage("light/progress_circular_indeterminate");
+		}
 	}
 	
 	@Override
@@ -47,11 +53,13 @@ public class ProgressBar extends AbstractWidget {
 		}
 		else {
 			g.drawImage(base, getX(), getY(), getWidth(), getHeight(), null);
-			if (indeterminate.getBooleanValue()) {
-				g.drawImage(indet, getX(), getY(), getWidth(), getHeight(), null);				
-			}
-			else {
-				g.drawImage(dot, getX(), getY(), getWidth(), getHeight(), null);
+			if (indet != null) {
+				if (indeterminate.getBooleanValue()) {
+					g.drawImage(indet, getX(), getY(), getWidth(), getHeight(), null);				
+				}
+				else {
+					g.drawImage(dot, getX(), getY(), getWidth(), getHeight(), null);
+				}
 			}
 		}
 	}
