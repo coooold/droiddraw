@@ -396,13 +396,6 @@ public class DroidDrawPanel extends JPanel {
 		JPanel wp = new JPanel();
 		JPanel mp = new JPanel();
 		wp.setLayout(new GridLayout(0,1));
-		AnalogClock ac = new AnalogClock();
-		ac.setSize(50, 50);
-		mp.add(new WidgetPanel(ac));
-		
-		AutoCompleteTextView actv = new AutoCompleteTextView("AutoComplete");
-		((ColorProperty)actv.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
-		mp.add(new WidgetPanel(actv));
 		
 		Button b = new Button("Button");
 		((ColorProperty)b.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
@@ -412,6 +405,53 @@ public class DroidDrawPanel extends JPanel {
 		((ColorProperty)cb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
 		mp.add(new WidgetPanel(cb));
 		
+		
+
+		RadioButton rb = new RadioButton("RadioButton");
+		((ColorProperty)rb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(rb));
+		
+		mp.add(new WidgetPanel(new RadioGroup()));
+				
+		mp.add(new WidgetPanel(new ImageButton()));
+		mp.add(new WidgetPanel(new ImageView()));
+		
+
+		Gallery g = new Gallery();
+		g.setWidth(100);
+		g.setHeight(40);
+		mp.add(new WidgetPanel(g));
+		
+		wp.add(mp);
+		mp = new JPanel();
+		mp.setLayout(new FlowLayout(FlowLayout.LEFT));
+		mp.add(new WidgetPanel(new Spinner()));
+		
+		EditView ev = new EditView("EditText");
+		((ColorProperty)ev.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(ev));
+
+		
+		AutoCompleteTextView actv = new AutoCompleteTextView("AutoComplete");
+		((ColorProperty)actv.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(actv));
+		
+		TextView tv = new TextView("TextView");
+		((ColorProperty)tv.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(tv));
+		
+		mp.add(new WidgetPanel(new ProgressBar()));
+		
+		mp.add(new WidgetPanel(new GridView()));
+				
+		wp.add(mp);
+		mp = new JPanel();
+		mp.setLayout(new FlowLayout(FlowLayout.LEFT));
+		
+		AnalogClock ac = new AnalogClock();
+		ac.setSize(50, 50);
+		mp.add(new WidgetPanel(ac));
+		
 		DigitalClock dcb = new DigitalClock();
 		((ColorProperty)dcb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
 		mp.add(new WidgetPanel(dcb));
@@ -419,36 +459,11 @@ public class DroidDrawPanel extends JPanel {
 		DatePicker dp = new DatePicker();
 		dp.setSize(140, 40);
 		mp.add(new WidgetPanel(dp));
-		wp.add(mp);
-		mp = new JPanel();
 		
-		EditView ev = new EditView("EditText");
-		((ColorProperty)ev.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
-		mp.add(new WidgetPanel(ev));
-		mp.add(new WidgetPanel(new ImageButton()));
-		mp.add(new WidgetPanel(new ImageView()));
-		mp.add(new WidgetPanel(new ListView()));
-		mp.add(new WidgetPanel(new ProgressBar()));
-		
-		RadioButton rb = new RadioButton("RadioButton");
-		((ColorProperty)rb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
-		mp.add(new WidgetPanel(rb));
-		
-		mp.add(new WidgetPanel(new RadioGroup()));
-		wp.add(mp);
-		mp = new JPanel();
-		mp.add(new WidgetPanel(new Spinner()));
-		
-		TextView tv = new TextView("TextView");
-		((ColorProperty)tv.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
-		mp.add(new WidgetPanel(tv));
-		mp.add(new WidgetPanel(new Ticker()));
 		mp.add(new WidgetPanel(new TimePicker()));
-		mp.add(new WidgetPanel(new GridView()));
-		Gallery g = new Gallery();
-		g.setWidth(100);
-		g.setHeight(40);
-		mp.add(new WidgetPanel(g));
+		
+		mp.add(new WidgetPanel(new ListView()));
+		
 		wp.add(mp);
 		//wp.setSize(wp.getWidth(), 150);
 		JPanel ppp = new JPanel();
@@ -472,6 +487,9 @@ public class DroidDrawPanel extends JPanel {
 		tr.setSizeInternal(70, tr.getHeight());
 		mp.add(new WidgetPanel(tr));
 		mp.add(new WidgetPanel(new TableLayout()));
+		
+		mp.add(new WidgetPanel(new Ticker()));
+		
 		lp.add(mp);
 		mp = new JPanel();
 		mp.add(lp);
