@@ -40,9 +40,12 @@ public class DroidDraw extends JApplet implements URLOpener {
 		l.apply();
 	}
 	
-	protected void loadImage(String name, MediaTracker md, int id) {
+	MediaTracker md;
+	int ix;
+	
+	protected void loadImage(String name) {
 		Image img = getImage(getCodeBase(), "ui/"+name+".png");
-		md.addImage(img, id);
+		md.addImage(img, ix++);
 		ImageResources.instance().addImage(img, name);
 		
 	}
@@ -68,30 +71,58 @@ public class DroidDraw extends JApplet implements URLOpener {
 		if (screen == null) {
 			screen="hvgap";
 		}
-		MediaTracker md = new MediaTracker(this);
-		int ix = 0;
-		loadImage("emu1", md, ix++);
-		loadImage("emu2", md, ix++);
-		loadImage("emu3", md, ix++);
-		loadImage("emu4", md, ix++);
-		loadImage("checkbox_off_background", md, ix++);
-		loadImage("checkbox_on_background", md, ix++);
-		loadImage("clock_dial", md, ix++);
-		loadImage("clock_hand_hour", md, ix++);
-		loadImage("clock_hand_minute", md, ix++);
-		loadImage("radiobutton_off_background", md, ix++);
-		loadImage("radiobutton_on_background", md, ix++);
-		loadImage("button_background_normal.9", md, ix++);
-		loadImage("editbox_background_normal.9", md, ix++);
-		loadImage("progress_circular_background", md, ix++);
-		loadImage("progress_particle", md, ix++);
-		loadImage("progress_circular_indeterminate", md, ix++);
-		loadImage("arrow_up_float", md, ix++);
-		loadImage("arrow_down_float", md, ix++);
-		loadImage("spinnerbox_background_focus_yellow.9", md, ix++);
-		loadImage("spinnerbox_arrow_middle.9", md, ix++);
-		loadImage("paint", md, ix++);
-		loadImage("paypal", md, ix++);
+		md = new MediaTracker(this);
+		ix = 0;
+		
+		loadImage("emu1");
+		loadImage("emu2");
+		loadImage("emu3");
+		loadImage("emu4");
+		loadImage("paint");
+		loadImage("droiddraw_small");
+		loadImage("paypal");
+		
+		loadImage("background_01p");
+		loadImage("background_01l");
+		
+		loadImage("statusbar_background_p");
+		loadImage("statusbar_background_l");
+		
+		loadImage("title_bar.9");
+		loadImage("stat_sys_data_connected");
+		loadImage("stat_sys_battery_charge_100");
+		loadImage("stat_sys_signal_3");
+		
+		loadImage("light/checkbox_off_background");
+		loadImage("light/checkbox_on_background");
+		loadImage("light/clock_dial");
+		loadImage("light/clock_hand_hour");
+		loadImage("light/clock_hand_minute");
+		loadImage("light/radiobutton_off_background");
+		loadImage("light/radiobutton_on_background");
+		loadImage("light/button_background_normal.9");
+		loadImage("light/editbox_background_normal.9");
+		loadImage("light/progress_circular_background");
+		loadImage("light/progress_particle");
+		loadImage("light/progress_circular_indeterminate");
+		loadImage("light/arrow_up_float");
+		loadImage("light/arrow_down_float");
+		loadImage("light/spinnerbox_background_focus_yellow.9");
+		loadImage("light/spinnerbox_arrow_middle.9");
+		
+		loadImage("def/btn_check_off");
+		loadImage("def/btn_check_on");
+		
+		loadImage("def/btn_radio_off");
+		loadImage("def/btn_radio_on");
+		
+		loadImage("def/textfield.9");
+		loadImage("def/btn_default_normal.9");
+		loadImage("def/progress_wheel_medium");
+		
+		loadImage("def/spinner_normal.9");
+		loadImage("def/btn_dropdown_neither.9");
+		
 		
 		for (int i=0;i<ix;i++) {
 			try {

@@ -1,6 +1,7 @@
 package org.droiddraw.gui;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -15,6 +16,8 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.geom.AffineTransform;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.util.Date;
 
 import javax.swing.JPanel;
 
@@ -29,6 +32,8 @@ public class Viewer extends JPanel implements DropTargetListener {
 	AndroidEditor app;
 	ViewerListener vl;
 	Image img;
+	Image back;
+	
 	DropTarget dt;
 
 	
@@ -42,7 +47,6 @@ public class Viewer extends JPanel implements DropTargetListener {
 		addKeyListener(vl);
 		this.img = img;
 		this.d = new Dimension(480,480);
-		
 		dt = new DropTarget(this, DnDConstants.ACTION_MOVE, this, true );
 	}
 	
@@ -95,8 +99,55 @@ public class Viewer extends JPanel implements DropTargetListener {
 
 		g.setColor(Color.white);
 		g.fillRect(0,0, app.getScreenX(), app.getScreenY());
-		if (img != null)
-			g.drawImage(img, 0, 0, this);
+		String theme = AndroidEditor.instance().getTheme();
+		if (theme == null || theme.equals("default")) {
+			Image back = null;
+			Image stat = null;
+			int wx = AndroidEditor.instance().getScreenX();
+			
+			if (AndroidEditor.instance().getScreenMode().equals(AndroidEditor.ScreenMode.HVGA_PORTRAIT)) {
+				back = ImageResources.instance().getImage("background_01p");
+				stat = ImageResources.instance().getImage("statusbar_background_p");
+			}
+			else if (AndroidEditor.instance().getScreenMode().equals(AndroidEditor.ScreenMode.HVGA_LANDSCAPE)) {
+				back = ImageResources.instance().getImage("background_01l");
+				stat = ImageResources.instance().getImage("statusbar_background_l");	
+			}
+			if (back != null)
+				g.drawImage(back, 0, 0, this);
+			if (stat != null)
+				g.drawImage(stat, 0, 0, this);
+			
+			Image dat = ImageResources.instance().getImage("stat_sys_data_connected");
+			g.drawImage(dat, wx-160, 0, this);
+			
+			Image sig = ImageResources.instance().getImage("stat_sys_signal_3");
+			g.drawImage(sig, wx-130, 2, this);
+			
+			Image bat = ImageResources.instance().getImage("stat_sys_battery_charge_100");
+			g.drawImage(bat, wx-100, 4, this);
+			
+			Font f = g.getFont();
+			Font f2 = f.deriveFont(Font.BOLD);
+			f2 = f2.deriveFont(14f);
+			g.setFont(f2);
+			g.setColor(Color.black);
+			g.drawString(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()), wx-65, 17);
+			
+			Image title = ImageResources.instance().getImage("title_bar.9");
+			NineWayImage nwt = new NineWayImage(title, 0, 0);
+			nwt.paint(g, 0, stat.getHeight(null), wx, stat.getHeight(null));
+			
+			g.setColor(Color.lightGray);
+			g.drawString("DroidDraw", 5, stat.getHeight(null)+17);
+			g.setFont(f);
+			
+		}
+		else {
+			if (img != null)
+				g.drawImage(img, 0, 0, this);
+		}
+		
 		
 		paint(g, app.getLayout());
 		

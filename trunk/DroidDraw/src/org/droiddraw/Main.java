@@ -204,6 +204,7 @@ public class Main implements ApplicationListener, URLOpener {
 		if (osx) {
 			doMacOSXIntegration();
 		}
+		
 		loadImage("emu1");
 		loadImage("emu2");
 		loadImage("emu3");
@@ -211,6 +212,17 @@ public class Main implements ApplicationListener, URLOpener {
 		loadImage("paint");
 		loadImage("droiddraw_small");
 		loadImage("paypal");
+		
+		loadImage("background_01p");
+		loadImage("background_01l");
+		
+		loadImage("statusbar_background_p");
+		loadImage("statusbar_background_l");
+		
+		loadImage("title_bar.9");
+		loadImage("stat_sys_data_connected");
+		loadImage("stat_sys_battery_charge_100");
+		loadImage("stat_sys_signal_3");
 		
 		loadImage("light/checkbox_off_background");
 		loadImage("light/checkbox_on_background");

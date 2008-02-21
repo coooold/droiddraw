@@ -21,6 +21,7 @@ public class EditView extends TextView {
 	StringProperty digits;
 	
 	NineWayImage img;
+	Image img_base;
 	
 	public static final String[] propertyNames = 
 		new String[] {"android:password", "android:capitalize", "android:numeric", "android:phoneNumber","android:autoText","android:digits"};
@@ -45,26 +46,26 @@ public class EditView extends TextView {
 		props.add(capitalize);
 		props.add(digits);
 		
-		Image img = null;
+		img_base = null;
 		
 		String theme = AndroidEditor.instance().getTheme();
 		if (theme == null || theme.equals("default")) {
 			fontSz.setStringValue("18sp");
 			fontSize = 18;
-			img = ImageResources.instance().getImage("def/textfield.9");
-			if (img != null) {
-				this.img = new NineWayImage(img, 10, 10);
+			img_base = ImageResources.instance().getImage("def/textfield.9");
+			if (img_base != null) {
+				this.img = new NineWayImage(img_base, 10, 10);
 			}
 			pad_x = 20;
-			pad_y = 30;
+			pad_y = 0;
 		}
 		else if (theme.equals("light")) {
-			img = ImageResources.instance().getImage("light/editbox_background_normal.9");
-			if (img != null) {
-				this.img = new NineWayImage(img, 10, 10);
+			img_base = ImageResources.instance().getImage("light/editbox_background_normal.9");
+			if (img_base != null) {
+				this.img = new NineWayImage(img_base, 10, 10);
 			}
 			pad_x = 18;
-			pad_y = 12;
+			pad_y = 0;
 		}
 		
 		apply();
@@ -87,6 +88,23 @@ public class EditView extends TextView {
 		else {
 			return super.getContentWidth();
 		}
+	}
+	
+	public int getContentHeight() {
+		//int sup = super.getContentWidth();
+		//if (sup > fontSize) {
+		//	return sup;
+		//}
+		//else {
+		if (img_base != null) {
+			String theme = AndroidEditor.instance().getTheme();
+			if (theme == null || theme.equals("default"))
+				return img_base.getHeight(null)-5;
+			else if (theme.equals("light")); 
+				return img_base.getHeight(null)-5;
+		}
+		return fontSize;
+		//}
 	}
 	
 	public void paint(Graphics g) {
@@ -112,8 +130,8 @@ public class EditView extends TextView {
 		}
 		g.setColor(textColor.getColorValue());
 		//g.drawString(s, getX()+pad_x/2, getY()+fontSize+pad_y/2-1);
-		this.drawText(g, 0, fontSize+pad_y/2-1);
+		this.drawText(g, 0, (fontSize+getHeight())/2-1);
 		g.setColor(Color.black);
-		g.fillRect(getX()+pad_x/2-4, getY()+15, 1, fontSize+5);
+		g.fillRect(getX()+pad_x/2-4, getY()+(getHeight()-fontSize)/2-3, 1, fontSize+5);
 	}
 }

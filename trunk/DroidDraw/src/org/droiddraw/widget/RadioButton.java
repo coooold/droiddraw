@@ -83,7 +83,7 @@ public class RadioButton extends CompoundButton {
 		
 		baseline = (off_y+fontSize)/2;
 		
-		g.setColor(textColor.getColorValue());
+		setTextColor(g);
 		g.setFont(f);
 		g.drawString(text.getStringValue(), getX()+off_x, getY()+baseline-4);
 	}
