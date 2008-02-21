@@ -130,7 +130,7 @@ public class DroidDraw extends JApplet implements URLOpener {
 			} catch (InterruptedException ex) {}
 		}
 		setLayout(new BorderLayout());
-		setSize(1100, 600);
+		setSize(1024, 650);
 		add(new DroidDrawPanel(screen, true), BorderLayout.CENTER);
 	}
 }
