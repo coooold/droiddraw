@@ -1,6 +1,7 @@
 package org.droiddraw.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -32,6 +33,7 @@ import javax.swing.border.TitledBorder;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.droiddraw.AndroidEditor;
+import org.droiddraw.property.ColorProperty;
 import org.droiddraw.util.DroidDrawHandler;
 import org.droiddraw.widget.AbsoluteLayout;
 import org.droiddraw.widget.AnalogClock;
@@ -397,26 +399,49 @@ public class DroidDrawPanel extends JPanel {
 		AnalogClock ac = new AnalogClock();
 		ac.setSize(50, 50);
 		mp.add(new WidgetPanel(ac));
-		mp.add(new WidgetPanel(new AutoCompleteTextView("AutoComplete")));
-		mp.add(new WidgetPanel(new Button("Button")));
-		mp.add(new WidgetPanel(new CheckBox("CheckBox")));
-		mp.add(new WidgetPanel(new DigitalClock()));
+		
+		AutoCompleteTextView actv = new AutoCompleteTextView("AutoComplete");
+		((ColorProperty)actv.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(actv));
+		
+		Button b = new Button("Button");
+		((ColorProperty)b.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(b));
+		
+		CheckBox cb = new CheckBox("CheckBox");
+		((ColorProperty)cb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(cb));
+		
+		DigitalClock dcb = new DigitalClock();
+		((ColorProperty)dcb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(dcb));
+		
 		DatePicker dp = new DatePicker();
 		dp.setSize(140, 40);
 		mp.add(new WidgetPanel(dp));
 		wp.add(mp);
 		mp = new JPanel();
-		mp.add(new WidgetPanel(new EditView("EditText")));
+		
+		EditView ev = new EditView("EditText");
+		((ColorProperty)ev.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(ev));
 		mp.add(new WidgetPanel(new ImageButton()));
 		mp.add(new WidgetPanel(new ImageView()));
 		mp.add(new WidgetPanel(new ListView()));
 		mp.add(new WidgetPanel(new ProgressBar()));
-		mp.add(new WidgetPanel(new RadioButton("RadioButton")));
+		
+		RadioButton rb = new RadioButton("RadioButton");
+		((ColorProperty)rb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(rb));
+		
 		mp.add(new WidgetPanel(new RadioGroup()));
 		wp.add(mp);
 		mp = new JPanel();
 		mp.add(new WidgetPanel(new Spinner()));
-		mp.add(new WidgetPanel(new TextView("TextView")));
+		
+		TextView tv = new TextView("TextView");
+		((ColorProperty)tv.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
+		mp.add(new WidgetPanel(tv));
 		mp.add(new WidgetPanel(new Ticker()));
 		mp.add(new WidgetPanel(new TimePicker()));
 		mp.add(new WidgetPanel(new GridView()));

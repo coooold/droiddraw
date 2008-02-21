@@ -14,7 +14,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		super(tagName);
 		this.widgets = new Vector<Widget>();
 		addProperty(new StringProperty("xmlns", "xmlns:android", "http://schemas.android.com/apk/res/android", false));
-		background.setColorValue(Color.white);
+		//background.setColorValue(Color.white);
 		apply();
 	}
 	

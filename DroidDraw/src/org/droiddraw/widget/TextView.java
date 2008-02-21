@@ -51,7 +51,7 @@ public class TextView extends AbstractWidget {
 		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"sp");
 		face = new SelectProperty("Font Face", "android:typeface", new String[] {"normal","sans","serif","monospace"}, 0);
 		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"normal", "bold", "italic", "bold|italic"}, 0);
-		textColor = new ColorProperty("Text Color", "android:textColor", Color.black);
+		textColor = new ColorProperty("Text Color", "android:textColor", null);
 		align = new SelectProperty("Text Alignment", "android:textAlign", new String[] {"end","center","start"}, 2);
 		props.add(text);
 		props.add(fontSz);
@@ -183,14 +183,26 @@ public class TextView extends AbstractWidget {
 		}
 	}
 
+	protected void setTextColor(Graphics g) {
+		Color c = textColor.getColorValue();
+		String theme = AndroidEditor.instance().getTheme();
+		Color def = null;
+		if (theme == null || theme.equals("default")) {
+			def = Color.white;
+		}
+		else if (theme.equals("light")) {
+			def = Color.black;
+		}
+		if (c == null)
+			c = def;
+		g.setColor(c);
+	}
+	
 	public void paint(Graphics g) {
 		drawBackground(g);
 
 		if (text.getStringValue() != null) {
-			Color c = textColor.getColorValue();
-			if (c == null)
-				c = Color.black;
-			g.setColor(c);
+			setTextColor(g);
 			g.setFont(f);
 
 			int h = fontSize+pad_y/2;
