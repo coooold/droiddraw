@@ -491,7 +491,7 @@ public class Main implements ApplicationListener, URLOpener {
 		menu.add(it);
 		menu.addSeparator();
 		
-		it = new JMenuItem("Send layout to device");
+		it = new JMenuItem("Send GUI to device");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
