@@ -105,18 +105,22 @@ public class Viewer extends JPanel implements DropTargetListener {
 			Image stat = null;
 			int wx = AndroidEditor.instance().getScreenX();
 			
-			if (AndroidEditor.instance().getScreenMode().equals(AndroidEditor.ScreenMode.HVGA_PORTRAIT)) {
+			AndroidEditor.ScreenMode sc = AndroidEditor.instance().getScreenMode();
+			if (sc.equals(AndroidEditor.ScreenMode.HVGA_PORTRAIT) ||
+				sc.equals(AndroidEditor.ScreenMode.QVGA_PORTRAIT)) 
+			{
 				back = ImageResources.instance().getImage("background_01p");
 				stat = ImageResources.instance().getImage("statusbar_background_p");
 			}
-			else if (AndroidEditor.instance().getScreenMode().equals(AndroidEditor.ScreenMode.HVGA_LANDSCAPE)) {
+			else if (sc.equals(AndroidEditor.ScreenMode.HVGA_LANDSCAPE) ||
+					 sc.equals(AndroidEditor.ScreenMode.QVGA_LANDSCAPE)) {
 				back = ImageResources.instance().getImage("background_01l");
 				stat = ImageResources.instance().getImage("statusbar_background_l");	
 			}
 			if (back != null)
-				g.drawImage(back, 0, 0, this);
+				g.drawImage(back, 0, 0, AndroidEditor.instance().getScreenX(), AndroidEditor.instance().getScreenY(), this);
 			if (stat != null)
-				g.drawImage(stat, 0, 0, this);
+				g.drawImage(stat, 0, 0, AndroidEditor.instance().getScreenX(), stat.getHeight(null), this);
 			
 			Image dat = ImageResources.instance().getImage("stat_sys_data_connected");
 			g.drawImage(dat, wx-160, 0, this);
