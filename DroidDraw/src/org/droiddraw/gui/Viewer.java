@@ -186,6 +186,7 @@ public class Viewer extends JPanel implements DropTargetListener {
 			Object data = t.getTransferData(t.getTransferDataFlavors()[0]);
 			Point l = e.getLocation();
 			vl.addWidget(ViewerListener.createWidget((String)data), l.x-getOffX(), l.y-getOffY());
+			AndroidEditor.instance().setChanged(true);
 			e.dropComplete(true);
 		} catch (IOException ex) {
 			AndroidEditor.instance().error(ex);

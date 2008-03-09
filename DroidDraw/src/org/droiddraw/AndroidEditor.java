@@ -43,6 +43,8 @@ public class AndroidEditor {
 	File arrayFile = null;
 	Hashtable<String, Vector<String>> arrays;
 	
+	boolean changed;
+	
 	File drawable_dir;
 	URLOpener opener;
 	
@@ -75,6 +77,16 @@ public class AndroidEditor {
 		colors.put("cyan", Color.cyan);
 		colors.put("magenta", Color.magenta);
 		colors.put("white", Color.white);
+	
+		this.changed = false;
+	}
+	
+	public boolean isChanged() {
+		return changed;
+	}
+	
+	public void setChanged(boolean changed) {
+		this.changed = changed;
 	}
 	
 	public PropertiesPanel getPropertiesPanel() {
@@ -310,12 +322,14 @@ public class AndroidEditor {
 			if (selected == w) {
 				selected = null;
 			}
+			changed = true;
 		}
 	}
 	
 	public void removeAllWidgets() {
 		layout.removeAllWidgets();
 		selected = null;
+		changed = true;
 	}
 	
 	public Vector<Layout> findLayouts(int x, int y) {
