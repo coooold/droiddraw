@@ -13,6 +13,8 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -76,6 +78,22 @@ public class Main implements ApplicationListener, URLOpener {
 	}
 	
 	protected static void quit() {
+		quit(true);
+	}
+	
+	protected static void quit(boolean cancelable) {
+		if (AndroidEditor.instance().isChanged()) {
+			int opt = JOptionPane.showConfirmDialog(ddp, "Do you wish to save changes to your layout?", "Unsaved Changes", cancelable?JOptionPane.YES_NO_CANCEL_OPTION:JOptionPane.YES_NO_OPTION);
+			switch (opt) {
+				case JOptionPane.CANCEL_OPTION:
+					return;
+				case JOptionPane.YES_OPTION:
+					doSave();
+					break;
+				case JOptionPane.NO_OPTION:
+					break;
+			}
+		}
 		System.exit(0);
 	}
 	
@@ -255,7 +273,20 @@ public class Main implements ApplicationListener, URLOpener {
 		loadImage("def/btn_dropdown_neither.9");
 		
 		jf = new JFrame("DroidDraw");
-		jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jf.addWindowListener(new WindowListener() {
+			public void windowActivated(WindowEvent e) {}
+			public void windowClosed(WindowEvent e) {}
+			public void windowClosing(WindowEvent e) {
+				quit(false);
+			}
+			public void windowDeactivated(WindowEvent e) {}
+			public void windowDeiconified(WindowEvent e) {}
+			public void windowIconified(WindowEvent e) {}
+			public void windowOpened(WindowEvent e) {}
+			
+		});
+		
 		
 		ddp = new DroidDrawPanel("hvgap", false);
 		fd = new FileDialog(jf);

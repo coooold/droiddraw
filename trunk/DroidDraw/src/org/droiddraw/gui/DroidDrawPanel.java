@@ -137,6 +137,7 @@ public class DroidDrawPanel extends JPanel {
 	public void save(File f) {
 		try {
 			AndroidEditor.instance().generate(new PrintWriter(new FileWriter(f)));
+			AndroidEditor.instance().setChanged(false);
 		} catch (IOException ex) {
 			AndroidEditor.instance().error(ex);
 		}
@@ -166,6 +167,7 @@ public class DroidDrawPanel extends JPanel {
 			else
 				jtext.setText(buff.toString());
 			repaint();
+			AndroidEditor.instance().setChanged(false);
 		} 
 		catch (IOException ex) {
 			AndroidEditor.instance().error(ex);
