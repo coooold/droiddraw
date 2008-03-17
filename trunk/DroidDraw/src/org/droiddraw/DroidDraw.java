@@ -11,6 +11,9 @@ import javax.swing.UIManager;
 
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
+import org.droiddraw.gui.LayoutPainter;
+import org.droiddraw.gui.WidgetRegistry;
+import org.droiddraw.widget.AbstractLayout;
 import org.droiddraw.widget.Layout;
 
 public class DroidDraw extends JApplet implements URLOpener {
@@ -54,6 +57,10 @@ public class DroidDraw extends JApplet implements URLOpener {
 	public void init() {
 		super.init();
 		AndroidEditor.instance().setURLOpener(this);
+		AndroidEditor.instance().getPropertiesPanel().setApplet(true);
+		
+		WidgetRegistry.registerPainter(AbstractLayout.class, new LayoutPainter());
+		
 		// This is so that I can test out the Google examples...
 		// START
 		/*

@@ -7,8 +7,12 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -17,21 +21,28 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import org.droiddraw.AndroidEditor;
+import org.droiddraw.Main;
 import org.droiddraw.property.BooleanProperty;
 import org.droiddraw.property.ColorProperty;
+import org.droiddraw.property.ImageProperty;
 import org.droiddraw.property.IntProperty;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
+import org.droiddraw.util.FileCopier;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
 
-public class PropertiesPanel extends JPanel implements ActionListener, PropertyChangeListener {
+public class PropertiesPanel 
+extends JPanel 
+implements ActionListener, PropertyChangeListener, KeyListener
+{
 	private static final long serialVersionUID = 1L;
 
 	Vector<Property> properties;
@@ -41,20 +52,26 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 	Widget w;
 	JPanel items;
 	Dimension d;
+	boolean applet;
 
-	public PropertiesPanel() {
-		this(new Vector<Property>(), null);
+	public PropertiesPanel(boolean applet) {
+		this(new Vector<Property>(), null, applet);
 	}
 
-	public PropertiesPanel(Vector<Property> properties, Widget w) {
+	public PropertiesPanel(Vector<Property> properties, Widget w, boolean applet) {
 		this.components = new Hashtable<Property, JComponent>();
 		this.colorTable = new Hashtable<ColorProperty, Color>();
 		this.w =w;
+		this.applet = applet;
 
 		setProperties(properties, w);
 		this.d = new Dimension(200,400);
 	}
 
+	public void setApplet(boolean applet) {
+		this.applet = applet;
+	}
+	
 	public void setProperties(Vector<Property> properties, Widget w) {
 		this.properties = properties;
 		this.removeAll();
@@ -66,7 +83,7 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 		items.setLayout(new GridLayout(0,2));
 		//items.setBorder(BorderFactory.createTitledBorder("Properties"));
 		components.clear();
-		
+
 		if (properties.size() > 0) {
 			items.add(new JLabel("Properties for: "));
 			items.add(new JLabel(w.getTagName()));
@@ -91,9 +108,57 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 					components.put(prop, jf);
 					items.add(jp);
 				}
+				else if (prop instanceof ImageProperty) {
+					items.add(new JLabel(prop.getEnglishName()));
+					final JTextField jf = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 10);	
+					JPanel jp = new JPanel();
+					jp.setLayout(fl);
+					jp.add(jf);
+					if (!applet) {
+						JButton jb = new JButton("Browse");
+						jb.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								if (AndroidEditor.instance().getDrawableDirectory() == null) {
+									JOptionPane.showMessageDialog(PropertiesPanel.this, "You must select a drawables directory.\n If you select an image which is not in this directory,\n it will be copied into it.",  "Select Drawable Dir.", JOptionPane.INFORMATION_MESSAGE);
+									File dir = Main.doOpenDir();
+									if (dir != null) {
+										AndroidEditor.instance().setDrawableDirectory(dir);
+									}
+								}
+								File dir = AndroidEditor.instance().getDrawableDirectory();
+								if (dir != null) {
+									File img = Main.doOpen(dir);
+									if (img != null) {
+										if (!img.getParentFile().equals(dir)) {
+											try {
+												FileCopier.copy(img, dir, true);
+											}
+											catch (IOException ex) {
+												AndroidEditor.instance().error(ex);
+											}
+										}
+
+
+										String name = img.getName();
+										int ix = name.indexOf(".");
+										if (ix != -1) {
+											name = name.substring(0, ix);
+										}
+										jf.setText("@drawable/"+name);
+										jf.requestFocus();
+									}
+								}
+							}
+						});
+						jp.add(jb);
+					}
+					components.put(prop, jf);
+					items.add(jp);
+
+				}
 				else if (prop instanceof StringProperty) {
 					items.add(new JLabel(prop.getEnglishName()));
-					
+
 					JComponent jc;
 					if (prop instanceof SelectProperty) {
 						JComboBox jcb = new JComboBox(((SelectProperty)prop).getOptions());
@@ -105,7 +170,7 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 					}
 					else {
 						if (prop.getAtttributeName().equals("android:layout_width") ||
-							prop.getAtttributeName().equals("android:layout_height")) 
+								prop.getAtttributeName().equals("android:layout_height")) 
 						{
 							Vector<String> v = new Vector<String>();
 							v.add("");
@@ -141,7 +206,7 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 								if (jc != null)
 									((JTextField)jc).setText(evt.getNewValue().toString());
 							}
-							
+
 						}
 					});
 					components.put(prop, jc);
@@ -172,6 +237,10 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 	}
 
 	public void actionPerformed(ActionEvent arg0) {
+		apply();
+	}
+
+	protected void apply() {
 		for (Property prop : properties) {
 			if (prop.getEditable()) {
 				if (prop instanceof BooleanProperty) {
@@ -217,7 +286,7 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 		}
 		if (w.getParent() != null)
 			w.getParent().positionWidget(w);
-		
+
 		if (viewer != null)
 			viewer.repaint();
 	}
@@ -226,6 +295,16 @@ public class PropertiesPanel extends JPanel implements ActionListener, PropertyC
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (w.equals(evt.getSource())) {
 			setProperties((Vector<Property>)evt.getNewValue(), w);
+		}
+	}
+
+	public void keyPressed(KeyEvent e) {}
+
+	public void keyReleased(KeyEvent e) {}
+
+	public void keyTyped(KeyEvent e) {
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			apply();
 		}
 	}
 }

@@ -6,18 +6,18 @@ import java.awt.image.BufferedImage;
 
 import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.ImageResources;
-import org.droiddraw.property.StringProperty;
+import org.droiddraw.property.ImageProperty;
 
 public class ImageView extends AbstractWidget {
 	Image paint;
 	BufferedImage img;
 	
-	StringProperty src;
+	ImageProperty src;
 	
 	public ImageView() {
 		super("ImageView");
 		paint = ImageResources.instance().getImage("paint");
-		src = new StringProperty("Image Source", "android:src", "");
+		src = new ImageProperty("Image Source", "android:src", "");
 		addProperty(src);
 		apply();
 	}
