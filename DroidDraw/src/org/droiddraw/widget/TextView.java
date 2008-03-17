@@ -80,13 +80,6 @@ public class TextView extends AbstractWidget {
 		}
 	}
 
-	public JPanel getEditorPanel() {
-		if (p == null) {
-			p = new PropertiesPanel(props, this);
-		}
-		return p;
-	}
-
 	public void apply() {
 		super.apply();
 		if (fontSz.getStringValue() != null && fontSz.getStringValue().length() > 0) {

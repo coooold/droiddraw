@@ -6,11 +6,13 @@ import java.awt.Image;
 import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.NineWayImage;
+import org.droiddraw.property.StringProperty;
 
 
 public class Button extends TextView {
 	NineWayImage img;
 	Image img_base;
+	StringProperty onClick;
 	
 	public Button(String txt) {
 		super(txt);
@@ -34,6 +36,8 @@ public class Button extends TextView {
 				this.img = new NineWayImage(img_base, 10, 10);
 			}
 		}
+		this.onClick = new StringProperty("Click Listener Classname", "droiddraw:onClickListener", null);
+		addProperty(onClick);
 		apply();
 	}
 

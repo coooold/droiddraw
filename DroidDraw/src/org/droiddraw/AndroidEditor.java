@@ -21,6 +21,7 @@ import org.droiddraw.util.ArrayHandler;
 import org.droiddraw.util.ColorHandler;
 import org.droiddraw.util.StringHandler;
 import org.droiddraw.widget.AbstractWidget;
+import org.droiddraw.widget.Button;
 import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
@@ -62,7 +63,7 @@ public class AndroidEditor {
 	
 	private AndroidEditor(ScreenMode mode) {
 		setScreenMode(mode);
-		this.pp = new PropertiesPanel();
+		this.pp = new PropertiesPanel(false);
 		this.colors = new Hashtable<String, Color>();
 		this.strings = new Hashtable<String, String>();
 		this.arrays = new Hashtable<String, Vector<String>>();
@@ -107,14 +108,14 @@ public class AndroidEditor {
 		}
 		int ix = src.indexOf("/");
 		String file = src.substring(ix+1);
-		System.out.println("Looking for: "+file);
+		//System.out.println("Looking for: "+file);
 		File f = new File(this.getDrawableDirectory(), file+".png"); 
 		if (!f.exists()) {
-			try {
-				System.out.println(f.getCanonicalPath()+" doesn't exist!");
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
+			//try {
+			//	System.out.println(f.getCanonicalPath()+" doesn't exist!");
+			//} catch (IOException ex) {
+			//	ex.printStackTrace();
+			//}
 			f = new File(this.getDrawableDirectory(), file+".bmp");
 		}
 		if (!f.exists()) {
@@ -124,7 +125,7 @@ public class AndroidEditor {
 			return null;
 		}
 		try {
-			System.out.println("Reading in: "+f.getCanonicalPath());
+			//System.out.println("Reading in: "+f.getCanonicalPath());
 			return ImageIO.read(f);
 		}
 		catch (IOException ex) {
@@ -371,13 +372,45 @@ public class AndroidEditor {
 		return res;
 	}
 
+	public void generateSource(PrintWriter pw, String pkg) {
+		pw.println("package "+pkg+";");
+		pw.println("public class DroidDrawSetup {");
+		pw.println("public static void setup(Context c) {");
+		generateSource(layout, pw, pkg);
+		pw.println("}");
+		pw.println("}");
+	}
+
+	public void generateSource(Layout l, PrintWriter pw, String pkg) {
+		for (Widget w : l.getWidgets()) {
+			generateSource(w, pw, pkg);
+		}
+	}
+	
+	public void generateSource(Widget w, PrintWriter pw, String pkg) {
+		if (w instanceof Layout) {
+			generateSource((Layout)w, pw, pkg);
+		}
+		else {
+			if (w instanceof Button) {
+				StringProperty onClick = (StringProperty)w.getPropertyByAttName("droiddraw:onClickListener");
+				if (onClick != null && onClick.getStringValue() != null && onClick.getStringValue().length() > 0) {
+					String id = w.getId();
+					int ix = id.indexOf("/");
+					id = id.substring(ix+1);
+					pw.println("View b"+id+" = context.findViewById(R.ids."+id+";");
+					pw.println("b"+id+".setOnClickListener(new "+onClick.getStringValue()+"());");
+				}
+			}
+		}
+	}
+	
 	public void generate(PrintWriter pw) {
 		pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 		generateWidget(layout, pw);
 		pw.flush();
 	}
-
-
+	
 	@SuppressWarnings("unchecked")
 	protected void generateWidget(Widget w, PrintWriter pw) {
 		pw.println("<"+w.getTagName());

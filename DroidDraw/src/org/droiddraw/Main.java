@@ -13,12 +13,13 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -113,9 +114,19 @@ public class Main implements ApplicationListener, URLOpener {
 		});
 	}
 	
-	protected static File doOpen() {
+	public static File doOpen() {
+		return doOpen(null);
+	}
+	
+	public static File doOpen(File f) {
 		if (!osx) {
 			jfc.setFileFilter(xmlFilter);
+			if (f != null) {
+				if (f.isDirectory())
+					jfc.setCurrentDirectory(f);
+				else
+					jfc.setCurrentDirectory(f.getParentFile());
+			}
 			int res = jfc.showOpenDialog(ddp);
 			if (res == JFileChooser.APPROVE_OPTION) {
 				return jfc.getSelectedFile();
@@ -123,6 +134,18 @@ public class Main implements ApplicationListener, URLOpener {
 		}
 		else {
 			fd.setMode(FileDialog.LOAD);
+			if (f != null) {
+				try {
+					if (f.isDirectory())
+						fd.setDirectory(f.getCanonicalPath());
+					else
+						fd.setDirectory(f.getParentFile().getCanonicalPath());
+				}
+				catch (IOException ex) {
+					AndroidEditor.instance().error(ex);
+				}
+			}
+	
 			fd.setVisible(true);
 			if (fd.getDirectory() != null && fd.getFile() != null) {
 				return new File(fd.getDirectory()+"/"+fd.getFile());
@@ -131,7 +154,7 @@ public class Main implements ApplicationListener, URLOpener {
 		return null;
 	}
 	
-	protected static File doOpenDir() {
+	public static File doOpenDir() {
 		//if (!osx) {
 			jfc.setFileFilter(dirFilter);
 			jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -182,6 +205,20 @@ public class Main implements ApplicationListener, URLOpener {
 			jf.setTitle("DroidDraw: "+f.getName());
 			ddp.save(f);
 			saveFile = f;
+			
+			File src = new File(f.getParentFile(), "Foo.java");
+			try {
+				FileWriter fw = new FileWriter(src);
+				PrintWriter pw = new PrintWriter(fw);
+				AndroidEditor.instance().generateSource(pw, "foo.bar");
+				pw.flush();
+				fw.flush();
+				pw.close();
+				fw.close();
+			}
+			catch (IOException ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 	
@@ -273,18 +310,11 @@ public class Main implements ApplicationListener, URLOpener {
 		loadImage("def/btn_dropdown_neither.9");
 		
 		jf = new JFrame("DroidDraw");
-		//jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jf.addWindowListener(new WindowListener() {
-			public void windowActivated(WindowEvent e) {}
-			public void windowClosed(WindowEvent e) {}
+		jf.addWindowListener(new WindowAdapter() {
+			@Override
 			public void windowClosing(WindowEvent e) {
 				quit(false);
 			}
-			public void windowDeactivated(WindowEvent e) {}
-			public void windowDeiconified(WindowEvent e) {}
-			public void windowIconified(WindowEvent e) {}
-			public void windowOpened(WindowEvent e) {}
-			
 		});
 		
 		
