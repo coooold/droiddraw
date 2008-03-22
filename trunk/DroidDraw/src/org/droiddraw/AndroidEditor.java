@@ -289,6 +289,10 @@ public class AndroidEditor {
 			this.layout.removeAllWidgets();
 		}
 		this.layout = l;
+		if (l.getPropertyByAttName("xmlns:android") == null) {
+			l.addProperty(new StringProperty("xmlns", "xmlns:android", "http://schemas.android.com/apk/res/android", false));
+			
+		}
 		if (selected == null) {
 			pp.setProperties(l.getProperties(), l);
 		}
