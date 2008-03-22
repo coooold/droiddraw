@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.droiddraw.android">
+    <application android:icon="@drawable/icon">
+        <activity android:name=".AnDroidDraw" android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+        <service android:name=".NetworkService" android:label="DroidDraw NetworkService"/>
+        <activity android:name=".ParseActivity"/>
+    </application>
+</manifest> 
