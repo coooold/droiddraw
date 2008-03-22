@@ -160,14 +160,13 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return null;
 	}
 
-	public void mousePressed(MouseEvent ev) { 
-	}
-
 	public void mouseEntered(MouseEvent arg0) { }
 	public void mouseExited(MouseEvent arg0) { }
 	public void mouseClicked(MouseEvent e) { 
 		final int x = e.getX()-viewer.getOffX();
 		final int y = e.getY()-viewer.getOffY();
+		
+		
 		final MouseEvent ev = e;
 
 		if (select) {
@@ -275,7 +274,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 
 	protected void addWidget(Widget w, Layout l, int x, int y) 
 	{
-		if (l instanceof AbsoluteLayout)
+		if (shift && l instanceof AbsoluteLayout)
 			w.setPosition((x/grid_x)*grid_x-l.getScreenX(), (y/grid_y)*grid_y-l.getScreenY());
 		else
 			w.setPosition(x-l.getScreenX(), y-l.getScreenY());
@@ -293,7 +292,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	public void mouseDragged(MouseEvent e) {
+	public void mouseDragged(MouseEvent e) {		
 		int x = e.getX()-viewer.getOffX();
 		int y = e.getY()-viewer.getOffY();
 		if (x < 0) {
@@ -340,7 +339,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 				int nx = (x+off_x);
 				int ny = (y+off_y);
-				if (!shift && l instanceof AbsoluteLayout) {
+				if (shift && l instanceof AbsoluteLayout) {
 					nx = nx/grid_x*grid_x;
 					ny = ny/grid_y*grid_y;
 				}
@@ -457,5 +456,16 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	}
 
 	public void keyTyped(KeyEvent ev) {
+	}
+
+	public void mousePressed(MouseEvent e) {
+		Widget w = app.getSelected();
+		if (w != null) {
+			int x = e.getX()-viewer.getOffX();
+			int y = e.getY()-viewer.getOffY();
+			
+			off_x = (w.getParent()!=null?w.getParent().getScreenX():0)+w.getX()-x;
+			off_y = (w.getParent()!=null?w.getParent().getScreenY():0)+w.getY()-y;
+		}
 	}
 }
