@@ -12,9 +12,11 @@ import javax.swing.UIManager;
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.LayoutPainter;
+import org.droiddraw.gui.ScrollViewPainter;
 import org.droiddraw.gui.WidgetRegistry;
 import org.droiddraw.widget.AbstractLayout;
 import org.droiddraw.widget.Layout;
+import org.droiddraw.widget.ScrollView;
 
 public class DroidDraw extends JApplet implements URLOpener {
 	private static final long serialVersionUID = 1L;
@@ -59,8 +61,6 @@ public class DroidDraw extends JApplet implements URLOpener {
 		AndroidEditor.instance().setURLOpener(this);
 		AndroidEditor.instance().getPropertiesPanel().setApplet(true);
 		
-		WidgetRegistry.registerPainter(AbstractLayout.class, new LayoutPainter());
-		
 		// This is so that I can test out the Google examples...
 		// START
 		/*
@@ -100,6 +100,9 @@ public class DroidDraw extends JApplet implements URLOpener {
 		loadImage("stat_sys_battery_charge_100");
 		loadImage("stat_sys_signal_3");
 		
+		loadImage("scrollbar.9");
+		loadImage("scrollfield.9");
+		
 		loadImage("light/checkbox_off_background");
 		loadImage("light/checkbox_on_background");
 		loadImage("light/clock_dial");
@@ -130,12 +133,17 @@ public class DroidDraw extends JApplet implements URLOpener {
 		loadImage("def/spinner_normal.9");
 		loadImage("def/btn_dropdown_neither.9");
 		
-		
 		for (int i=0;i<ix;i++) {
 			try {
 				md.waitForID(i);
 			} catch (InterruptedException ex) {}
 		}
+		
+		WidgetRegistry.registerPainter(AbstractLayout.class, new LayoutPainter());
+		WidgetRegistry.registerPainter(ScrollView.class, new ScrollViewPainter());
+		
+		
+		
 		setLayout(new BorderLayout());
 		setSize(1024, 650);
 		add(new DroidDrawPanel(screen, true), BorderLayout.CENTER);

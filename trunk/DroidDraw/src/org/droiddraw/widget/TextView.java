@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Vector;
 
-import javax.swing.JPanel;
-
 import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.PropertiesPanel;
 import org.droiddraw.property.ColorProperty;

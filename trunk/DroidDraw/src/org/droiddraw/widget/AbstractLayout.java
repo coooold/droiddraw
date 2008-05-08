@@ -5,8 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Vector;
 
-import org.droiddraw.property.StringProperty;
-
 public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	protected Vector<Widget> widgets;
 	
