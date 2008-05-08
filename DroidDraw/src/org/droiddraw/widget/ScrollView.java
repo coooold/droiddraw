@@ -1,5 +1,9 @@
 package org.droiddraw.widget;
 
+import java.awt.Graphics;
+
+import org.droiddraw.gui.ImageResources;
+import org.droiddraw.gui.NineWayImage;
 import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
 
@@ -7,6 +11,7 @@ public class ScrollView extends FrameLayout {
 	StringProperty scrollbar_size;
 	StringProperty scrollbar_fade;
 	SelectProperty scrollbars;
+	NineWayImage field;
 	
 	public ScrollView() {
 		this.tagName = "ScrollView";
@@ -16,5 +21,14 @@ public class ScrollView extends FrameLayout {
 		props.add(scrollbar_size);
 		props.add(scrollbar_fade);
 		props.add(scrollbars);
+		field = new NineWayImage(ImageResources.instance().getImage("scrollfield.9"), 1, 1);
 	}
+
+	@Override
+	public void paint(Graphics g) {
+		super.paint(g);
+		field.paint(g, getX()+getWidth()-10, getY(), 10, getHeight());
+	}
+	
+	
 }
