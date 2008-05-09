@@ -1,0 +1,72 @@
+package org.droiddraw.gui;
+
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import org.droiddraw.AndroidEditor;
+
+public class PreferencesPanel extends JPanel {
+	private static final long serialVersionUID = 1L;
+
+	protected JCheckBox grid;
+	protected JComboBox screen;
+	protected JComboBox defLayout;
+	protected JButton ok;
+	protected JButton cancel;
+	protected Preferences prefs;
+	protected JFrame frame;
+	
+	public PreferencesPanel(Preferences prefs, JFrame frame) {
+		this.prefs = prefs;
+		this.frame = frame;
+		
+		this.setLayout(new GridLayout(0, 2));
+		this.grid = new JCheckBox("Snap to grid.");
+		this.grid.setSelected(prefs.getSnap());
+		
+		this.screen = new JComboBox(new String[] { "QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait"});
+		this.screen.setSelectedIndex(prefs.getScreenMode().ordinal());
+		
+		this.defLayout = new JComboBox(new String[] {"Absolute Layout", "Linear Layout", "Relative Layout"});
+		this.defLayout.setSelectedIndex(prefs.getDefaultLayout().ordinal());
+		
+		this.ok = new JButton("Apply");
+		this.ok.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PreferencesPanel.this.prefs.setSnap(PreferencesPanel.this.grid.isSelected());
+				PreferencesPanel.this.prefs.setScreenMode(AndroidEditor.ScreenMode.values()[PreferencesPanel.this.screen.getSelectedIndex()]);
+				PreferencesPanel.this.prefs.setDefaultLayout(Preferences.Layout.values()[PreferencesPanel.this.defLayout.getSelectedIndex()]);
+				
+				PreferencesPanel.this.prefs.save();
+				PreferencesPanel.this.frame.setVisible(false);
+				PreferencesPanel.this.frame.dispose();
+			}
+		});
+		
+		this.cancel = new JButton("Cancel");
+		this.cancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PreferencesPanel.this.frame.setVisible(false);
+				PreferencesPanel.this.frame.dispose();
+			}
+		});
+		
+		this.add(grid);
+		this.add(new JLabel(""));
+		this.add(new JLabel("Default Screen Size"));
+		this.add(screen);
+		this.add(new JLabel("Default Screen Layout"));
+		this.add(defLayout);
+		this.add(cancel);
+		this.add(ok);
+	}
+		
+}

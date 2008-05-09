@@ -2,17 +2,23 @@ package org.droiddraw;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Hashtable;
+import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.droiddraw.gui.Preferences;
 import org.droiddraw.gui.PropertiesPanel;
 import org.droiddraw.gui.Viewer;
 import org.droiddraw.property.Property;
@@ -31,6 +37,9 @@ import org.xml.sax.SAXException;
 public class AndroidEditor {
 	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT};
 
+	public static int MAJOR_VERSION = 0;
+	public static int MINOR_VERSION = 10;
+	
 	Layout layout;
 	Widget selected;
 	Viewer viewer;
@@ -43,6 +52,7 @@ public class AndroidEditor {
 	Hashtable<String, Color> colors;
 	File arrayFile = null;
 	Hashtable<String, Vector<String>> arrays;
+	Preferences prefs;
 	
 	boolean changed;
 	
@@ -60,6 +70,26 @@ public class AndroidEditor {
 	private AndroidEditor() {
 		this(ScreenMode.HVGA_PORTRAIT);
 	}
+	
+	
+	public boolean isLatestVersion() {
+		try {
+			URL u = new URL("http://www.droiddraw.org/version.txt");
+			BufferedReader in = new BufferedReader(new InputStreamReader(u.openStream()));
+			String line = in.readLine();
+			StringTokenizer tok = new StringTokenizer(line);
+			int major = Integer.parseInt(tok.nextToken());
+			int minor = Integer.parseInt(tok.nextToken());
+			return MAJOR_VERSION > major || (MAJOR_VERSION == major && MINOR_VERSION >= minor);
+		}	
+		catch (MalformedURLException ex) {
+			return true;
+		}
+		catch (IOException ex) {
+			return true;
+		}
+	}
+	
 	
 	private AndroidEditor(ScreenMode mode) {
 		setScreenMode(mode);
@@ -485,4 +515,16 @@ public class AndroidEditor {
 	public void setTheme(String theme) {
 		this.theme = theme;
 	}
+	
+	public Preferences getPreferences() {
+		if (prefs == null) {
+			prefs = new Preferences();
+			try {
+				prefs.load();
+			}
+			catch (SecurityException ex) {}
+		}
+		return prefs;
+	}
+	
 }

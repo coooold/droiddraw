@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import org.droiddraw.gui.Preferences;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -41,6 +42,7 @@ import javax.swing.filechooser.FileFilter;
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.LayoutPainter;
+import org.droiddraw.gui.PreferencesPanel;
 import org.droiddraw.gui.ScrollViewPainter;
 import org.droiddraw.gui.WidgetRegistry;
 import org.droiddraw.util.LayoutUploader;
@@ -98,6 +100,13 @@ public class Main implements ApplicationListener, URLOpener {
 			}
 		}
 		System.exit(0);
+	}
+	
+	protected static void preferences() {
+		JFrame jf = new JFrame();
+		jf.getContentPane().add(new PreferencesPanel(AndroidEditor.instance().getPreferences(), jf));
+		jf.pack();
+		jf.setVisible(true);
 	}
 	
 	protected static void about() {
@@ -260,6 +269,15 @@ public class Main implements ApplicationListener, URLOpener {
 			doMacOSXIntegration();
 		}
 		
+		if (!AndroidEditor.instance().isLatestVersion()) {
+			int res = JOptionPane.showConfirmDialog(ddp, "There is a new DroidDraw version available. Do you wish to download it?", "DroidDraw Update", JOptionPane.YES_NO_OPTION);
+			if (res == JOptionPane.YES_OPTION) {
+				AndroidEditor.instance().getURLOpener().openURL("http://code.google.com/p/droiddraw/downloads/list");
+			}
+		}
+		
+		final Preferences prefs = AndroidEditor.instance().getPreferences();
+		
 		loadImage("emu1");
 		loadImage("emu2");
 		loadImage("emu3");
@@ -324,7 +342,18 @@ public class Main implements ApplicationListener, URLOpener {
 		WidgetRegistry.registerPainter(ScrollView.class, new ScrollViewPainter());
 		WidgetRegistry.registerPainter(AbstractLayout.class, new LayoutPainter());
 
-		ddp = new DroidDrawPanel("hvgap", false);
+		String screen = "hvgap";
+		AndroidEditor.ScreenMode scr = prefs.getScreenMode();
+		if (scr.equals(AndroidEditor.ScreenMode.HVGA_LANDSCAPE))
+			screen = "hvgal";
+		else if (scr.equals(AndroidEditor.ScreenMode.QVGA_LANDSCAPE))
+			screen = "qvgal";
+		else if (scr.equals(AndroidEditor.ScreenMode.QVGA_PORTRAIT))
+			screen = "qvgap";
+		
+		
+		ddp = new DroidDrawPanel(screen, false);
+		AndroidEditor.instance().setScreenMode(prefs.getScreenMode());
 		fd = new FileDialog(jf);
 		jfc = new JFileChooser();
 		
@@ -390,9 +419,19 @@ public class Main implements ApplicationListener, URLOpener {
 			}
 		});
 		menu.add(it);
-		
+				
 		if (!osx) {
+			
+			it = new JMenuItem("Preferences");
+			it.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					preferences();
+				}
+			});
+			menu.add(it);
+	
 			menu.addSeparator();
+
 			it = new JMenuItem("Quit");
 			it.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -643,6 +682,7 @@ public class Main implements ApplicationListener, URLOpener {
 	}
 
 	public void handlePreferences(ApplicationEvent arg0) {
+		preferences();
 	}
 
 	public void handlePrintFile(ApplicationEvent arg0) {
@@ -658,7 +698,7 @@ public class Main implements ApplicationListener, URLOpener {
 	public void openURL(String url) {
 		try {
 			BrowserLauncher l = new BrowserLauncher();
-			l.openURLinBrowser("https://www.paypal.com/us/cgi-bin/webscr?cmd=_xclick&business=brendan.d.burns@gmail.com&item_name=Support%20DroidDraw&currency_code=USD");
+			l.openURLinBrowser(url);
 		}
 		catch (UnsupportedOperatingSystemException ex) {AndroidEditor.instance().error(ex);}
 		catch (BrowserLaunchingInitializingException ex) {AndroidEditor.instance().error(ex);}
