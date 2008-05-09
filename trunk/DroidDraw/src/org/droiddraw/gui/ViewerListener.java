@@ -29,6 +29,7 @@ import org.droiddraw.widget.FrameLayout;
 import org.droiddraw.widget.Gallery;
 import org.droiddraw.widget.GridView;
 import org.droiddraw.widget.ImageButton;
+import org.droiddraw.widget.ImageSwitcher;
 import org.droiddraw.widget.ImageView;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.LinearLayout;
@@ -156,6 +157,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			return new Gallery();
 		else if (str.equals("DatePicker"))
 			return new DatePicker();
+		else if (str.equals("ImageSwitcher"))
+			return new ImageSwitcher();
 		else
 			return null;
 	}
@@ -274,7 +277,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 
 	protected void addWidget(Widget w, Layout l, int x, int y) 
 	{
-		if (shift && l instanceof AbsoluteLayout)
+		boolean prefersGrid = AndroidEditor.instance().getPreferences().getSnap();
+		if (l instanceof AbsoluteLayout && ((shift && !prefersGrid) ||  (!shift && prefersGrid)))
 			w.setPosition((x/grid_x)*grid_x-l.getScreenX(), (y/grid_y)*grid_y-l.getScreenY());
 		else
 			w.setPosition(x-l.getScreenX(), y-l.getScreenY());
@@ -339,7 +343,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
 				int nx = (x+off_x);
 				int ny = (y+off_y);
-				if (shift && l instanceof AbsoluteLayout) {
+				boolean prefersGrid = AndroidEditor.instance().getPreferences().getSnap();
+				if (l instanceof AbsoluteLayout && ((shift && !prefersGrid) ||  (!shift && prefersGrid))) {
 					nx = nx/grid_x*grid_x;
 					ny = ny/grid_y*grid_y;
 				}

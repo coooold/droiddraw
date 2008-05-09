@@ -47,6 +47,7 @@ import org.droiddraw.widget.FrameLayout;
 import org.droiddraw.widget.Gallery;
 import org.droiddraw.widget.GridView;
 import org.droiddraw.widget.ImageButton;
+import org.droiddraw.widget.ImageSwitcher;
 import org.droiddraw.widget.ImageView;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.LinearLayout;
@@ -138,6 +139,7 @@ public class DroidDrawPanel extends JPanel {
 		try {
 			AndroidEditor.instance().generate(new PrintWriter(new FileWriter(f)));
 			AndroidEditor.instance().setChanged(false);
+
 		} catch (IOException ex) {
 			AndroidEditor.instance().error(ex);
 		}
@@ -230,6 +232,7 @@ public class DroidDrawPanel extends JPanel {
 		final Viewer viewer = new Viewer(ae, this, img);
 		JPanel jp = new JPanel();
 		
+		
 		ae.setViewer(viewer);
 		
 		setLayout(new BorderLayout());
@@ -293,6 +296,7 @@ public class DroidDrawPanel extends JPanel {
 		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout", "ScrollView", "TableLayout"});
 		if (!System.getProperty("os.name").toLowerCase().contains("mac os x"))
 			layout.setLightWeightPopupEnabled(false);
+		
 		final ActionListener layoutActionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("comboBoxChanged")) {
@@ -371,6 +375,10 @@ public class DroidDrawPanel extends JPanel {
 		jp.add(p, BorderLayout.NORTH);
 		jp.add(viewer, BorderLayout.CENTER);
 		jp.setBorder(BorderFactory.createTitledBorder("Screen"));
+		
+		JTabbedPane tabs = new JTabbedPane();
+		tabs.addTab("Layout", jp);
+		
 		
 		//setLayout(new BorderLayout());
 		
@@ -465,7 +473,7 @@ public class DroidDrawPanel extends JPanel {
 		mp.add(new WidgetPanel(new TimePicker()));
 		
 		mp.add(new WidgetPanel(new ListView()));
-		
+		mp.add(new WidgetPanel(new ImageSwitcher()));
 		wp.add(mp);
 		//wp.setSize(wp.getWidth(), 150);
 		JPanel ppp = new JPanel();
