@@ -30,6 +30,12 @@ public abstract class AbstractWidget implements Widget {
 	StringProperty heightProp;
 	StringProperty pad;
 	SelectProperty visibility;
+	
+	StringProperty marginBottom;
+	StringProperty marginTop;
+	StringProperty marginLeft;
+	StringProperty marginRight;
+	
 	ColorProperty background;
 	
 	public AbstractWidget(String tagName) {
@@ -44,6 +50,13 @@ public abstract class AbstractWidget implements Widget {
 		this.background = new ColorProperty("Background Color", "android:background", null);
 		this.pad = new StringProperty("Padding", "android:padding", "0px");
 		this.visibility = new SelectProperty("Visible", "android:visibility", new String[] {"visible", "invisible", "gone"}, 0);
+		
+		this.marginTop = new StringProperty("Top Margin", "android:layout_marginTop", "0px");
+		this.marginBottom = new StringProperty("Bottom Margin", "android:layout_marginBottom", "0px");
+		this.marginLeft = new StringProperty("Left Margin", "android:layout_marginLeft", "0px");
+		this.marginRight = new StringProperty("Right Margin", "android:layout_marginRight", "0px");
+		
+		
 		this.padding = new int[4];
 		
 		this.props.add(id);
@@ -52,6 +65,12 @@ public abstract class AbstractWidget implements Widget {
 		this.props.add(background);
 		this.props.add(pad);
 		this.props.add(visibility);
+		
+		this.props.add(marginTop);
+		this.props.add(marginBottom);
+		this.props.add(marginLeft);
+		this.props.add(marginRight);
+		
 		this.baseline = 14;
 		
 		this.parent = null;
@@ -252,7 +271,14 @@ public abstract class AbstractWidget implements Widget {
 		if (getParent() == null) {
 			setPosition(getPadding(LEFT)+AndroidEditor.OFFSET_X, getPadding(TOP)+AndroidEditor.OFFSET_Y);
 		}
-
+		if (widthProp.getStringValue().equals("fill_parent")) {
+			x = padding[LEFT];
+		}
+		if (heightProp.getStringValue().equals("fill_parent") &&
+			this.getParent() != null) 
+		{
+			y = padding[TOP];
+		}
 		//if (getParent() != null) {
 		//	getParent().repositionAllWidgets();
 		//}
@@ -287,6 +313,21 @@ public abstract class AbstractWidget implements Widget {
 	
 	public int getPadding(int which) {
 		return padding[which];
+	}
+	
+	public int getMargin(int which) {
+		switch (which) {
+		case TOP:
+			return DisplayMetrics.readSize(marginTop);
+		case BOTTOM:
+			return DisplayMetrics.readSize(marginBottom);
+		case LEFT:
+			return DisplayMetrics.readSize(marginLeft);
+		case RIGHT:
+			return DisplayMetrics.readSize(marginRight);
+		default:
+			return 0;
+		}
 	}
 	
 	public boolean isVisible() {

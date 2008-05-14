@@ -45,6 +45,7 @@ public class ColorPanel extends JPanel {
 		jac.setStrict(false);
 		jac.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				System.out.println(jac.getSelectedItem().toString());
 				Color c = ColorProperty.parseColor(jac.getSelectedItem().toString());
 				if (c != null) {
 					setColor(c);
@@ -56,9 +57,11 @@ public class ColorPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				Color nc = chooseColor();
 				if (nc != null) {
-					setColor(c);
+					setColor(nc);
 					//jt.setText(ColorProperty.makeColor(nc));
-					jac.setSelectedValue(ColorProperty.makeColor(nc));
+					String colorString = ColorProperty.makeColor(nc);
+					jac.addItem(colorString);
+					jac.setSelectedItem(colorString);
 				}
 			}
 		});
@@ -67,6 +70,7 @@ public class ColorPanel extends JPanel {
 	}
 	
 	public void setColor(Color nc) {
+		System.out.println(nc);
 		Graphics g = img.getGraphics();
 		g.setColor(nc);
 		g.fillRect(0, 0, img.getWidth(), img.getHeight());

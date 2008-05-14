@@ -41,4 +41,6 @@ public interface Widget {
 	public void setPadding(int pad);
 	public void setPadding(int pad, int which);
 	public boolean isVisible();
+	
+	public int getMargin(int which);
 }

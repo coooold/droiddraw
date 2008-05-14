@@ -131,10 +131,10 @@ public class RelativeLayout extends AbstractLayout {
 			x = parent.getX()+parent.getWidth()-w.getWidth();
 		}
 		if (r == RelationType.TO_LEFT) {
-			x = parent.getX()-PADDING-w.getWidth();
+			x = parent.getX()-PADDING-w.getWidth()-parent.getMargin(Widget.LEFT);
 		}
 		if (r == RelationType.TO_RIGHT) {
-			x = parent.getX()+parent.getWidth()+PADDING;
+			x = parent.getX()+parent.getWidth()+PADDING+w.getMargin(Widget.LEFT);
 		}
 		if (r == RelationType.PARENT_LEFT) {
 			x = 0;
