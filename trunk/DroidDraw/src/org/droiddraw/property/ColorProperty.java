@@ -37,6 +37,9 @@ public class ColorProperty extends StringProperty {
 	}
 	
 	public static Color parseColor(String col) {
+		if (col.length() == 0) {
+			return null;
+		}
 		if (col.startsWith("@")) {
 			int ix = col.indexOf("/");
 			String name = col.substring(ix+1);
@@ -45,6 +48,7 @@ public class ColorProperty extends StringProperty {
 			else
 				return null;
 		}
+		
 		int a, r, g, b;
 		switch (col.length()) {
 		case 4:

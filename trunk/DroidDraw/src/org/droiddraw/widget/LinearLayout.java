@@ -122,9 +122,9 @@ public class LinearLayout extends AbstractLayout {
 			if (prop != null && "1".equals(prop.getStringValue()))
 				with_weight.add(w);
 			if (vertical)
-				y +=w.getPadding(TOP)+w.getHeight()+w.getPadding(BOTTOM);
+				y +=w.getPadding(TOP)+w.getHeight()+w.getPadding(BOTTOM)+w.getMargin(TOP)+w.getMargin(BOTTOM);
 			else
-				x += w.getPadding(LEFT)+w.getWidth()+w.getPadding(RIGHT);
+				x += w.getPadding(LEFT)+w.getWidth()+w.getPadding(RIGHT)+w.getMargin(LEFT)+w.getMargin(RIGHT);
 		}
 		int extra=0;
 		if (vertical) {
@@ -146,21 +146,21 @@ public class LinearLayout extends AbstractLayout {
 
 			if (vertical) {
 				int width_w_pad = (w.getPadding(Widget.LEFT)+w.getWidth()+w.getPadding(Widget.RIGHT));
-				if ("right".equals(gravity))
+				if (gravity.contains("right"))
 					x = getWidth()-width_w_pad;
 				else if ("center_horizontal".equals(gravity) || "center".equals(gravity)) 
 					x = getWidth()/2-width_w_pad/2;
 				else
-					x = w.getPadding(Widget.LEFT);
+					x = w.getPadding(Widget.LEFT)+w.getMargin(Widget.LEFT);
 			}
 			else {
-				if ("bottom".equals(gravity))
+				if (gravity.contains("bottom"))
 					y = getHeight()-max_base_bottom-w.getBaseline();
 				else if ("center_vertical".equals(gravity) || "center".equals(gravity))
 					y = getHeight()/2-w.getBaseline();
 				else  {
 					if (w instanceof Layout) {
-						y = w.getPadding(Widget.TOP);
+						y = w.getPadding(Widget.TOP)+w.getMargin(Widget.TOP);
 					}
 					else {
 						y = max_base-w.getBaseline()+w.getPadding(TOP);
@@ -168,10 +168,10 @@ public class LinearLayout extends AbstractLayout {
 				}
 			}
 			if (vertical) {
-				y+=w.getPadding(Widget.TOP);
+				y+=w.getPadding(Widget.TOP)+w.getMargin(Widget.TOP);
 			}
 			else {
-				x+=w.getPadding(Widget.LEFT);
+				x+=w.getPadding(Widget.LEFT)+w.getMargin(Widget.LEFT);
 			}
 			w.setPosition(x,y);
 			if (with_weight.size() == 0) {
@@ -185,13 +185,13 @@ public class LinearLayout extends AbstractLayout {
 				}
 			}
 			if (vertical) {			
-				y+=w.getHeight()+w.getPadding(Widget.BOTTOM);
+				y+=w.getHeight()+w.getPadding(Widget.BOTTOM)+w.getMargin(Widget.BOTTOM);
 				if (with_weight.contains(w)) {
 					y+=share;
 				}
 			}
 			else {
-				x+=w.getWidth()+w.getPadding(Widget.RIGHT);
+				x+=w.getWidth()+w.getPadding(Widget.RIGHT)+w.getMargin(Widget.RIGHT);
 				if (with_weight.contains(w)) {
 					x+=share;
 				}

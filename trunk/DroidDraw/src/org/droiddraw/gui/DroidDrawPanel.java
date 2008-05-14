@@ -63,6 +63,7 @@ import org.droiddraw.widget.TableRow;
 import org.droiddraw.widget.TextView;
 import org.droiddraw.widget.Ticker;
 import org.droiddraw.widget.TimePicker;
+import org.droiddraw.widget.Widget;
 import org.xml.sax.SAXException;
 
 
@@ -191,7 +192,7 @@ public class DroidDrawPanel extends JPanel {
 	}
 	
 	protected static final void setupRootLayout(Layout l) {
-		l.setPosition(AndroidEditor.OFFSET_X,AndroidEditor.OFFSET_Y);
+		l.setPosition(AndroidEditor.OFFSET_X+l.getPadding(Widget.LEFT)+l.getMargin(Widget.LEFT),AndroidEditor.OFFSET_Y+l.getPadding(Widget.TOP)+l.getMargin(Widget.TOP));
 		l.setPropertyByAttName("android:layout_width", "fill_parent");
 		l.setPropertyByAttName("android:layout_height", "fill_parent");
 		l.apply();
