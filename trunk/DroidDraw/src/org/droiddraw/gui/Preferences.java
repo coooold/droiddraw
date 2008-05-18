@@ -28,7 +28,7 @@ public class Preferences {
 		java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(Preferences.class);
 		this.snap = prefs.getBoolean(SNAP, false);
 		
-		screen = ScreenMode.values()[prefs.getInt(SCREEN, 4)];
+		screen = ScreenMode.values()[prefs.getInt(SCREEN, 3)];
 		layout = Layout.values()[prefs.getInt(LAYOUT, 0)];
 		
 	}
