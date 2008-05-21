@@ -16,15 +16,20 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
-import org.droiddraw.gui.Preferences;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -42,6 +47,7 @@ import javax.swing.filechooser.FileFilter;
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.LayoutPainter;
+import org.droiddraw.gui.Preferences;
 import org.droiddraw.gui.PreferencesPanel;
 import org.droiddraw.gui.ScrollViewPainter;
 import org.droiddraw.gui.WidgetRegistry;
@@ -246,6 +252,77 @@ public class Main implements ApplicationListener, URLOpener {
 		ImageResources.instance().addImage(img, name);
 	}
 	
+	public static final int BUFFER=4096;
+	
+	protected static void makeAPK(File dir, boolean install)
+	    throws IOException
+	{
+		URL u = ClassLoader.getSystemClassLoader().getResource("data/activity.zip");
+		if (u == null) {
+			AndroidEditor.instance().error("Couldn't open activity.zip");
+			return;
+		}
+		InputStream is = u.openStream();
+		
+		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is));
+		ZipEntry entry;
+		while((entry = zis.getNextEntry()) != null) {
+			int count;
+			byte data[] = new byte[BUFFER];
+			// write the files to the disk
+			if (entry.isDirectory()) {
+				File f = new File(dir, entry.getName());
+				f.mkdir();
+			}
+			else {
+				FileOutputStream fos = new FileOutputStream(new File(dir, entry.getName()));
+				BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
+				while ((count = zis.read(data, 0, BUFFER)) != -1) {
+					dest.write(data, 0, count);
+				}
+				dest.flush();
+				dest.close();
+			}
+		}
+		zis.close();
+		
+		File wd = new File(dir, "activity");
+		File res = new File(wd, "res");
+		res = new File(res, "layout");
+		res = new File(res, "main.xml");
+		PrintWriter pw = new PrintWriter(new FileWriter(res));
+		AndroidEditor.instance().generate(pw);
+		pw.flush();
+		pw.close();
+		
+		String[] cmd = install?new String[] {"ant", "install"}:new String[] {"ant"};
+		
+		Process p = Runtime.getRuntime().exec(cmd, null, new File(dir, "activity"));
+		try {
+			int ret = p.waitFor();
+			if (ret != 0) {
+				AndroidEditor.instance().error("Error running ant: "+ret);
+			}
+		}
+		catch (InterruptedException ex) {}
+	}
+	
+	public static void copy(File from, File to) 
+		throws IOException
+	{
+		FileInputStream fis = new FileInputStream(from);
+		FileOutputStream fos = new FileOutputStream(to);
+		
+		byte[] buffer = new byte[4096];
+		int rd = fis.read(buffer);
+		while (rd != -1) {
+			fos.write(buffer, 0, rd);
+			rd = fis.read(buffer);
+		}
+		fos.flush();
+		fos.close();
+	}
+	
 	public static void main(String[] args) 
 		throws IOException
 	{
@@ -420,6 +497,61 @@ public class Main implements ApplicationListener, URLOpener {
 		});
 		menu.add(it);
 				
+		it = new JMenuItem("Export as .apk");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String tmpFile = System.getProperty("java.io.tmpdir");
+				File f = new File(tmpFile);
+				
+				if (f != null) {
+					try {
+						makeAPK(f, false);
+
+						File save = doOpenDir();
+						
+						File apk = new File(f, "activity");
+						apk = new File(apk, "bin");
+						apk = new File(apk, "DroidDrawActivity.apk");
+						
+						save = new File(save, "DroidDrawActivity.apk");
+						
+						copy(apk, save);
+						
+						AndroidEditor.instance().message("Saved", "Layout saved as "+save.getCanonicalPath());
+					}
+					catch (IOException ex) {
+						AndroidEditor.instance().error(ex);
+					}
+				}
+				
+				
+				
+			}
+		});
+		menu.add(it);
+		
+		it = new JMenuItem("Export to device");
+		it.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String tmpFile = System.getProperty("java.io.tmpdir");
+				File f = new File(tmpFile);
+				if (f.exists()) {
+					try {
+						makeAPK(f, true);
+						
+						AndroidEditor.instance().message("Installed", "Layout successfully installed.");			
+					}
+					catch (IOException ex) {
+						AndroidEditor.instance().error(ex);
+					}
+				}
+				else {
+					AndroidEditor.instance().error("Error generating .apk");
+				}
+			}
+		});
+		menu.add(it);
+		
 		if (!osx) {
 			
 			it = new JMenuItem("Preferences");

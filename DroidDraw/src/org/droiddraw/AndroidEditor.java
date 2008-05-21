@@ -226,6 +226,10 @@ public class AndroidEditor {
 		ex.printStackTrace();
 	}
 	
+	public void message(String title, String message) {
+		JOptionPane.showMessageDialog(viewer, message, title, JOptionPane.INFORMATION_MESSAGE);
+	}
+	
 	public void setColors(Hashtable<String, Color> colors) {
 		for (String key : colors.keySet()) {
 			colors.put(key, colors.get(key));
