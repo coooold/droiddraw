@@ -53,7 +53,8 @@ public class AnalogClock extends AbstractWidget {
 		return 154;
 	}
 	
-	public void apply() {
+	@Override
+  public void apply() {
 		super.apply();
 
 		if (face != null) {

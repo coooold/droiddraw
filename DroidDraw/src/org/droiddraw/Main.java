@@ -124,6 +124,7 @@ public class Main implements ApplicationListener, URLOpener {
 		jd.setLocationRelativeTo(null);
 		jd.setVisible(true);
 		jd.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent ev) {
 				jd.setVisible(false);
 				jd.dispose();
@@ -346,14 +347,25 @@ public class Main implements ApplicationListener, URLOpener {
 			doMacOSXIntegration();
 		}
 		
-		if (!AndroidEditor.instance().isLatestVersion()) {
-			int res = JOptionPane.showConfirmDialog(ddp, "There is a new DroidDraw version available. Do you wish to download it?", "DroidDraw Update", JOptionPane.YES_NO_OPTION);
+		final Preferences prefs = AndroidEditor.instance().getPreferences();
+        
+		boolean checkUpdate = false;
+		if (prefs.getUpdateCheck() == Preferences.Update.YES) {
+		  checkUpdate = true;
+		}
+		else if (prefs.getUpdateCheck() == Preferences.Update.ASK) {
+		  int res = JOptionPane.showConfirmDialog(null,  "Check for updates to DroidDraw?","Update?", JOptionPane.YES_NO_OPTION);
+		  checkUpdate = res == JOptionPane.YES_OPTION;
+		}
+		if (checkUpdate) {
+		  if (!AndroidEditor.instance().isLatestVersion()) {
+		    int res = JOptionPane.showConfirmDialog(ddp, "There is a new DroidDraw version available. Do you wish to download it?", "DroidDraw Update", JOptionPane.YES_NO_OPTION);
 			if (res == JOptionPane.YES_OPTION) {
 				AndroidEditor.instance().getURLOpener().openURL("http://code.google.com/p/droiddraw/downloads/list");
 			}
+		  }
 		}
 		
-		final Preferences prefs = AndroidEditor.instance().getPreferences();
 		
 		loadImage("emu1");
 		loadImage("emu2");
@@ -578,6 +590,25 @@ public class Main implements ApplicationListener, URLOpener {
 		
 		menu = new JMenu("Edit");
 
+		it = new JMenuItem("Undo");
+        it.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                AndroidEditor.instance().undo();
+            }
+        });
+        it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ctl_key));
+        menu.add(it);
+        
+        it = new JMenuItem("Redo");
+        it.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent arg0) {
+                AndroidEditor.instance().redo();
+            }
+        });
+        it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ctl_key));
+        menu.add(it);
+        
+		
 		it = new JMenuItem("Cut");
 		it.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

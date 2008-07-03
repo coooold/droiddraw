@@ -28,7 +28,8 @@ public class AbsoluteLayout extends AbstractLayout {
 	public void addEditableProperties(Widget w) {}
 	public void removeEditableProperties(Widget w) {}
 	
-	public void apply() {
+	@Override
+  public void apply() {
 		super.apply();
 	}
 }

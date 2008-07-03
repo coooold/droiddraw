@@ -16,7 +16,8 @@ public class ScrollViewPainter extends LayoutPainter {
 	}
 	
 	
-	public void paint(Widget wx, Graphics g) {
+	@Override
+  public void paint(Widget wx, Graphics g) {
 		Layout l = (Layout)wx;
 		super.paint(l, g);
 		field.paint(g, l.getX()+l.getWidth()-10, l.getY(), 10, l.getHeight());

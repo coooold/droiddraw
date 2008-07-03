@@ -21,16 +21,19 @@ public class StringHandler extends DefaultHandler
         buff = new StringBuffer();
     }
 
+    @Override
     public void characters(char arg0[], int arg1, int arg2)
     {
         buff.append(arg0, arg1, arg2);
     }
 
+    @Override
     public void startDocument()
     {
         strings.clear();
     }
 
+    @Override
     public void startElement(String ns, String lName, String qName, Attributes atts)
     {
         buff.setLength(0);
@@ -38,6 +41,7 @@ public class StringHandler extends DefaultHandler
             name = atts.getValue("name");
     }
 
+    @Override
     public void endElement(String uri, String localName, String qName)
     {
         if(qName.equals("string")) {

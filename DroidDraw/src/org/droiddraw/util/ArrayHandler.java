@@ -29,17 +29,20 @@ public class ArrayHandler extends DefaultHandler	{
 	        buff = new StringBuffer();
 	    }
 
-	    public void characters(char arg0[], int arg1, int arg2)
+	    @Override
+      public void characters(char arg0[], int arg1, int arg2)
 	    {
 	        buff.append(arg0, arg1, arg2);
 	    }
 
-	    public void startDocument()
+	    @Override
+      public void startDocument()
 	    {
 	        arrays.clear();
 	    }
 
-	    public void startElement(String ns, String lName, String qName, Attributes atts)
+	    @Override
+      public void startElement(String ns, String lName, String qName, Attributes atts)
 	    {
 	        buff.setLength(0);
 	        if(qName.equals("array")) {
@@ -49,7 +52,8 @@ public class ArrayHandler extends DefaultHandler	{
 	        
 	    }
 
-	    public void endElement(String uri, String localName, String qName)
+	    @Override
+      public void endElement(String uri, String localName, String qName)
 	    {
 	        if(qName.equals("item")) {
 	        	String str = buff.toString();
@@ -91,7 +95,6 @@ public class ArrayHandler extends DefaultHandler	{
 	    }
 	    
 	    public static void dump(Writer w, Hashtable<String, Vector<String>> arrays) 
-		throws IOException
 		{
 	    	PrintWriter pw = new PrintWriter(w);
 			pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");

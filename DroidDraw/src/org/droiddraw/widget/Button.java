@@ -41,7 +41,8 @@ public class Button extends TextView {
 		apply();
 	}
 
-	public void apply() {
+	@Override
+  public void apply() {
 		super.apply();
 		this.baseline = fontSize+2;
 	}
@@ -65,7 +66,8 @@ public class Button extends TextView {
 		return w;
 	}
 
-	public void paint(Graphics g) {
+	@Override
+  public void paint(Graphics g) {
 		if (img == null) {
 			g.setColor(Color.white);
 			g.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);

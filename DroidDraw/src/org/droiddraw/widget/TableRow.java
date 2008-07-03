@@ -17,13 +17,15 @@ public class TableRow extends LinearLayout {
 		apply();
 	}
 	
-	public void positionWidget(Widget w) {
+	@Override
+  public void positionWidget(Widget w) {
 		super.positionWidget(w);
 		if (parent instanceof TableLayout)
 			parent.positionWidget(this);
 	}
 	
-	protected void repositionAllWidgetsInternal() {
+	@Override
+  protected void repositionAllWidgetsInternal() {
 		int y = 0;
 		int x = 0;
 		Vector<Widget> with_weight = new Vector<Widget>();
@@ -132,7 +134,8 @@ public class TableRow extends LinearLayout {
 		repositionAllWidgetsInternal();
 	}
 	
-	public int getContentWidth() {
+	@Override
+  public int getContentWidth() {
 		if (widths != null) {
 			int res = 0;
 			for (int w : widths) {

@@ -58,8 +58,9 @@ public class LinearLayout extends AbstractLayout {
 		if (vertical) {
 			int y = w.getY();
 			if (y >= -100) {
-				int ix;
-				for (ix = 0;ix < widgets.size() && y > widgets.get(ix).getY(); ix++);
+				int ix = 0;
+				while(ix < widgets.size() && y > widgets.get(ix).getY())
+				  ix++;
 				widgets.add(ix, w);
 			}
 			else {
@@ -69,8 +70,9 @@ public class LinearLayout extends AbstractLayout {
 		else {
 			int x = w.getX();
 			if (x >= 0) {
-				int ix;
-				for (ix = 0;ix < widgets.size() && x > widgets.get(ix).getX(); ix++);
+				int ix= 0;
+				while (ix < widgets.size() && x > widgets.get(ix).getX())
+				  ix++;
 				widgets.add(ix, w);
 			}
 			else {

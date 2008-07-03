@@ -1,5 +1,20 @@
 package org.droiddraw;
 
+import org.droiddraw.gui.Preferences;
+import org.droiddraw.gui.PropertiesPanel;
+import org.droiddraw.gui.Viewer;
+import org.droiddraw.property.Property;
+import org.droiddraw.property.StringProperty;
+import org.droiddraw.util.ArrayHandler;
+import org.droiddraw.util.ColorHandler;
+import org.droiddraw.util.StringHandler;
+import org.droiddraw.widget.AbstractWidget;
+import org.droiddraw.widget.Button;
+import org.droiddraw.widget.CheckBox;
+import org.droiddraw.widget.Layout;
+import org.droiddraw.widget.Widget;
+import org.xml.sax.SAXException;
+
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -16,26 +31,15 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.undo.UndoManager;
+import javax.swing.undo.UndoableEdit;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.droiddraw.gui.Preferences;
-import org.droiddraw.gui.PropertiesPanel;
-import org.droiddraw.gui.Viewer;
-import org.droiddraw.property.Property;
-import org.droiddraw.property.StringProperty;
-import org.droiddraw.util.ArrayHandler;
-import org.droiddraw.util.ColorHandler;
-import org.droiddraw.util.StringHandler;
-import org.droiddraw.widget.AbstractWidget;
-import org.droiddraw.widget.Button;
-import org.droiddraw.widget.CheckBox;
-import org.droiddraw.widget.Layout;
-import org.droiddraw.widget.Widget;
-import org.xml.sax.SAXException;
 
 
 public class AndroidEditor {
-	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT};
+	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT}
 
 	public static int MAJOR_VERSION = 0;
 	public static int MINOR_VERSION = 10;
@@ -54,6 +58,10 @@ public class AndroidEditor {
 	Hashtable<String, Vector<String>> arrays;
 	Preferences prefs;
 	
+	UndoManager undo;
+	
+	Vector<ChangeListener> changeListeners;
+	
 	boolean changed;
 	
 	File drawable_dir;
@@ -70,7 +78,6 @@ public class AndroidEditor {
 	private AndroidEditor() {
 		this(ScreenMode.HVGA_PORTRAIT);
 	}
-	
 	
 	public boolean isLatestVersion() {
 		try {
@@ -97,6 +104,9 @@ public class AndroidEditor {
 		this.colors = new Hashtable<String, Color>();
 		this.strings = new Hashtable<String, String>();
 		this.arrays = new Hashtable<String, Vector<String>>();
+		this.undo = new UndoManager();
+		this.changeListeners = new Vector<ChangeListener>();
+		
 		colors.put("black", Color.black);
 		colors.put("darkgray", Color.darkGray);
 		colors.put("gray", Color.gray);
@@ -112,12 +122,40 @@ public class AndroidEditor {
 		this.changed = false;
 	}
 	
+	public void queueUndoRecord(UndoableEdit edit) {
+	  this.undo.addEdit(edit);
+	  setChanged(true);
+	}
+	
+	public void undo() {
+	  if (undo.canUndo()) {
+	    undo.undo();
+	    setChanged(true);
+	  }
+	}
+	
+	public void redo() {
+	  if (undo.canRedo()) {
+	    undo.redo();
+	    setChanged(true);
+	  }
+	}
+	
 	public boolean isChanged() {
 		return changed;
 	}
 	
 	public void setChanged(boolean changed) {
 		this.changed = changed;
+		if (changed) {
+		  for (ChangeListener cl : changeListeners) {
+		    cl.stateChanged(new ChangeEvent(layout));
+		  }
+		}
+	}
+	
+	public void addChangeListener(ChangeListener cl) {
+	  this.changeListeners.add(cl);
 	}
 	
 	public PropertiesPanel getPropertiesPanel() {
@@ -454,7 +492,7 @@ public class AndroidEditor {
 		pw.println("<"+w.getTagName());
 		Vector<Property> props = (Vector<Property>)w.getProperties().clone();
 		if (w != layout)
-			((Layout)w.getParent()).addOutputProperties(w, props);
+			w.getParent().addOutputProperties(w, props);
 		for (Property prop : props) {
 			if (prop.getValue() != null && prop.getValue().toString().length() > 0 && !prop.isDefault()) {
 				// Work around an android bug... *sigh*

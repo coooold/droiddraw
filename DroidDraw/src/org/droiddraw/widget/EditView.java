@@ -23,7 +23,8 @@ public class EditView extends TextView {
 	NineWayImage img;
 	Image img_base;
 	
-	public static final String[] propertyNames = 
+  	@SuppressWarnings("hiding")
+    public static final String[] propertyNames = 
 		new String[] {"android:password", "android:capitalize", "android:numeric", "android:phoneNumber","android:autoText","android:digits"};
 	
 	public EditView(String txt) {
@@ -71,14 +72,16 @@ public class EditView extends TextView {
 		apply();
 	}
 	
-	public Vector<Property> getProperties() {
+	@Override
+  public Vector<Property> getProperties() {
 		Vector<Property> ret = super.getProperties();
 		if (digits.getStringValue() == null || digits.getStringValue().length() < 1)
 			ret.remove(digits);
 		return ret;
 	}
 	
-	public int getContentWidth() {
+	@Override
+  public int getContentWidth() {
 		if (password != null && password.getBooleanValue()) {
 			String s = "";
 			for (int i=0;i<text.getStringValue().length();i++) 
@@ -90,7 +93,8 @@ public class EditView extends TextView {
 		}
 	}
 	
-	public int getContentHeight() {
+	@Override
+  public int getContentHeight() {
 		//int sup = super.getContentWidth();
 		//if (sup > fontSize) {
 		//	return sup;
@@ -100,14 +104,15 @@ public class EditView extends TextView {
 			String theme = AndroidEditor.instance().getTheme();
 			if (theme == null || theme.equals("default"))
 				return img_base.getHeight(null)-5;
-			else if (theme.equals("light")); 
+			else if (theme.equals("light"))
 				return img_base.getHeight(null)-5;
 		}
 		return fontSize;
 		//}
 	}
 	
-	public void paint(Graphics g) {
+	@Override
+  public void paint(Graphics g) {
 		if (img == null) {
 			g.setColor(Color.white);
 			g.fillRoundRect(getX(), getY(), getWidth(), getHeight(), 8, 8);

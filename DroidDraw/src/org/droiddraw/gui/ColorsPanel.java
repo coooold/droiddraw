@@ -67,7 +67,7 @@ public class ColorsPanel extends AbstractDataPanel {
 			return lb;
 		}
 
-	};
+	}
 	
 	public class ColorEditor 
 		extends AbstractCellEditor
@@ -77,21 +77,21 @@ public class ColorsPanel extends AbstractDataPanel {
 		Color current;
 		JButton b;
 		JColorChooser cc;
-		JDialog d;
+		JDialog dl;
 
 		public ColorEditor() {
 			b = new JButton("Edit");
 			b.addActionListener(this);
 			
 			cc = new JColorChooser();
-			d = JColorChooser.createDialog(b, "Choose a Color", true,  cc, this, null);
+			dl = JColorChooser.createDialog(b, "Choose a Color", true,  cc, this, null);
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			if ("Edit".equals(e.getActionCommand())) {
 				b.setBackground(current);
 				cc.setColor(current);
-				d.setVisible(true);
+				dl.setVisible(true);
 				fireEditingStopped();
 			} else { 
 				current = cc.getColor();
@@ -117,11 +117,13 @@ public class ColorsPanel extends AbstractDataPanel {
 		dataTable.setDefaultEditor(Color.class, new ColorEditor());
 	}
 
+	@Override
 	protected int parentRowCount() {
 		Hashtable<String,Color> colors = AndroidEditor.instance().getColors();
 		return colors.size();
 	}
 
+	@Override
 	protected Object parentValueAt(int row, int col) {
 		Hashtable<String,Color> colors = AndroidEditor.instance().getColors();
 		ArrayList<String> sorted = Collections.list(colors.keys());

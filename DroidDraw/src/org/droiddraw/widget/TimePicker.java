@@ -27,7 +27,8 @@ public class TimePicker extends AbstractWidget {
 		apply();
 	}
 	
-	public void apply() {
+	@Override
+  public void apply() {
 		super.apply();
 		this.baseline = 22;
 	}

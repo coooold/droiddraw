@@ -66,7 +66,8 @@ public abstract class Property {
 	
 	protected abstract boolean isDefaultInternal();
 	
-	public boolean equals(Object o) {
+	@Override
+  public boolean equals(Object o) {
 		if (o instanceof Property) {
 			Property prop = (Property)o;
 			return prop.getAtttributeName().equals(this.getAtttributeName());

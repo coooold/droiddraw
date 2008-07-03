@@ -19,6 +19,8 @@ public class PreferencesPanel extends JPanel {
 	protected JCheckBox grid;
 	protected JComboBox screen;
 	protected JComboBox defLayout;
+	protected JComboBox update;
+	
 	protected JButton ok;
 	protected JButton cancel;
 	protected Preferences prefs;
@@ -38,12 +40,16 @@ public class PreferencesPanel extends JPanel {
 		this.defLayout = new JComboBox(new String[] {"Absolute Layout", "Linear Layout", "Relative Layout"});
 		this.defLayout.setSelectedIndex(prefs.getDefaultLayout().ordinal());
 		
+		this.update = new JComboBox(new String[] {"Always", "Ask me", "Never"});
+		this.update.setSelectedIndex(prefs.getUpdateCheck().ordinal());
+		
 		this.ok = new JButton("Apply");
 		this.ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				PreferencesPanel.this.prefs.setSnap(PreferencesPanel.this.grid.isSelected());
 				PreferencesPanel.this.prefs.setScreenMode(AndroidEditor.ScreenMode.values()[PreferencesPanel.this.screen.getSelectedIndex()]);
 				PreferencesPanel.this.prefs.setDefaultLayout(Preferences.Layout.values()[PreferencesPanel.this.defLayout.getSelectedIndex()]);
+				PreferencesPanel.this.prefs.setUpdateCheck(Preferences.Update.values()[PreferencesPanel.this.update.getSelectedIndex()]);
 				
 				PreferencesPanel.this.prefs.save();
 				PreferencesPanel.this.frame.setVisible(false);
@@ -65,6 +71,8 @@ public class PreferencesPanel extends JPanel {
 		this.add(screen);
 		this.add(new JLabel("Default Screen Layout"));
 		this.add(defLayout);
+		this.add(new JLabel("Check for updates at startup?"));
+		this.add(update);
 		this.add(cancel);
 		this.add(ok);
 	}
