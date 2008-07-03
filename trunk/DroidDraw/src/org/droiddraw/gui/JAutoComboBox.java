@@ -61,6 +61,7 @@ public JAutoComboBox(java.util.List<String> list) {
     setEditable(true);
     setModel(new DefaultComboBoxModel(list.toArray()) {
 
+      @Override
       protected void fireContentsChanged(Object obj, int i, int j) {
         if (!isFired)
           super.fireContentsChanged(obj, i, j);
@@ -108,6 +109,7 @@ public JAutoComboBox(java.util.List<String> list) {
     }
   }
 
+  @Override
   protected void fireActionEvent() {
     if (!isFired)
       super.fireActionEvent();

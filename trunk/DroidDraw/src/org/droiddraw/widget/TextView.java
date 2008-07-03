@@ -78,7 +78,8 @@ public class TextView extends AbstractWidget {
 		}
 	}
 
-	public void apply() {
+	@Override
+  public void apply() {
 		super.apply();
 		if (fontSz.getStringValue() != null && fontSz.getStringValue().length() > 0) {
 			fontSize = (DisplayMetrics.readSize(fontSz));
@@ -129,14 +130,16 @@ public class TextView extends AbstractWidget {
 		return bg.getGraphics().getFontMetrics(f).stringWidth(str);
 	}
 
-	protected int getContentWidth() {
+	@Override
+  protected int getContentWidth() {
 		int l = stringLength(text.getStringValue())+pad_x;
 		if (l > AndroidEditor.instance().getScreenX())
 			l = AndroidEditor.instance().getScreenX()-getX();
 		return l;
 	}
 
-	protected int getContentHeight() {
+	@Override
+  protected int getContentHeight() {
 		Vector<String> texts = buildLineBreaks(text.getStringValue());
 		if (texts.size() == 0) return fontSize+pad_y;
 		int h = texts.size()*(fontSize+1)+pad_y;
@@ -201,7 +204,8 @@ public class TextView extends AbstractWidget {
 		}
 	}
 
-	public Vector<Property> getProperties() {
+	@Override
+  public Vector<Property> getProperties() {
 		return props;
 	}
 }

@@ -455,7 +455,7 @@ public class RelativeLayout extends AbstractLayout {
 		}
 	}
 
-	public static enum RelationType {TOP, ABOVE, BOTTOM, BELOW, LEFT, TO_LEFT, RIGHT, TO_RIGHT, BASELINE, CENTER_VERTICAL, CENTER_HORIZONTAL, CENTER, PARENT_TOP, PARENT_BOTTOM, PARENT_RIGHT, PARENT_LEFT};
+	public static enum RelationType {TOP, ABOVE, BOTTOM, BELOW, LEFT, TO_LEFT, RIGHT, TO_RIGHT, BASELINE, CENTER_VERTICAL, CENTER_HORIZONTAL, CENTER, PARENT_TOP, PARENT_BOTTOM, PARENT_RIGHT, PARENT_LEFT}
 
 	public static class Relation {
 		RelationType relation;

@@ -56,7 +56,6 @@ public class ArrayPanel extends AbstractDataPanel {
 		return arrays.size();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void parentSetValueAt(Object value, int rowIndex, int columnIndex) {
 		String key = (String)parentValueAt(rowIndex, 0);

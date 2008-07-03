@@ -20,12 +20,14 @@ import java.text.DateFormat;
 import java.util.Date;
 
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.droiddraw.AndroidEditor;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
 
-public class Viewer extends JPanel implements DropTargetListener {
+public class Viewer extends JPanel implements DropTargetListener, ChangeListener {
 	private static final long serialVersionUID = 1L;
 
 	Dimension d;
@@ -35,8 +37,6 @@ public class Viewer extends JPanel implements DropTargetListener {
 	Image back;
 	
 	DropTarget dt;
-
-	
 	
 	public Viewer(AndroidEditor app, DroidDrawPanel ddp, Image img) {
 		this.app = app;
@@ -45,6 +45,7 @@ public class Viewer extends JPanel implements DropTargetListener {
 		addMouseListener(vl);
 		addMouseMotionListener(vl);
 		addKeyListener(vl);
+		app.addChangeListener(this);
 		this.img = img;
 		this.d = new Dimension(480,480);
 		dt = new DropTarget(this, DnDConstants.ACTION_MOVE, this, true );
@@ -59,16 +60,18 @@ public class Viewer extends JPanel implements DropTargetListener {
 		return vl;
 	}
 
-	public Dimension getPreferredSize() {
+	@Override
+  public Dimension getPreferredSize() {
 		return d;
 	}
 
-	public Dimension getMinimumSize() {
+	@Override
+  public Dimension getMinimumSize() {
 		return d;
 	}
 
 	public int getOffX() {
-		return (int)(getWidth()-app.getScreenX())/2;
+		return (getWidth()-app.getScreenX())/2;
 	}
 
 	public int getOffY() {
@@ -88,7 +91,8 @@ public class Viewer extends JPanel implements DropTargetListener {
 		}
 	}
 	
-	public void paint(Graphics g) {
+	@Override
+  public void paint(Graphics g) {
 		g.setColor(Color.lightGray);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
@@ -197,4 +201,10 @@ public class Viewer extends JPanel implements DropTargetListener {
 
 	public void dropActionChanged(DropTargetDragEvent arg0) {
 	}
+
+  public void stateChanged(ChangeEvent ev) {
+    if (ev.getSource() instanceof Layout) {
+      repaint();
+    }
+  }
 }

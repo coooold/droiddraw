@@ -43,11 +43,14 @@ public class WidgetPanel extends JPanel implements DragGestureListener, DragSour
 		w.paint(g);	
 	}
 	
-	public Dimension getMinimumSize() { return d; }
+	@Override
+  public Dimension getMinimumSize() { return d; }
 	
-	public Dimension getPreferredSize() { return d; }
+	@Override
+  public Dimension getPreferredSize() { return d; }
 	
-	public void paint(Graphics g) {
+	@Override
+  public void paint(Graphics g) {
 		w.paint(g);
 	}
 

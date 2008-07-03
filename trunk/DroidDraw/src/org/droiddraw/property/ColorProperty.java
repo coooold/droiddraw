@@ -19,7 +19,8 @@ public class ColorProperty extends StringProperty {
 		return c.equals(defaultColor);
 	}
 	
-	public void setStringValue(String col) {
+	@Override
+  public void setStringValue(String col) {
 		if (col == null || col.length() == 0) {
 			setColorValue(null);
 		}

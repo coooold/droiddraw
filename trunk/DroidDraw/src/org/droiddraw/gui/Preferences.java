@@ -6,22 +6,24 @@ import org.droiddraw.AndroidEditor;
 import org.droiddraw.AndroidEditor.ScreenMode;
 
 public class Preferences {
-	public static enum Layout {ABSOLUTE, LINEAR, RELATIVE};
-	
+	public static enum Layout {ABSOLUTE, LINEAR, RELATIVE}
+	public static enum Update {YES, ASK, NO}
 	
 	private static String SNAP = "snap";
 	private static String SCREEN = "screen";
 	private static String LAYOUT = "layout";
+	private static String UPDATE = "update";
 	
 	protected boolean snap;
 	protected ScreenMode screen;
 	protected Layout layout;
-	
+	protected Update updateCheck;
 	
 	public Preferences() {
 		this.snap = false;
 		this.screen = ScreenMode.HVGA_PORTRAIT;
 		this.layout = Layout.ABSOLUTE;
+		this.updateCheck = Update.ASK;
 	}
 	
 	public void load() {
@@ -29,8 +31,8 @@ public class Preferences {
 		this.snap = prefs.getBoolean(SNAP, false);
 		
 		screen = ScreenMode.values()[prefs.getInt(SCREEN, 3)];
-		layout = Layout.values()[prefs.getInt(LAYOUT, 0)];
-		
+		layout = Layout.values()[prefs.getInt(LAYOUT, 0)];	
+		updateCheck = Update.values()[prefs.getInt(UPDATE, 1)];
 	}
 	
 	public void save() {
@@ -39,7 +41,7 @@ public class Preferences {
 		prefs.putBoolean(SNAP, snap);
 		prefs.putInt(SCREEN, screen.ordinal());
 		prefs.putInt(LAYOUT, layout.ordinal());
-		
+		prefs.putInt(UPDATE, updateCheck.ordinal());
 		try {
 			prefs.sync();
 		}
@@ -70,5 +72,13 @@ public class Preferences {
 	
 	public Layout getDefaultLayout() {
 		return layout;
+	}
+
+	public Update getUpdateCheck() {
+	  return updateCheck;
+	}
+	
+	public void setUpdateCheck(Update u) {
+	  this.updateCheck = u;
 	}
 }

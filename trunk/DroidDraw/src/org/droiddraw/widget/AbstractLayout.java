@@ -14,7 +14,8 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		apply();
 	}
 	
-	public String toString() {
+	@Override
+  public String toString() {
 		return tagName;
 	}
 	
@@ -66,7 +67,8 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	}
 	
 	
-	public int getContentWidth() {
+	@Override
+  public int getContentWidth() {
 		if (widgets.size() > 0) {
 			int maxX = 0;
 			for (Widget w : widgets) {
@@ -82,7 +84,8 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 			return 100;
 	}
 	
-	public int getContentHeight() {
+	@Override
+  public int getContentHeight() {
 		if (widgets.size() > 0) {
 			int maxY = 0;
 			for (Widget w : widgets) {
@@ -111,7 +114,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	
 	public int getScreenX() {
 		if (parent != null && parent != this) {
-			return ((Layout)parent).getScreenX()+getX();
+			return (parent).getScreenX()+getX();
 		}
 		else {
 			return getX();
@@ -120,7 +123,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	
 	public int getScreenY() {
 		if (parent != null && parent != this) {
-			return ((Layout)parent).getScreenY()+getY();
+			return parent.getScreenY()+getY();
 		}
 		else {
 			return getY();

@@ -50,7 +50,8 @@ public class CheckBox extends CompoundButton {
 		}
 	}
 
-	public void paint(Graphics g) {
+	@Override
+  public void paint(Graphics g) {
 		Image img;
 		int off_x;
 		int off_y;

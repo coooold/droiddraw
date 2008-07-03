@@ -55,15 +55,18 @@ public class DonatePanel extends JPanel {
 		
 	}
 	
-	public Dimension getPreferredSize() {
+	@Override
+  public Dimension getPreferredSize() {
 		return d;
 	}
 	
-	public Dimension getMinimumSize() {
+	@Override
+  public Dimension getMinimumSize() {
 		return d;
 	}
 	
-	public void paint(Graphics g) {
+	@Override
+  public void paint(Graphics g) {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		

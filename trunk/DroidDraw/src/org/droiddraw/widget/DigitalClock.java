@@ -15,7 +15,8 @@ public class DigitalClock extends TextView {
 		text.setStringValue(DateFormat.getTimeInstance(DateFormat.SHORT).format(new Date()));
 	}
 	
-	public void paint(Graphics g) {
+	@Override
+  public void paint(Graphics g) {
 		setDate();
 		super.paint(g);
 	}

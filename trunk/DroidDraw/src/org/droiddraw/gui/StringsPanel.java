@@ -23,14 +23,16 @@ public class StringsPanel extends AbstractDataPanel {
 		dataTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(new JTextField()));
 	}
 	
-	protected int parentRowCount() {
+	@Override
+  protected int parentRowCount() {
 		Hashtable<String,String> strings = AndroidEditor.instance().getStrings();
 		if (strings != null)
 			return strings.size();
 		return 0;
 	}
 
-	protected Object parentValueAt(int row, int col) {
+	@Override
+  protected Object parentValueAt(int row, int col) {
 		Hashtable<String,String> strings = AndroidEditor.instance().getStrings();
 		ArrayList<String> sorted = Collections.list(strings.keys());
 		Collections.sort(sorted);

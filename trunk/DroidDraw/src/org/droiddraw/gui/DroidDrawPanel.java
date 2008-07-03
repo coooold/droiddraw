@@ -115,7 +115,8 @@ public class DroidDrawPanel extends JPanel {
 		}
 	}
 	
-	public Dimension getMinimumSize() {
+	@Override
+  public Dimension getMinimumSize() {
 		return d;
 	}
 
@@ -128,7 +129,8 @@ public class DroidDrawPanel extends JPanel {
 		}
 	}
 	
-	public Dimension getPreferredSize() {
+	@Override
+  public Dimension getPreferredSize() {
 		return d;
 	}
 	

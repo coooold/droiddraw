@@ -1,21 +1,4 @@
 package org.droiddraw.gui;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.Vector;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JComboBox;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.JToggleButton;
-
 import org.droiddraw.AndroidEditor;
 import org.droiddraw.widget.AbsoluteLayout;
 import org.droiddraw.widget.AnalogClock;
@@ -47,13 +30,27 @@ import org.droiddraw.widget.Ticker;
 import org.droiddraw.widget.TimePicker;
 import org.droiddraw.widget.Widget;
 
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.Vector;
 
-public class ViewerListener implements MouseListener, MouseMotionListener, ActionListener, KeyListener {
-	int off_x;
-	int off_y;
+import javax.swing.JComboBox;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
+
+public class ViewerListener implements MouseListener, MouseMotionListener, KeyListener {
+	int off_x, off_y;
+	int sx, sy;
 	int grid_x = 10;
 	int grid_y = 10;
-	boolean add;
 	boolean select;
 	boolean shift;
 
@@ -68,31 +65,15 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 	AndroidEditor app;
 	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock","AutoCompleteTextView", "Button", "CheckBox", "DigitalClock","EditText", "ImageButton", "ImageView", "ListView", "ProgressBar", "RadioButton","RadioGroup", "Spinner", "TableRow", "TextView", "TimePicker", "AbsoluteLayout", "LinearLayout", "RelativeLayout", "TableLayout", "Ticker"});
 
-	JToggleButton addButton;
-	JToggleButton selectButton;
-	ButtonGroup bg;
 	DroidDrawPanel ddp;
 
 	public ViewerListener(AndroidEditor app, DroidDrawPanel ddp, Viewer viewer) {
 		this.ddp = ddp;
 		this.app = app;
 		this.viewer = viewer;
-		this.addButton = new JToggleButton("Add");
-		this.selectButton = new JToggleButton("Select");
-		this.addButton.addActionListener(this);
-		this.selectButton.addActionListener(this);
-		this.select = true;
-		bg = new ButtonGroup();
-		bg.add(selectButton);
-		bg.add(addButton);
-		bg.setSelected(selectButton.getModel(), true);
-
+		
 		if (!System.getProperty("os.name").toLowerCase().contains("mac os x"))
 			widgetType.setLightWeightPopupEnabled(false);
-	}
-
-	public ButtonGroup getInterfaceStateGroup() {
-		return bg;
 	}
 
 	public Component getWidgetSelector() {
@@ -243,6 +224,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		final int y = yy;
 		final Widget w = ww;
 		final Vector<Layout> ls = app.findLayouts(x, y);
+		
 		Layout l = null;
 
 		switch (ls.size()) {
@@ -283,10 +265,9 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		else
 			w.setPosition(x-l.getScreenX(), y-l.getScreenY());
 		l.addWidget(w);
+		AndroidEditor.instance().queueUndoRecord(new WidgetAddRecord(l, w));
 		l.apply();
 		app.select(w);
-		bg.setSelected(addButton.getModel(), false);
-		bg.setSelected(selectButton.getModel(), true);
 		select = true;
 		viewer.requestFocus();
 		viewer.repaint();
@@ -294,6 +275,14 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 
 	public void mouseReleased(MouseEvent e) {
 		e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		Widget w = app.getSelected();
+		if (w != null) {
+		  int nx = w.getX();
+		  int ny = w.getY();
+		  if (nx != sx || ny != sy) {
+		    app.queueUndoRecord(new MoveRecord(sx, sy, nx, ny, w));
+		  }
+		}
 	}
 
 	public void mouseDragged(MouseEvent e) {		
@@ -328,10 +317,10 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 				} while (l.equals(selected) && ix < ls.size());
 			}
 			else 
-				l = (Layout)(selected.getParent());
+				l = (selected.getParent());
 			if (l != selected.getParent()) {
 				if (!(selected instanceof Layout) || !((Layout)selected).containsWidget(l)){
-					((Layout)selected.getParent()).removeWidget(selected);
+					(selected.getParent()).removeWidget(selected);
 					l.addWidget(selected);
 				}
 				else {
@@ -407,17 +396,6 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		ev.getComponent().setCursor(c);
 	}
 
-	public void actionPerformed(ActionEvent ev) {
-		if (ev.getActionCommand().equals("Add")) {
-			add = true;
-			select = false;
-		}
-		else if (ev.getActionCommand().equals("Select")) {
-			add = false;
-			select = true;
-		}
-	}
-
 	public void keyPressed(KeyEvent ev) { 
 		switch (ev.getKeyCode()) {
 		case KeyEvent.VK_SHIFT:
@@ -425,30 +403,39 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 			break;
 		case KeyEvent.VK_DELETE:
 		case KeyEvent.VK_BACK_SPACE:
-			app.removeWidget(app.getSelected());
-			viewer.repaint();
-			break;
+		    Widget w = app.getSelected();
+		    if (w != null) {
+		      Layout l = w.getParent();
+		      app.removeWidget(app.getSelected());
+		      app.queueUndoRecord(new WidgetDeleteRecord(l, w));
+		      viewer.repaint();
+		    }
+		    break;
 		}
 		Widget w = app.getSelected();
 		if (w != null && w.getParent() instanceof AbsoluteLayout) {
-			switch (ev.getKeyCode()) {
+		    int dx = 0;
+		    int dy = 0;
+		    switch (ev.getKeyCode()) {
 			case KeyEvent.VK_UP:
-				w.move(0, -1);
-				viewer.repaint();
+				dy = -1;
 				break;
 			case KeyEvent.VK_DOWN:
-				w.move(0, 1);
-				viewer.repaint();
+				dy = 1;
 				break;
 			case KeyEvent.VK_LEFT:
-				w.move(-1, 0);
-				viewer.repaint();
+				dx = -1;
 				break;
 			case KeyEvent.VK_RIGHT:
-				w.move(1, 0);
-				viewer.repaint();
+				dy = 1;
 				break;
 			}
+		    if (dx != 0 || dy != 0) {
+		      int sx = w.getX();
+		      int sy = w.getY();
+		      w.move(dx, dy);
+		      app.queueUndoRecord(new MoveRecord(sx, sy, sx+dx, sy+dy, w));
+		   }
 		}
 	}
 
@@ -468,6 +455,9 @@ public class ViewerListener implements MouseListener, MouseMotionListener, Actio
 		if (w != null) {
 			int x = e.getX()-viewer.getOffX();
 			int y = e.getY()-viewer.getOffY();
+			
+			sx = w.getX();
+			sy = w.getY();
 			
 			off_x = (w.getParent()!=null?w.getParent().getScreenX():0)+w.getX()-x;
 			off_y = (w.getParent()!=null?w.getParent().getScreenY():0)+w.getY()-y;

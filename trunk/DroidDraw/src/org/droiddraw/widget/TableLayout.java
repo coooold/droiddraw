@@ -60,7 +60,8 @@ public class TableLayout extends LinearLayout {
 		}
 	}
 	
-	public void apply() {
+	@Override
+  public void apply() {
 		if (stretch != null) {
 			String cols = stretch.getStringValue();
 			stretchColumns.clear();
@@ -74,7 +75,8 @@ public class TableLayout extends LinearLayout {
 		super.apply();
 	}
 	
-	public void resizeForRendering() {
+	@Override
+  public void resizeForRendering() {
 		calculateMaxWidths();
 		for (Widget w : widgets) {
 			if (w instanceof TableRow) {
