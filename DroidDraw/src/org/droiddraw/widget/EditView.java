@@ -23,8 +23,7 @@ public class EditView extends TextView {
 	NineWayImage img;
 	Image img_base;
 	
-  	@SuppressWarnings("hiding")
-    public static final String[] propertyNames = 
+  	public static final String[] propertyNames = 
 		new String[] {"android:password", "android:capitalize", "android:numeric", "android:phoneNumber","android:autoText","android:digits"};
 	
 	public EditView(String txt) {
