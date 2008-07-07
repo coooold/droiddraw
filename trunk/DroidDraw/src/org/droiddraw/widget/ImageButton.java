@@ -8,8 +8,7 @@ import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.NineWayImage;
 
 public class ImageButton extends ImageView {
-	@SuppressWarnings("hiding")
-  NineWayImage img;
+	NineWayImage img;
 	Image img_base;
 	int cw;
 	
