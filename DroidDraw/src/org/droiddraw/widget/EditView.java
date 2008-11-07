@@ -14,7 +14,7 @@ import org.droiddraw.property.StringProperty;
 
 public class EditView extends TextView {
 	BooleanProperty password;
-	BooleanProperty numeric;
+	SelectProperty numeric;
 	BooleanProperty phone;
 	BooleanProperty autoText;
 	SelectProperty capitalize;
@@ -34,7 +34,7 @@ public class EditView extends TextView {
 		
 		password = new BooleanProperty("Password", "android:password", false);
 		capitalize = new SelectProperty("Capitalize", "android:capitalize", new String[] {"sentences", "words"}, 0);
-		numeric = new BooleanProperty("Numbers Only", "android:numeric", false);
+		numeric = new SelectProperty("Number Format", "android:numeric", new String[] {"integer", "signed", "decimal"}, 0);
 		phone = new BooleanProperty("Phone Number", "android:phoneNumber", false);
 		autoText = new BooleanProperty("Correct Spelling", "android:autoText", false);
 		digits = new StringProperty("Valid Characters", "android:digits", "");
