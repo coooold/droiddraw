@@ -11,7 +11,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.XmlPullAttributes;
+import android.util.AttributeSet;
+import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
@@ -126,7 +127,7 @@ public class ParseActivity extends Activity {
 	protected View createView(XmlPullParser parse) {
 		String name = parse.getName();
 		View result = null;
-		XmlPullAttributes atts = new XmlPullAttributes(parse);
+		AttributeSet atts = Xml.asAttributeSet(parse);
 		if (name.equals("LinearLayout")) {
 			result = new LinearLayout(this);
 		}
@@ -274,7 +275,7 @@ public class ParseActivity extends Activity {
 		return -1;
 	}
 	
-	protected String findAttribute(XmlPullAttributes atts, String id) {
+	protected String findAttribute(AttributeSet atts, String id) {
 		for (int i=0;i<atts.getAttributeCount();i++) {
 			if (atts.getAttributeName(i).equals(id)) {
 				return atts.getAttributeValue(i);
@@ -289,7 +290,7 @@ public class ParseActivity extends Activity {
 		}
 	}
 	
-	protected ViewGroup.LayoutParams loadLayoutParams(XmlPullAttributes atts, ViewGroup vg) {
+	protected ViewGroup.LayoutParams loadLayoutParams(AttributeSet atts, ViewGroup vg) {
 		ViewGroup.LayoutParams lps = null;
 		
 		String width = findAttribute(atts, "android:layout_width");
@@ -392,21 +393,21 @@ public class ParseActivity extends Activity {
 	                            			"android:layout_toRight"};
 	                            	
 	                            	int[] relative_verbs = new int[]
-	                            	       {RelativeLayout.POSITION_ABOVE,
+	                            	       {RelativeLayout.ABOVE,
 	                            			RelativeLayout.ALIGN_BASELINE,
 	                            			RelativeLayout.ALIGN_BOTTOM,
 	                            			RelativeLayout.ALIGN_LEFT,
-	                            			RelativeLayout.ALIGN_WITH_PARENT_BOTTOM,
-	                            			RelativeLayout.ALIGN_WITH_PARENT_LEFT,
-	                            			RelativeLayout.ALIGN_WITH_PARENT_RIGHT,
-	                            			RelativeLayout.ALIGN_WITH_PARENT_TOP,
+	                            			RelativeLayout.ALIGN_PARENT_BOTTOM,
+	                            			RelativeLayout.ALIGN_PARENT_LEFT,
+	                            			RelativeLayout.ALIGN_PARENT_RIGHT,
+	                            			RelativeLayout.ALIGN_PARENT_TOP,
 	                            			RelativeLayout.ALIGN_RIGHT,
 	                            			RelativeLayout.ALIGN_TOP,
-	                            			RelativeLayout.POSITION_BELOW,
+	                            			RelativeLayout.BELOW,
 	                            			RelativeLayout.CENTER_HORIZONTAL,
 	                            			RelativeLayout.CENTER_IN_PARENT,
 	                            			RelativeLayout.CENTER_VERTICAL,
-	                            			RelativeLayout.POSITION_TO_LEFT,
-	                            			RelativeLayout.POSITION_TO_RIGHT,
+	                            			RelativeLayout.LEFT_OF,
+	                            			RelativeLayout.RIGHT_OF,
 	                            	      };
 }
