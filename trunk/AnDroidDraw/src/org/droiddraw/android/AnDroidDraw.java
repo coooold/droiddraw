@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.DeadObjectException;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -42,7 +43,7 @@ public class AnDroidDraw extends Activity implements ServiceConnection, View.OnC
 		this.preview.setOnClickListener(this);
 
 		Intent netService = new Intent(this, NetworkService.class);
-		this.startService(netService, new Bundle());
+		this.startService(netService);
 		this.bindService(netService, this, Context.BIND_AUTO_CREATE);
 
 		//this.registerReceiver(new NetworkReceiver(this), new IntentFilter("layout"));
@@ -64,7 +65,7 @@ public class AnDroidDraw extends Activity implements ServiceConnection, View.OnC
 		try {
 			this.service.addMessageListener(new MessageListener.Stub() {
 				public void receivedRequest(String msg)
-				throws DeadObjectException {
+				throws RemoteException {
 					//Toast.makeText(AnDroidDraw.this,
 					//		cb.isChecked()?"Accepting Connection":"Rejecting Connection",
 					//				Toast.LENGTH_LONG).show();
@@ -84,7 +85,7 @@ public class AnDroidDraw extends Activity implements ServiceConnection, View.OnC
 				}
 			});
 		}
-		catch (DeadObjectException ex) {
+		catch (RemoteException ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -104,7 +105,7 @@ public class AnDroidDraw extends Activity implements ServiceConnection, View.OnC
 				data = layout;
 			}
 			i.putExtra(ParseActivity.DATA, data);
-			startSubActivity(i, 0);
+			startActivity(i);
 		}
 	}
 }

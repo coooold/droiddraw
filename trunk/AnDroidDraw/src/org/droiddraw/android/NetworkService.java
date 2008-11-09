@@ -13,6 +13,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.DeadObjectException;
 import android.os.IBinder;
+import android.os.RemoteException;
 
 public class NetworkService extends Service implements Runnable {
 	boolean running;
@@ -22,7 +23,7 @@ public class NetworkService extends Service implements Runnable {
 	boolean accept;
 	NetworkInterfaceImpl impl;
 	
-	protected void onCreate() {
+	public void onCreate() {
 		this.listener = new Thread(this);
 		this.listener.start();
 		this.listeners = new Vector<MessageListener>();
@@ -30,7 +31,7 @@ public class NetworkService extends Service implements Runnable {
 		super.onCreate();
 	}
 	
-	protected void onDestroy() {
+	public void onDestroy() {
 		running = false;
 		try {
 			listener.join();
@@ -79,7 +80,7 @@ public class NetworkService extends Service implements Runnable {
 							try {
 								l.newLayout(layout);
 							}
-							catch (DeadObjectException ex) {
+							catch (RemoteException ex) {
 								ex.printStackTrace();
 							}
 						}
