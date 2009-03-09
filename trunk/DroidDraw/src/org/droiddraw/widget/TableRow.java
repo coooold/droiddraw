@@ -136,7 +136,7 @@ public class TableRow extends LinearLayout {
 	
 	@Override
   public int getContentWidth() {
-		if (widths != null) {
+		if (widths != null && widths.size() > 0) {
 			int res = 0;
 			for (int w : widths) {
 				res += w;

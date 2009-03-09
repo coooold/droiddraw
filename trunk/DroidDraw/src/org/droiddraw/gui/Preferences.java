@@ -30,9 +30,21 @@ public class Preferences {
 		java.util.prefs.Preferences prefs = java.util.prefs.Preferences.userNodeForPackage(Preferences.class);
 		this.snap = prefs.getBoolean(SNAP, false);
 		
-		screen = ScreenMode.values()[prefs.getInt(SCREEN, 3)];
-		layout = Layout.values()[prefs.getInt(LAYOUT, 0)];	
-		updateCheck = Update.values()[prefs.getInt(UPDATE, 1)];
+		int screenPref = prefs.getInt(SCREEN, 3);
+		if (screenPref < 0 || screenPref >= ScreenMode.values().length) {
+			screenPref = 3;
+		}
+		screen = ScreenMode.values()[3];
+		int layoutPref = prefs.getInt(LAYOUT, 0);
+		if (layoutPref < 0 || layoutPref >= Layout.values().length) {
+			layoutPref = 0;
+		}
+		layout = Layout.values()[layoutPref];	
+		int updatePref = prefs.getInt(UPDATE, 1);
+		if (updatePref < 0 || updatePref >= Update.values().length) {
+			updatePref = 1;
+		}
+		updateCheck = Update.values()[updatePref];
 	}
 	
 	public void save() {

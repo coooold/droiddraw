@@ -66,6 +66,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock","AutoCompleteTextView", "Button", "CheckBox", "DigitalClock","EditText", "ImageButton", "ImageView", "ListView", "ProgressBar", "RadioButton","RadioGroup", "Spinner", "TableRow", "TextView", "TimePicker", "AbsoluteLayout", "LinearLayout", "RelativeLayout", "TableLayout", "Ticker"});
 
 	DroidDrawPanel ddp;
+	private boolean dragging;
 
 	public ViewerListener(AndroidEditor app, DroidDrawPanel ddp, Viewer viewer) {
 		this.ddp = ddp;
@@ -274,6 +275,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 	}
 
 	public void mouseReleased(MouseEvent e) {
+		dragging = false;
 		e.getComponent().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		Widget w = app.getSelected();
 		if (w != null) {
@@ -302,10 +304,21 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 		Widget selected = app.getSelected();
 		Vector<Widget> ws = app.findWidgets(x, y);
 		
-		if (!ws.contains(selected) && ws.size() > 0) {
-			app.select(ws.get(0));
-			selected = app.getSelected();
+		if (!dragging) {
+			if (!ws.contains(selected)) {
+				if (ws.size() > 0) {
+					app.select(ws.get(0));
+					selected = app.getSelected();
+					Widget w = selected;
+					off_x = (w.getParent()!=null?w.getParent().getScreenX():0)+w.getX()-x;
+					off_y = (w.getParent()!=null?w.getParent().getScreenY():0)+w.getY()-y;
+				} else {
+					app.select(null);
+					return;
+				}
+			}
 		}
+		dragging = true;
 		
 		if (selected != null) {
 			Layout l = selected.getParent();
