@@ -2,7 +2,9 @@ package org.droiddraw.widget;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Set;
 import java.util.Vector;
 
 import org.droiddraw.property.BooleanProperty;
@@ -17,8 +19,8 @@ public class RelativeLayout extends AbstractLayout {
 
 	public static final String[] propNames = 
 		new String[] {
-		"android:layout_toRight",
-		"android:layout_toLeft",
+		"android:layout_toRightOf",
+		"android:layout_toLeftOf",
 		"android:layout_above",
 		"android:layout_below",
 		"android:layout_alignRight",
@@ -131,7 +133,7 @@ public class RelativeLayout extends AbstractLayout {
 			x = parent.getX()+parent.getWidth()-w.getWidth();
 		}
 		if (r == RelationType.TO_LEFT) {
-			x = parent.getX()-PADDING-w.getWidth()-parent.getMargin(Widget.LEFT);
+			x = parent.getX()+w.getX()-w.getWidth();
 		}
 		if (r == RelationType.TO_RIGHT) {
 			x = parent.getX()+parent.getWidth()+PADDING+w.getMargin(Widget.LEFT);
@@ -373,20 +375,43 @@ public class RelativeLayout extends AbstractLayout {
 		Collections.sort(widgets, new Comparator<Widget>() {
 			public int compare(Widget w1, Widget w2) {
 				if (isRelatedTo(w1, w2)) {
-					return 1;
+					return -1;
 				}
 				else if (isRelatedTo(w2, w1)) {
-					return -1;
+					return 1;
 				}
 				else
 					return 0;
 			}
 		});
 	}
-
+	
+	public Vector<Widget> getParents(Widget w) {
+		Vector<Relation> rels = relations.get(w);
+		Vector<Widget> parents = new Vector<Widget>();
+		if (rels != null && rels.size() > 0) {
+			for (Relation r : rels) {
+				parents.add(r.getRelatedTo());
+			}
+		}
+		return parents;
+	}
+	
+	public Set<Widget> getRoots(Widget w) {
+		Vector<Widget> parents = getParents(w);
+		Set<Widget> roots = new HashSet<Widget>();
+		for (Widget parent : parents) {
+			Set<Widget> parentRoots = getRoots(parent);
+			for (Widget root : parentRoots) {
+				roots.add(root);
+			}
+		}
+		return roots;
+	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public void repositionAllWidgets() {
+	public synchronized void repositionAllWidgets() {
 		if (!repositioning) {
 			repositioning = true;
 			Vector<Widget> ws = (Vector<Widget>)widgets.clone();
@@ -410,13 +435,13 @@ public class RelativeLayout extends AbstractLayout {
 					properties.add(new StringProperty("relation", "android:layout_alignLeft", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.TO_LEFT)) {
-					properties.add(new StringProperty("relation", "android:layout_toLeft", r.getRelatedTo().getId(), false));
+					properties.add(new StringProperty("relation", "android:layout_toLeftOf", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.RIGHT)) {
 					properties.add(new StringProperty("relation", "android:layout_alignRight", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.TO_RIGHT)) {
-					properties.add(new StringProperty("relation", "android:layout_toRight", r.getRelatedTo().getId(), false));
+					properties.add(new StringProperty("relation", "android:layout_toRightOf", r.getRelatedTo().getId(), false));
 				}
 				else if (r.getRelation().equals(RelationType.ABOVE)) {
 					properties.add(new StringProperty("relation", "android:layout_above", r.getRelatedTo().getId(), false));
