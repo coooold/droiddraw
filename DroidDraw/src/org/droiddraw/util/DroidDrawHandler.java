@@ -234,6 +234,15 @@ public class DroidDrawHandler extends DefaultHandler {
 	}
 	
 	
+	@Override
+	public void endElement(String ns, String lName, String qName) 
+	{
+		if (isLayout(qName)) {
+			layout_props.pop();
+			layoutStack.pop();
+		}
+	}
+	
 	protected void addWidget(Widget w, Attributes atts) {
 		if (w instanceof TextView) {
 			for (int i=0;i<TextView.propertyNames.length;i++) {
@@ -265,17 +274,7 @@ public class DroidDrawHandler extends DefaultHandler {
 			w.setPosition(x, y);
 		}
 	}
-	
-	
-	@Override
-	public void endElement(String ns, String lName, String qName) 
-	{
-		if (isLayout(qName)) {
-			layout_props.pop();
-			layoutStack.pop();
-		}
-	}
-	
+
 	public static void loadFromString(String content) 
 		throws SAXException, ParserConfigurationException, IOException
 	{

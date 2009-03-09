@@ -16,6 +16,9 @@ public class ColorProperty extends StringProperty {
 
 	@Override
 	protected boolean isDefaultInternal() {
+		if (c == null) {
+			return true;
+		}
 		return c.equals(defaultColor);
 	}
 	
