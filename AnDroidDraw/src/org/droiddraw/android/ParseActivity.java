@@ -350,6 +350,23 @@ public class ParseActivity extends Activity {
 					l.addRule(relative_verbs[i], idN);
 				}
 			}
+			// Margin handling
+			// Contributed by Vishal Choudhary - Thanks!
+			String bottom = findAttribute(atts, "android:layout_marginBottom");
+	        String left = findAttribute(atts, "android:layout_marginLeft");
+	        String right = findAttribute(atts, "android:layout_marginRight");
+	        String top = findAttribute(atts, "android:layout_marginTop");
+	        int bottomInt=0, leftInt=0, rightInt=0, topInt=0;
+	        if (bottom != null)
+	            bottomInt = readSize(bottom);
+	        if (left != null)
+	            leftInt = readSize(left);
+	        if (right != null)
+	            rightInt = readSize(right);
+	        if (top != null)
+	            topInt = readSize(top);
+		    
+		    l.setMargins(leftInt, topInt, rightInt, bottomInt);
 		}
 		
 		return lps;
