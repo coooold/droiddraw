@@ -440,7 +440,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 				dx = -1;
 				break;
 			case KeyEvent.VK_RIGHT:
-				dy = 1;
+				dx = 1;
 				break;
 			}
 		    if (dx != 0 || dy != 0) {
