@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -391,10 +393,6 @@ public class DroidDrawPanel extends JPanel {
 		JPanel out = new JPanel();
 		out.setLayout(new BorderLayout());
 		out.add(text!=null?text:new JScrollPane(jtext), BorderLayout.CENTER);
-		JPanel gp = new JPanel();
-		gp.add(gen);
-		gp.add(load);
-		out.add(gp, BorderLayout.SOUTH);
 		
 		TitledBorder border = BorderFactory.createTitledBorder("Output");
 		
@@ -520,6 +518,26 @@ public class DroidDrawPanel extends JPanel {
 		jtb.addTab("Support", new DonatePanel());
 	
 		//add(out, BorderLayout.CENTER);
+		
+		JButton undo = new JButton("Undo");
+		undo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AndroidEditor.instance().undo();
+			}
+		});
+		JButton redo = new JButton("Redo");
+		undo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				AndroidEditor.instance().redo();
+			}
+		});
+		JToolBar gp = new JToolBar();
+		gp.add(gen);
+		gp.add(load);
+		gp.addSeparator();
+		gp.add(undo);
+		gp.add(redo);
+		
 		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jtb, out);
 		final JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jp, ctl);
 		
@@ -527,6 +545,7 @@ public class DroidDrawPanel extends JPanel {
 		//p.setLayout(fl);
 		//p.add(tb);
 		//add(p, BorderLayout.NORTH);
+		add(gp, BorderLayout.NORTH);
 		add(jsp, BorderLayout.CENTER);
 		screen_size.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

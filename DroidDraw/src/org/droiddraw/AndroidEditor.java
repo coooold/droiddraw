@@ -95,6 +95,9 @@ public class AndroidEditor {
 		catch (IOException ex) {
 			return true;
 		}
+		catch (Exception ex) {
+			return true;
+		}
 	}
 	
 	
