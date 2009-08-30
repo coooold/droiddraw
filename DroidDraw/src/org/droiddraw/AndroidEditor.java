@@ -42,7 +42,7 @@ public class AndroidEditor {
 	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT}
 
 	public static int MAJOR_VERSION = 0;
-	public static int MINOR_VERSION = 10;
+	public static int MINOR_VERSION = 11;
 	
 	Layout layout;
 	Widget selected;
