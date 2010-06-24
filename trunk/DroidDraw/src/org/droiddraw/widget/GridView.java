@@ -4,10 +4,11 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 import org.droiddraw.property.IntProperty;
+import org.droiddraw.property.StringProperty;
 
 public class GridView extends AbstractWidget {
 	IntProperty columnCount;
-	IntProperty columnWidth;
+	StringProperty columnWidth;
 	IntProperty hSpacing, vSpacing;
 	
 	public static final String[] propertyNames = {"android:numColumns", "android:columnWidth", "android:horizontalSpacing", "android:verticalSpacing"};
@@ -16,8 +17,8 @@ public class GridView extends AbstractWidget {
 		super("GridView");
 		columnCount = new IntProperty("Columns", "android:numColumns", -1);
 		columnCount.setIntValue(5);
-		columnWidth = new IntProperty("Column Width", "android:columnWidth", 0);
-		columnWidth.setIntValue(20);
+		columnWidth = new StringProperty("Column Width", "android:columnWidth", "");
+		columnWidth.setStringValue("20px");
 		hSpacing = new IntProperty("Horiz. Spacing", "android:horizontalSpacing", 0);
 		vSpacing = new IntProperty("Vert. Spacing", "android:verticalSpacing", 0);
 		
@@ -29,6 +30,7 @@ public class GridView extends AbstractWidget {
 		
 		apply();
 	}
+
 		
 	@Override
 	protected int getContentHeight() {
@@ -38,7 +40,7 @@ public class GridView extends AbstractWidget {
 	@Override
 	protected int getContentWidth() {
 		int cols = columnCount.getIntValue();
-		int w = columnWidth.getIntValue();
+		int w = removePX(columnWidth.getStringValue());
 		if (cols*w > 50) {
 			return cols*w;
 		}
@@ -53,12 +55,16 @@ public class GridView extends AbstractWidget {
 		
 		g.setColor(Color.lightGray);
 		for (int i=1;i<columnCount.getIntValue();i++) {
-			int x = getX()+i*columnWidth.getIntValue();
+			int x = getX()+i*removePX(columnWidth.getStringValue());
 			g.drawLine(x, getY(), x, getY()+getHeight());
 			if (hSpacing.getIntValue() > 0) {
 				x += hSpacing.getIntValue();
 				g.drawLine(x, getY(), x, getY()+getHeight());
 			}
 		}
+	}
+	
+	private int removePX(String propertyValue){
+		return Integer.parseInt(propertyValue.substring(0, propertyValue.indexOf("px")));
 	}
 }

@@ -203,8 +203,9 @@ implements ActionListener, PropertyChangeListener, KeyListener
 								// TODO
 							}
 							else if (p instanceof StringProperty) {
-								if (jc != null)
+								if (jc != null){
 									((JTextField)jc).setText(evt.getNewValue().toString());
+								}
 							}
 
 						}
@@ -273,6 +274,14 @@ implements ActionListener, PropertyChangeListener, KeyListener
 						JTextField jtf = (JTextField)components.get(prop);
 						if (jtf == null)
 							AndroidEditor.instance().error("Couldn't find text for: "+prop.getAtttributeName());
+						else if(prop.getAtttributeName().equals("android:layout_width") ||
+								prop.getAtttributeName().equals("android:layout_height")){
+							if(!jtf.getText().endsWith("px") && !jtf.getText().equals("wrap_content") && !jtf.getText().equals("fill_parent")){
+								AndroidEditor.instance().error("Incorrect Syntax for: " + prop.getEnglishName() + "\n\"px\" is required after a width or height entry");
+							}
+							else
+								((StringProperty)prop).setStringValue(jtf.getText());
+						}
 						else
 							((StringProperty)prop).setStringValue(jtf.getText());
 					}

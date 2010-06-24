@@ -111,13 +111,15 @@ public class Viewer extends JPanel implements DropTargetListener, ChangeListener
 			
 			AndroidEditor.ScreenMode sc = AndroidEditor.instance().getScreenMode();
 			if (sc.equals(AndroidEditor.ScreenMode.HVGA_PORTRAIT) ||
-				sc.equals(AndroidEditor.ScreenMode.QVGA_PORTRAIT)) 
+				sc.equals(AndroidEditor.ScreenMode.QVGA_PORTRAIT) ||
+				sc.equals(AndroidEditor.ScreenMode.WVGA_PORTRAIT)) 
 			{
 				back = ImageResources.instance().getImage("background_01p");
 				stat = ImageResources.instance().getImage("statusbar_background_p");
 			}
 			else if (sc.equals(AndroidEditor.ScreenMode.HVGA_LANDSCAPE) ||
-					 sc.equals(AndroidEditor.ScreenMode.QVGA_LANDSCAPE)) {
+					 sc.equals(AndroidEditor.ScreenMode.QVGA_LANDSCAPE) ||
+					 sc.equals(AndroidEditor.ScreenMode.WVGA_LANDSCAPE)) {
 				back = ImageResources.instance().getImage("background_01l");
 				stat = ImageResources.instance().getImage("statusbar_background_l");	
 			}

@@ -137,6 +137,7 @@ public class LinearLayout extends AbstractLayout {
 		}
 		if (with_weight.size() > 0) {
 			share = extra/with_weight.size();
+			System.err.println("Share: " + this + " " + share);
 		}
 		y=0;
 		x=0;

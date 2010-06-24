@@ -15,7 +15,6 @@ public class CheckBox extends CompoundButton {
 		super(text);
 		this.tagName = "CheckBox";
 		
-		pad_y = 6;
 		apply();
 	}
 	

@@ -39,7 +39,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 
 public class AndroidEditor {
-	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT}
+	public static enum ScreenMode {QVGA_LANDSCAPE, QVGA_PORTRAIT, HVGA_LANDSCAPE, HVGA_PORTRAIT, WVGA_LANDSCAPE, WVGA_PORTRAIT}
 
 	public static int MAJOR_VERSION = 0;
 	public static int MINOR_VERSION = 11;
@@ -304,6 +304,22 @@ public class AndroidEditor {
 		else if (screen == ScreenMode.HVGA_PORTRAIT) {
 			sx = 320;
 			sy = 480;
+		} 
+		else if (screen == ScreenMode.WVGA_LANDSCAPE) {
+			sx = 854;
+			sy = 480;
+		}
+		else if (screen == ScreenMode.WVGA_PORTRAIT) {
+			sx = 480;
+			sy = 854;
+		}
+		else if (screen == ScreenMode.WVGA_LANDSCAPE) {
+			sx = 854;
+			sy = 480;
+		}
+		else if (screen == ScreenMode.WVGA_PORTRAIT) {
+			sx = 480;
+			sy = 854;
 		}
 		if (this.getLayout() != null) {
 			this.getLayout().apply();

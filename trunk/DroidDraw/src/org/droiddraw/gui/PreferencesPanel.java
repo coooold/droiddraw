@@ -34,7 +34,7 @@ public class PreferencesPanel extends JPanel {
 		this.grid = new JCheckBox("Snap to grid.");
 		this.grid.setSelected(prefs.getSnap());
 		
-		this.screen = new JComboBox(new String[] { "QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait"});
+		this.screen = new JComboBox(new String[] { "QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait", "WVGA Landscape", "WVGA Portrait"});
 		this.screen.setSelectedIndex(prefs.getScreenMode().ordinal());
 		
 		this.defLayout = new JComboBox(new String[] {"Absolute Layout", "Linear Layout", "Relative Layout"});
