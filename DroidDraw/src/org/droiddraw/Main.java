@@ -99,8 +99,8 @@ public class Main implements ApplicationListener, URLOpener {
 				case JOptionPane.CANCEL_OPTION:
 					return;
 				case JOptionPane.YES_OPTION:
-					doSave();
-					break;
+					if(doSave()) break;
+					else return;
 				case JOptionPane.NO_OPTION:
 					break;
 			}
@@ -217,7 +217,7 @@ public class Main implements ApplicationListener, URLOpener {
 		return f;
 	}
 	
-	protected static void doSave() {
+	protected static boolean doSave() {
 		File f = doSaveBasic();
 		if (f != null) {
 			jf.setTitle("DroidDraw: "+f.getName());
@@ -233,11 +233,14 @@ public class Main implements ApplicationListener, URLOpener {
 				fw.flush();
 				pw.close();
 				fw.close();
+				return true;
 			}
 			catch (IOException ex) {
 				ex.printStackTrace();
+				return false;
 			}
 		}
+		else return false;
 	}
 	
 	protected static void loadImage(String name) 
@@ -439,7 +442,12 @@ public class Main implements ApplicationListener, URLOpener {
 			screen = "qvgal";
 		else if (scr.equals(AndroidEditor.ScreenMode.QVGA_PORTRAIT))
 			screen = "qvgap";
-		
+		else if (scr.equals(AndroidEditor.ScreenMode.WVGA_LANDSCAPE)) {
+			screen = "wvgal";
+		}
+		else if (scr.equals(AndroidEditor.ScreenMode.WVGA_PORTRAIT)) {
+			screen = "wvgap";
+		}
 		
 		ddp = new DroidDrawPanel(screen, false);
 		AndroidEditor.instance().setScreenMode(prefs.getScreenMode());

@@ -232,6 +232,22 @@ public class DroidDrawPanel extends JPanel {
 			img = ImageResources.instance().getImage("emu4");
 		}
 		else if ("qvgal".equals(screen)) {
+			ae.setScreenMode(AndroidEditor.ScreenMode.QVGA_LANDSCAPE);
+			img = ImageResources.instance().getImage("emu1");
+		}
+		else if ("wvgap".equals(screen)) {
+			ae.setScreenMode(AndroidEditor.ScreenMode.WVGA_PORTRAIT);
+			img = ImageResources.instance().getImage("emu4");
+		}
+		else if ("wvgal".equals(screen)) {
+			ae.setScreenMode(AndroidEditor.ScreenMode.WVGA_LANDSCAPE);
+			img = ImageResources.instance().getImage("emu1");
+		}
+		else if ("wvgap".equals(screen)) {
+			ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_PORTRAIT);
+			img = ImageResources.instance().getImage("emu4");
+		}
+		else if ("wvgal".equals(screen)) {
 			img = ImageResources.instance().getImage("emu1");
 		}
 		final Viewer viewer = new Viewer(ae, this, img);
@@ -363,7 +379,7 @@ public class DroidDrawPanel extends JPanel {
 		
 		jp.setLayout(new BorderLayout());
 		
-		JComboBox screen_size = new JComboBox(new String[] {"QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait"});
+		JComboBox screen_size = new JComboBox(new String[] {"QVGA Landscape", "QVGA Portrait", "HVGA Landscape", "HVGA Portrait", "WVGA Landscape", "WVGA Portrait"});
 		screen_size.setSelectedIndex(3);
 		JPanel top = new JPanel();
 		FlowLayout fl = new FlowLayout();
@@ -556,24 +572,29 @@ public class DroidDrawPanel extends JPanel {
 				case 0:
 					ae.setScreenMode(AndroidEditor.ScreenMode.QVGA_LANDSCAPE);
 					viewer.resetScreen(ImageResources.instance().getImage("emu1"));
-					//setSize(1000,450);
 					break;
 				case 1:
 					ae.setScreenMode(AndroidEditor.ScreenMode.QVGA_PORTRAIT);
 					viewer.resetScreen(ImageResources.instance().getImage("emu2"));
-					//setSize(1000,550);
-					
 					break;
 				case 2:
 					ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_LANDSCAPE);
 					viewer.resetScreen(ImageResources.instance().getImage("emu3"));
-					//setSize(1100,550);
-					
 					break;
 				case 3:
 					ae.setScreenMode(AndroidEditor.ScreenMode.HVGA_PORTRAIT);
 					viewer.resetScreen(ImageResources.instance().getImage("emu4"));
-					//setSize(1000,750);
+					break;
+				case 4:
+					ae.setScreenMode(AndroidEditor.ScreenMode.WVGA_LANDSCAPE);
+					viewer.resetScreen(ImageResources.instance().getImage("emu5"));
+					setSize(1000,750);
+					
+					break;
+				case 5:
+					ae.setScreenMode(AndroidEditor.ScreenMode.WVGA_PORTRAIT);
+					viewer.resetScreen(ImageResources.instance().getImage("emu6"));
+					setSize(1000,750);
 					
 					break;
 				}

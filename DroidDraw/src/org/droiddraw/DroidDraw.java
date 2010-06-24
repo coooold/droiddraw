@@ -85,6 +85,8 @@ public class DroidDraw extends JApplet implements URLOpener {
 		loadImage("emu2");
 		loadImage("emu3");
 		loadImage("emu4");
+		loadImage("emu5");
+		loadImage("emu6");
 		loadImage("paint");
 		loadImage("droiddraw_small");
 		loadImage("paypal");

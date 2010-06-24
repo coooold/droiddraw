@@ -19,7 +19,7 @@ public class Button extends TextView {
 		// This is a hack and bad oo, I know...
 		this.tagName = "Button";
 		
-		pad_x = 0;
+		pad_x = 10;
 		pad_y = 0;
 	
 		img_base = null;
