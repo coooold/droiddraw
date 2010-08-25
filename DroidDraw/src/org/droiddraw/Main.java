@@ -73,805 +73,844 @@ public class Main implements ApplicationListener, URLOpener {
 	static public boolean osx;
 	static FileFilter xmlFilter = null;
 	static FileFilter dirFilter = null;
-	
+	static FileFilter imgFilter = null;
+
 	protected static void doMacOSXIntegration() {
 		Application a = new DefaultApplication();
-		a.addApplicationListener(new Main());
+		a.addApplicationListener( new Main() );
 	}
-	
-	protected static void open(String file) {
-		open(new File(file));
+
+	protected static void open( String file ) {
+		open( new File( file ) );
 	}
-	
-	protected static void open(File f) {
-		ddp.open(f);
+
+	protected static void open( File f ) {
+		ddp.open( f );
 		saveFile = f;
 	}
-	
+
 	protected static void quit() {
-		quit(true);
+		quit( true );
 	}
-	
-	protected static void quit(boolean cancelable) {
-		if (AndroidEditor.instance().isChanged()) {
-			int opt = JOptionPane.showConfirmDialog(ddp, "Do you wish to save changes to your layout?", "Unsaved Changes", cancelable?JOptionPane.YES_NO_CANCEL_OPTION:JOptionPane.YES_NO_OPTION);
-			switch (opt) {
-				case JOptionPane.CANCEL_OPTION:
-					return;
-				case JOptionPane.YES_OPTION:
-					if(doSave()) break;
-					else return;
-				case JOptionPane.NO_OPTION:
-					break;
+
+	protected static void quit( boolean cancelable ) {
+		if ( AndroidEditor.instance().isChanged() ) {
+			int opt = JOptionPane.showConfirmDialog( ddp, "Do you wish to save changes to your layout?", "Unsaved Changes", cancelable ? JOptionPane.YES_NO_CANCEL_OPTION : JOptionPane.YES_NO_OPTION );
+			switch ( opt ) {
+			case JOptionPane.CANCEL_OPTION:
+				return;
+			case JOptionPane.YES_OPTION:
+				if ( doSave() ) break;
+				else return;
+			case JOptionPane.NO_OPTION:
+				break;
 			}
 		}
-		System.exit(0);
+		System.exit( 0 );
 	}
-	
+
 	protected static void preferences() {
 		JFrame jf = new JFrame();
-		jf.getContentPane().add(new PreferencesPanel(AndroidEditor.instance().getPreferences(), jf));
+		jf.getContentPane().add( new PreferencesPanel( AndroidEditor.instance().getPreferences(), jf ) );
 		jf.pack();
-		jf.setVisible(true);
+		jf.setVisible( true );
 	}
-	
+
 	protected static void about() {
-		final JDialog jd = new JDialog(jf, "About DroidDraw");
-		jd.getContentPane().setLayout(new BorderLayout());
-		jd.getContentPane().add(new JLabel(new ImageIcon(ImageResources.instance().getImage("droiddraw_small"))), BorderLayout.CENTER);
+		final JDialog jd = new JDialog( jf, "About DroidDraw" );
+		jd.getContentPane().setLayout( new BorderLayout() );
+		jd.getContentPane().add( new JLabel( new ImageIcon( ImageResources.instance().getImage( "droiddraw_small" ) ) ), BorderLayout.CENTER );
 		jd.pack();
-		jd.setResizable(false);
-		jd.setLocationRelativeTo(null);
-		jd.setVisible(true);
-		jd.addMouseListener(new MouseAdapter() {
+		jd.setResizable( false );
+		jd.setLocationRelativeTo( null );
+		jd.setVisible( true );
+		jd.addMouseListener( new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent ev) {
-				jd.setVisible(false);
+			public void mouseClicked( MouseEvent ev ) {
+				jd.setVisible( false );
 				jd.dispose();
 			}
-		});
+		} );
 	}
-	
+
 	public static File doOpen() {
-		return doOpen(null);
+		return doOpen( null );
 	}
-	
-	public static File doOpen(File f) {
-		if (!osx) {
-			jfc.setFileFilter(xmlFilter);
-			if (f != null) {
-				if (f.isDirectory())
-					jfc.setCurrentDirectory(f);
+
+	public static File doOpen( File file ) {
+		return doOpen( file, xmlFilter );
+	}
+
+	public static File doOpenImage( File file ) {
+		return doOpen( file, imgFilter );
+	}
+
+	private static File doOpen( File file, FileFilter filter ) {
+		if ( !osx ) {
+			jfc.setFileSelectionMode( JFileChooser.FILES_AND_DIRECTORIES );
+			jfc.setFileFilter( filter );
+			if ( file != null ) {
+				if ( file.isDirectory() )
+					jfc.setCurrentDirectory( file );
 				else
-					jfc.setCurrentDirectory(f.getParentFile());
+					jfc.setCurrentDirectory( file.getParentFile() );
 			}
-			int res = jfc.showOpenDialog(ddp);
-			if (res == JFileChooser.APPROVE_OPTION) {
+			int res = jfc.showOpenDialog( ddp );
+			if ( res == JFileChooser.APPROVE_OPTION ) {
 				return jfc.getSelectedFile();
 			}
 		}
 		else {
-			fd.setMode(FileDialog.LOAD);
-			if (f != null) {
+			fd.setMode( FileDialog.LOAD );
+			if ( file != null ) {
 				try {
-					if (f.isDirectory())
-						fd.setDirectory(f.getCanonicalPath());
+					if ( file.isDirectory() )
+						fd.setDirectory( file.getCanonicalPath() );
 					else
-						fd.setDirectory(f.getParentFile().getCanonicalPath());
+						fd.setDirectory( file.getParentFile().getCanonicalPath() );
 				}
-				catch (IOException ex) {
-					AndroidEditor.instance().error(ex);
+				catch ( IOException ex ) {
+					AndroidEditor.instance().error( ex );
 				}
 			}
-	
-			fd.setVisible(true);
-			if (fd.getDirectory() != null && fd.getFile() != null) {
-				return new File(fd.getDirectory()+"/"+fd.getFile());
+
+			fd.setVisible( true );
+			if ( fd.getDirectory() != null && fd.getFile() != null ) {
+				return new File( fd.getDirectory() + "/" + fd.getFile() );
 			}
 		}
 		return null;
 	}
-	
+
 	public static File doOpenDir() {
 		//if (!osx) {
-			jfc.setFileFilter(dirFilter);
-			jfc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-			int res = jfc.showOpenDialog(ddp);
-			if (res == JFileChooser.APPROVE_OPTION) {
+			jfc.setFileFilter( dirFilter );
+			jfc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+			int res = jfc.showOpenDialog( ddp );
+			if ( res == JFileChooser.APPROVE_OPTION ) {
 				return jfc.getSelectedFile();
 			}
-		//}
-		//else {
-		//	fd.setMode(FileDialog.LOAD);
-		//	fd.setFilenameFilter(new FilenameFilter() {
-		//		public boolean accept(File arg0, String arg1) {
-		//			return arg0.isDirectory();
-		//		}
-		//	});
-		//	fd.setVisible(true);
-		//	return new File(fd.getDirectory()+"/"+fd.getFile());
-		//}
-		return null;
+			//}
+			//else {
+			//	fd.setMode(FileDialog.LOAD);
+			//	fd.setFilenameFilter(new FilenameFilter() {
+			//		public boolean accept(File arg0, String arg1) {
+			//			return arg0.isDirectory();
+			//		}
+			//	});
+			//	fd.setVisible(true);
+			//	return new File(fd.getDirectory()+"/"+fd.getFile());
+			//}
+			return null;
 	}
-	
+
 	public static File doSaveBasic() {
 		File f = null;
-		if (!osx) {
-			int res = jfc.showSaveDialog(ddp);
-			if (res == JFileChooser.APPROVE_OPTION) {
+		if ( !osx ) {
+			int res = jfc.showSaveDialog( ddp );
+			if ( res == JFileChooser.APPROVE_OPTION ) {
 				f = jfc.getSelectedFile();
 			}
 		}
 		else {
-			fd.setMode(FileDialog.SAVE);
-			fd.setVisible(true);
-			if (fd.getFile() != null) {
-				f = new File(fd.getDirectory()+"/"+fd.getFile());
+			fd.setMode( FileDialog.SAVE );
+			fd.setVisible( true );
+			if ( fd.getFile() != null ) {
+				f = new File( fd.getDirectory() + "/" + fd.getFile() );
 			}
 		}
-		if (f != null && f.exists()) {
-			int res = JOptionPane.showConfirmDialog(ddp, f.getName()+" exists. Overwrite?", "Overwrite", JOptionPane.OK_CANCEL_OPTION);
-			if (res == JOptionPane.CANCEL_OPTION)
+		if ( f != null && f.exists() ) {
+			int res = JOptionPane.showConfirmDialog( ddp, f.getName() + " exists. Overwrite?", "Overwrite", JOptionPane.OK_CANCEL_OPTION );
+			if ( res == JOptionPane.CANCEL_OPTION )
 				return null;
 		}
 		return f;
 	}
-	
+
 	protected static boolean doSave() {
 		File f = doSaveBasic();
-		if (f != null) {
-			jf.setTitle("DroidDraw: "+f.getName());
-			ddp.save(f);
+		if ( f != null ) {
+			jf.setTitle( "DroidDraw: " + f.getName() );
+			ddp.save( f );
 			saveFile = f;
-			
-			File src = new File(f.getParentFile(), "Foo.java");
+
+			File src = new File( f.getParentFile(), "Foo.java" );
 			try {
-				FileWriter fw = new FileWriter(src);
-				PrintWriter pw = new PrintWriter(fw);
-				AndroidEditor.instance().generateSource(pw, "foo.bar");
+				FileWriter fw = new FileWriter( src );
+				PrintWriter pw = new PrintWriter( fw );
+				AndroidEditor.instance().generateSource( pw, "foo.bar" );
 				pw.flush();
 				fw.flush();
 				pw.close();
 				fw.close();
 				return true;
 			}
-			catch (IOException ex) {
+			catch ( IOException ex ) {
 				ex.printStackTrace();
 				return false;
 			}
 		}
 		else return false;
 	}
-	
-	protected static void loadImage(String name) 
-		throws IOException
-	{
-		URL u = ClassLoader.getSystemClassLoader().getResource("ui/"+name+".png");
-		if (u == null) {
-			AndroidEditor.instance().error("Couldn't open image : "+name);
+
+	protected static void loadImage( String name )
+	throws IOException {
+		URL u = ClassLoader.getSystemClassLoader().getResource( "ui/" + name + ".png" );
+		if ( u == null ) {
+			AndroidEditor.instance().error( "Couldn't open image : " + name );
 			return;
 		}
 		InputStream is = u.openStream();
-		BufferedImage img = ImageIO.read(is);
-		ImageResources.instance().addImage(img, name);
+		BufferedImage img = ImageIO.read( is );
+		ImageResources.instance().addImage( img, name );
 	}
-	
-	public static final int BUFFER=4096;
-	
-	protected static void makeAPK(File dir, boolean install)
-	    throws IOException
-	{
-		URL u = ClassLoader.getSystemClassLoader().getResource("data/activity.zip");
-		if (u == null) {
-			AndroidEditor.instance().error("Couldn't open activity.zip");
+
+	public static final int BUFFER = 4096;
+
+	protected static void makeAPK( File dir, boolean install )
+	throws IOException {
+		URL u = ClassLoader.getSystemClassLoader().getResource( "data/activity.zip" );
+		if ( u == null ) {
+			AndroidEditor.instance().error( "Couldn't open activity.zip" );
 			return;
 		}
 		InputStream is = u.openStream();
-		
-		ZipInputStream zis = new ZipInputStream(new BufferedInputStream(is));
+
+		ZipInputStream zis = new ZipInputStream( new BufferedInputStream( is ) );
 		ZipEntry entry;
-		while((entry = zis.getNextEntry()) != null) {
+		while ( ( entry = zis.getNextEntry() ) != null ) {
 			int count;
 			byte data[] = new byte[BUFFER];
 			// write the files to the disk
-			if (entry.isDirectory()) {
-				File f = new File(dir, entry.getName());
+			if ( entry.isDirectory() ) {
+				File f = new File( dir, entry.getName() );
 				f.mkdir();
 			}
 			else {
-				FileOutputStream fos = new FileOutputStream(new File(dir, entry.getName()));
-				BufferedOutputStream dest = new BufferedOutputStream(fos, BUFFER);
-				while ((count = zis.read(data, 0, BUFFER)) != -1) {
-					dest.write(data, 0, count);
+				FileOutputStream fos = new FileOutputStream( new File( dir, entry.getName() ) );
+				BufferedOutputStream dest = new BufferedOutputStream( fos, BUFFER );
+				while ( ( count = zis.read( data, 0, BUFFER ) ) != -1 ) {
+					dest.write( data, 0, count );
 				}
 				dest.flush();
 				dest.close();
 			}
 		}
 		zis.close();
-		
-		File wd = new File(dir, "activity");
-		File res = new File(wd, "res");
-		res = new File(res, "layout");
-		res = new File(res, "main.xml");
-		PrintWriter pw = new PrintWriter(new FileWriter(res));
-		AndroidEditor.instance().generate(pw);
+
+		File wd = new File( dir, "activity" );
+		File res = new File( wd, "res" );
+		res = new File( res, "layout" );
+		res = new File( res, "main.xml" );
+		PrintWriter pw = new PrintWriter( new FileWriter( res ) );
+		AndroidEditor.instance().generate( pw );
 		pw.flush();
 		pw.close();
-		
-		String[] cmd = install?new String[] {"ant", "install"}:new String[] {"ant"};
-		
-		Process p = Runtime.getRuntime().exec(cmd, null, new File(dir, "activity"));
+
+		String[] cmd = install ? new String[]{"ant", "install"} : new String[]{"ant"};
+
+		Process p = Runtime.getRuntime().exec( cmd, null, new File( dir, "activity" ) );
 		try {
 			int ret = p.waitFor();
-			if (ret != 0) {
-				AndroidEditor.instance().error("Error running ant: "+ret);
+			if ( ret != 0 ) {
+				AndroidEditor.instance().error( "Error running ant: " + ret );
 			}
 		}
-		catch (InterruptedException ex) {}
+		catch ( InterruptedException ex ) {
+		}
 	}
-	
-	public static void copy(File from, File to) 
-		throws IOException
-	{
-		FileInputStream fis = new FileInputStream(from);
-		FileOutputStream fos = new FileOutputStream(to);
-		
+
+	public static void copy( File from, File to )
+	throws IOException {
+		FileInputStream fis = new FileInputStream( from );
+		FileOutputStream fos = new FileOutputStream( to );
+
 		byte[] buffer = new byte[4096];
-		int rd = fis.read(buffer);
-		while (rd != -1) {
-			fos.write(buffer, 0, rd);
-			rd = fis.read(buffer);
+		int rd = fis.read( buffer );
+		while ( rd != -1 ) {
+			fos.write( buffer, 0, rd );
+			rd = fis.read( buffer );
 		}
 		fos.flush();
 		fos.close();
 	}
-	
-	public static void main(String[] args) 
-		throws IOException
-	{
-		
+
+	public static void main( String[] args )
+	throws IOException {
+
 		// This is so that I can test out the Google examples...
 		// START
 		/*if (args.length > 0) {
-			try {
-				AndroidEditor.instance().setStrings(StringHandler.load(new FileInputStream("src/strings.xml")));
-			} catch (Exception ex) {
-				AndroidEditor.instance().error(ex);
-			}
-		}*/
+        try {
+          AndroidEditor.instance().setStrings(StringHandler.load(new FileInputStream("src/strings.xml")));
+        } catch (Exception ex) {
+          AndroidEditor.instance().error(ex);
+        }
+      }*/
 		// END
-		
-		
-		AndroidEditor.instance().setURLOpener(new Main());
-		
-		osx = (System.getProperty("os.name").toLowerCase().contains("mac os x"));
-		if (osx) {
+
+
+		AndroidEditor.instance().setURLOpener( new Main() );
+
+		osx = ( System.getProperty( "os.name" ).toLowerCase().contains( "mac os x" ) );
+		if ( osx ) {
 			doMacOSXIntegration();
 		}
-		
-		final Preferences prefs = AndroidEditor.instance().getPreferences();
-        
-		boolean checkUpdate = false;
-		if (prefs.getUpdateCheck() == Preferences.Update.YES) {
-		  checkUpdate = true;
-		}
-		else if (prefs.getUpdateCheck() == Preferences.Update.ASK) {
-		  int res = JOptionPane.showConfirmDialog(null,  "Check for updates to DroidDraw?","Update?", JOptionPane.YES_NO_OPTION);
-		  checkUpdate = res == JOptionPane.YES_OPTION;
-		}
-		if (checkUpdate) {
-		  if (!AndroidEditor.instance().isLatestVersion()) {
-		    int res = JOptionPane.showConfirmDialog(ddp, "There is a new DroidDraw version available. Do you wish to download it?", "DroidDraw Update", JOptionPane.YES_NO_OPTION);
-			if (res == JOptionPane.YES_OPTION) {
-				AndroidEditor.instance().getURLOpener().openURL("http://code.google.com/p/droiddraw/downloads/list");
-			}
-		  }
-		}
-		
-		
-		loadImage("emu1");
-		loadImage("emu2");
-		loadImage("emu3");
-		loadImage("emu4");
-		loadImage("paint");
-		loadImage("droiddraw_small");
-		loadImage("paypal");
-		
-		loadImage("background_01p");
-		loadImage("background_01l");
-		
-		loadImage("statusbar_background_p");
-		loadImage("statusbar_background_l");
-		
-		loadImage("title_bar.9");
-		loadImage("stat_sys_data_connected");
-		loadImage("stat_sys_battery_charge_100");
-		loadImage("stat_sys_signal_3");
-		
-		loadImage("scrollbar.9");
-		loadImage("scrollfield.9");
 
-		
-		loadImage("light/checkbox_off_background");
-		loadImage("light/checkbox_on_background");
-		loadImage("light/clock_dial");
-		loadImage("light/clock_hand_hour");
-		loadImage("light/clock_hand_minute");
-		loadImage("light/radiobutton_off_background");
-		loadImage("light/radiobutton_on_background");
-		loadImage("light/button_background_normal.9");
-		loadImage("light/editbox_background_normal.9");
-		loadImage("light/progress_circular_background");
-		loadImage("light/progress_particle");
-		loadImage("light/progress_circular_indeterminate");
-		loadImage("light/arrow_up_float");
-		loadImage("light/arrow_down_float");
-		loadImage("light/spinnerbox_background_focus_yellow.9");
-		loadImage("light/spinnerbox_arrow_middle.9");
-		
-		loadImage("def/btn_check_off");
-		loadImage("def/btn_check_on");
-		
-		loadImage("def/btn_radio_off");
-		loadImage("def/btn_radio_on");
-		
-		loadImage("def/textfield.9");
-		loadImage("def/btn_default_normal.9");
-		loadImage("def/progress_wheel_medium");
-		
-		loadImage("def/spinner_normal.9");
-		loadImage("def/btn_dropdown_neither.9");
-		
-		jf = new JFrame("DroidDraw");
-		jf.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				quit(false);
+		final Preferences prefs = AndroidEditor.instance().getPreferences();
+
+		boolean checkUpdate = false;
+		if ( prefs.getUpdateCheck() == Preferences.Update.YES ) {
+			checkUpdate = true;
+		}
+		else if ( prefs.getUpdateCheck() == Preferences.Update.ASK ) {
+			int res = JOptionPane.showConfirmDialog( null, "Check for updates to DroidDraw?", "Update?", JOptionPane.YES_NO_OPTION );
+			checkUpdate = res == JOptionPane.YES_OPTION;
+		}
+		if ( checkUpdate ) {
+			if ( !AndroidEditor.instance().isLatestVersion() ) {
+				int res = JOptionPane.showConfirmDialog( ddp, "There is a new DroidDraw version available. Do you wish to download it?", "DroidDraw Update", JOptionPane.YES_NO_OPTION );
+				if ( res == JOptionPane.YES_OPTION ) {
+					AndroidEditor.instance().getURLOpener().openURL( "http://code.google.com/p/droiddraw/downloads/list" );
+				}
 			}
-		});
-		
-		WidgetRegistry.registerPainter(ScrollView.class, new ScrollViewPainter());
-		WidgetRegistry.registerPainter(AbstractLayout.class, new LayoutPainter());
+		}
+
+
+		loadImage( "emu1" );
+		loadImage( "emu2" );
+		loadImage( "emu3" );
+		loadImage( "emu4" );
+		loadImage( "paint" );
+		loadImage( "droiddraw_small" );
+		loadImage( "paypal" );
+
+		loadImage( "background_01p" );
+		loadImage( "background_01l" );
+
+		loadImage( "statusbar_background_p" );
+		loadImage( "statusbar_background_l" );
+
+		loadImage( "title_bar.9" );
+		loadImage( "stat_sys_data_connected" );
+		loadImage( "stat_sys_battery_charge_100" );
+		loadImage( "stat_sys_signal_3" );
+
+		loadImage( "scrollbar.9" );
+		loadImage( "scrollfield.9" );
+
+
+		loadImage( "light/checkbox_off_background" );
+		loadImage( "light/checkbox_on_background" );
+		loadImage( "light/clock_dial" );
+		loadImage( "light/clock_hand_hour" );
+		loadImage( "light/clock_hand_minute" );
+		loadImage( "light/radiobutton_off_background" );
+		loadImage( "light/radiobutton_on_background" );
+		loadImage( "light/button_background_normal.9" );
+		loadImage( "light/editbox_background_normal.9" );
+		loadImage( "light/progress_circular_background" );
+		loadImage( "light/progress_particle" );
+		loadImage( "light/progress_circular_indeterminate" );
+		loadImage( "light/arrow_up_float" );
+		loadImage( "light/arrow_down_float" );
+		loadImage( "light/spinnerbox_background_focus_yellow.9" );
+		loadImage( "light/spinnerbox_arrow_middle.9" );
+
+		loadImage( "def/btn_check_off" );
+		loadImage( "def/btn_check_on" );
+
+		loadImage( "def/btn_radio_off" );
+		loadImage( "def/btn_radio_on" );
+
+		loadImage( "def/textfield.9" );
+		loadImage( "def/btn_default_normal.9" );
+		loadImage( "def/progress_wheel_medium" );
+
+		loadImage( "def/spinner_normal.9" );
+		loadImage( "def/btn_dropdown_neither.9" );
+
+		jf = new JFrame( "DroidDraw" );
+		jf.addWindowListener( new WindowAdapter() {
+			@Override
+			public void windowClosing( WindowEvent e ) {
+				quit( false );
+			}
+		} );
+
+		WidgetRegistry.registerPainter( ScrollView.class, new ScrollViewPainter() );
+		WidgetRegistry.registerPainter( AbstractLayout.class, new LayoutPainter() );
 
 		String screen = "hvgap";
 		AndroidEditor.ScreenMode scr = prefs.getScreenMode();
-		if (scr.equals(AndroidEditor.ScreenMode.HVGA_LANDSCAPE))
+		if ( scr.equals( AndroidEditor.ScreenMode.HVGA_LANDSCAPE ) )
 			screen = "hvgal";
-		else if (scr.equals(AndroidEditor.ScreenMode.QVGA_LANDSCAPE))
+		else if ( scr.equals( AndroidEditor.ScreenMode.QVGA_LANDSCAPE ) )
 			screen = "qvgal";
-		else if (scr.equals(AndroidEditor.ScreenMode.QVGA_PORTRAIT))
+		else if ( scr.equals( AndroidEditor.ScreenMode.QVGA_PORTRAIT ) )
 			screen = "qvgap";
-		else if (scr.equals(AndroidEditor.ScreenMode.WVGA_LANDSCAPE)) {
+		else if ( scr.equals( AndroidEditor.ScreenMode.WVGA_LANDSCAPE ) ) {
 			screen = "wvgal";
 		}
-		else if (scr.equals(AndroidEditor.ScreenMode.WVGA_PORTRAIT)) {
+		else if ( scr.equals( AndroidEditor.ScreenMode.WVGA_PORTRAIT ) ) {
 			screen = "wvgap";
 		}
-		
-		ddp = new DroidDrawPanel(screen, false);
-		AndroidEditor.instance().setScreenMode(prefs.getScreenMode());
-		fd = new FileDialog(jf);
+
+		ddp = new DroidDrawPanel( screen, false );
+		AndroidEditor.instance().setScreenMode( prefs.getScreenMode() );
+		fd = new FileDialog( jf );
 		jfc = new JFileChooser();
-		
+
 		xmlFilter = new FileFilter() {
 			@Override
-			public boolean accept(File arg) {
-				return arg.getName().endsWith(".xml") || arg.isDirectory();
+			public boolean accept( File arg ) {
+				return arg.getName().endsWith( ".xml" ) || arg.isDirectory();
 			}
 
 			@Override
 			public String getDescription() {
 				return "Android Layout file (.xml)";
-			} 
+			}
 		};
-		
+
 		dirFilter = new FileFilter() {
 			@Override
-			public boolean accept(File arg) {
+			public boolean accept( File arg ) {
 				return arg.isDirectory();
 			}
 
 			@Override
 			public String getDescription() {
 				return "Directory";
-			} 
-		};
-		jfc.setFileFilter(xmlFilter);
-		
-		int ctl_key = InputEvent.CTRL_MASK;
-		if (osx)
-			ctl_key = InputEvent.META_MASK;
-		
-		JMenuBar mb = new JMenuBar();
-		JMenu menu = new JMenu("File");
-		JMenuItem it;
-		it = new JMenuItem("Open");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) { 
-				open(doOpen());
 			}
-		});
-		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ctl_key));
-		menu.add(it);
+		};
+
+		imgFilter = new FileFilter() {
+			@Override
+			public boolean accept( File f ) {
+				if ( f.isDirectory() ) {
+					return true;
+				}
+				return f.getName().endsWith( ".png" ) ||
+				f.getName().endsWith( ".jpg" ) ||
+				f.getName().endsWith( ".jpeg" ) ||
+				f.getName().endsWith( ".gif" );
+			}
+
+			@Override
+			public String getDescription() {
+				return "Image file (*.png, *.jpg, *.jpeg, *.gif)";
+			}
+		};
+
+		jfc.setFileFilter( xmlFilter );
+
+		int ctl_key = InputEvent.CTRL_MASK;
+		if ( osx )
+			ctl_key = InputEvent.META_MASK;
+
+		JMenuBar mb = new JMenuBar();
+		JMenu menu = new JMenu( "File" );
+		JMenuItem it;
+		it = new JMenuItem( "Open" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent ev ) {
+				open( doOpen() );
+			}
+		} );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_O, ctl_key ) );
+		menu.add( it );
 		menu.addSeparator();
-		it = new JMenuItem("Save");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) { 
-				if (saveFile == null) {
+		it = new JMenuItem( "Save" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent ev ) {
+				if ( saveFile == null ) {
 					doSave();
 				}
 				else {
-					ddp.save(saveFile);
+					ddp.save( saveFile );
 				}
 			}
-		});
-		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, ctl_key));
-		menu.add(it);
-		
-		it = new JMenuItem("Save As...");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		} );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_S, ctl_key ) );
+		menu.add( it );
+
+		it = new JMenuItem( "Save As..." );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				doSave();
 			}
-		});
-		menu.add(it);
-				
-		it = new JMenuItem("Export as .apk");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String tmpFile = System.getProperty("java.io.tmpdir");
-				File f = new File(tmpFile);
-				
-				if (f != null) {
+		} );
+		menu.add( it );
+
+		it = new JMenuItem( "Export as .apk" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				String tmpFile = System.getProperty( "java.io.tmpdir" );
+				File f = new File( tmpFile );
+
+				if ( f != null ) {
 					try {
-						makeAPK(f, false);
+						makeAPK( f, false );
 
 						File save = doOpenDir();
-						
-						File apk = new File(f, "activity");
-						apk = new File(apk, "bin");
-						apk = new File(apk, "DroidDrawActivity.apk");
-						
-						save = new File(save, "DroidDrawActivity.apk");
-						
-						copy(apk, save);
-						
-						AndroidEditor.instance().message("Saved", "Layout saved as "+save.getCanonicalPath());
+
+						File apk = new File( f, "activity" );
+						apk = new File( apk, "bin" );
+						apk = new File( apk, "DroidDrawActivity.apk" );
+
+						save = new File( save, "DroidDrawActivity.apk" );
+
+						copy( apk, save );
+
+						AndroidEditor.instance().message( "Saved", "Layout saved as " + save.getCanonicalPath() );
 					}
-					catch (IOException ex) {
-						AndroidEditor.instance().error(ex);
+					catch ( IOException ex ) {
+						AndroidEditor.instance().error( ex );
 					}
 				}
-				
-				
-				
+
+
 			}
-		});
-		menu.add(it);
-		
-		it = new JMenuItem("Export to device");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String tmpFile = System.getProperty("java.io.tmpdir");
-				File f = new File(tmpFile);
-				if (f.exists()) {
+		} );
+		menu.add( it );
+
+		it = new JMenuItem( "Export to device" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				String tmpFile = System.getProperty( "java.io.tmpdir" );
+				File f = new File( tmpFile );
+				if ( f.exists() ) {
 					try {
-						makeAPK(f, true);
-						
-						AndroidEditor.instance().message("Installed", "Layout successfully installed.");			
+						makeAPK( f, true );
+
+						AndroidEditor.instance().message( "Installed", "Layout successfully installed." );
 					}
-					catch (IOException ex) {
-						AndroidEditor.instance().error(ex);
+					catch ( IOException ex ) {
+						AndroidEditor.instance().error( ex );
 					}
 				}
 				else {
-					AndroidEditor.instance().error("Error generating .apk");
+					AndroidEditor.instance().error( "Error generating .apk" );
 				}
 			}
-		});
-		menu.add(it);
-		
-		if (!osx) {
-			
-			it = new JMenuItem("Preferences");
-			it.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+		} );
+		menu.add( it );
+
+		if ( !osx ) {
+
+			it = new JMenuItem( "Preferences" );
+			it.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
 					preferences();
 				}
-			});
-			menu.add(it);
-	
+			} );
+			menu.add( it );
+
 			menu.addSeparator();
 
-			it = new JMenuItem("Quit");
-			it.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
+			it = new JMenuItem( "Quit" );
+			it.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent arg0 ) {
 					quit();
 				}
-			});
-			it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ctl_key));
-			menu.add(it);
+			} );
+			it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_Q, ctl_key ) );
+			menu.add( it );
 		}
-		
-		mb.add(menu);
-		
-		menu = new JMenu("Edit");
 
-		it = new JMenuItem("Undo");
-        it.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                AndroidEditor.instance().undo();
-            }
-        });
-        it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ctl_key));
-        menu.add(it);
-        
-        it = new JMenuItem("Redo");
-        it.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent arg0) {
-                AndroidEditor.instance().redo();
-            }
-        });
-        it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, ctl_key));
-        menu.add(it);
-        
-		
-		it = new JMenuItem("Cut");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		mb.add( menu );
+
+		menu = new JMenu( "Edit" );
+
+		it = new JMenuItem( "Undo" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
+				AndroidEditor.instance().undo();
+			}
+		} );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_Z, ctl_key ) );
+		menu.add( it );
+
+		it = new JMenuItem( "Redo" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
+				AndroidEditor.instance().redo();
+			}
+		} );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_Y, ctl_key ) );
+		menu.add( it );
+
+
+		it = new JMenuItem( "Cut" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				String txt = ddp.getSelectedText();
 				ddp.deleteSelectedText();
 				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-				c.setContents(new StringSelection(txt), null);
+				c.setContents( new StringSelection( txt ), null );
 			}
-		});
-		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ctl_key));
-		menu.add(it);
-		it = new JMenuItem("Copy");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(ddp.getSelectedText()), null);
+		} );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_X, ctl_key ) );
+		menu.add( it );
+		it = new JMenuItem( "Copy" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
+				Toolkit.getDefaultToolkit().getSystemClipboard().setContents( new StringSelection( ddp.getSelectedText() ), null );
 			}
-		});
-		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_C, ctl_key));
-		menu.add(it);
-		it = new JMenuItem("Paste");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		} );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_C, ctl_key ) );
+		menu.add( it );
+		it = new JMenuItem( "Paste" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
 				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
 				try {
-					String txt = (String)c.getData(DataFlavor.stringFlavor);
-					if (txt != null) {
-						ddp.insertText(txt);
+					String txt = ( String ) c.getData( DataFlavor.stringFlavor );
+					if ( txt != null ) {
+						ddp.insertText( txt );
 					}
-				} 
-				catch (UnsupportedFlavorException ex) {}
-				catch (IOException ex) {}
+				}
+				catch ( UnsupportedFlavorException ex ) {
+				}
+				catch ( IOException ex ) {
+				}
 			}
-		});
-		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_V, ctl_key));
-		menu.add(it);
-		
+		} );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_V, ctl_key ) );
+		menu.add( it );
+
 		menu.addSeparator();
-		it = new JMenuItem("Select All");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		it = new JMenuItem( "Select All" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
 				ddp.selectAll();
 			}
-		});
-		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_A, ctl_key));
+		} );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_A, ctl_key ) );
 		//it.setShortcut(new MenuShortcut(KeyEvent.VK_A, false));
-		menu.add(it);
-	
+		menu.add( it );
+
 		menu.addSeparator();
-		
-		it = new JMenuItem("Clear Screen");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				int res = JOptionPane.showConfirmDialog(jf, "This will delete your entire GUI.  Proceed?", "Clear Screen?", JOptionPane.YES_NO_OPTION);
-				if (res == JOptionPane.YES_OPTION) {
+
+		it = new JMenuItem( "Clear Screen" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
+				int res = JOptionPane.showConfirmDialog( jf, "This will delete your entire GUI.  Proceed?", "Clear Screen?", JOptionPane.YES_NO_OPTION );
+				if ( res == JOptionPane.YES_OPTION ) {
 					AndroidEditor.instance().getLayout().removeAllWidgets();
-					AndroidEditor.instance().select(AndroidEditor.instance().getLayout());
+					AndroidEditor.instance().select( AndroidEditor.instance().getLayout() );
 					ddp.repaint();
 				}
 			}
-		});
-		menu.add(it);
-		
-		it = new JMenuItem("Set Ids from Labels");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		} );
+		menu.add( it );
+
+		it = new JMenuItem( "Set Ids from Labels" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				AndroidEditor.instance().setIdsFromLabels();
 			}
-		});
-		menu.add(it);
-		mb.add(menu);
-		
-		menu = new JMenu("Project");
-		it = new JMenuItem("Load string resources");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		} );
+		menu.add( it );
+		mb.add( menu );
+
+		menu = new JMenu( "Project" );
+		it = new JMenuItem( "Load string resources" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				File f = doOpen();
-				if (f != null) {
-					AndroidEditor.instance().setStrings(f);
+				if ( f != null ) {
+					AndroidEditor.instance().setStrings( f );
 				}
 			}
-		});
-		menu.add(it);
-		
-		it = new JMenuItem("Load color resources");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		} );
+		menu.add( it );
+
+		it = new JMenuItem( "Load color resources" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				File f = doOpen();
-				if (f != null) {
-					AndroidEditor.instance().setColors(f);
+				if ( f != null ) {
+					AndroidEditor.instance().setColors( f );
 				}
 			}
-		});
-		menu.add(it);
-		
-		it = new JMenuItem("Load array resources");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		} );
+		menu.add( it );
+
+		it = new JMenuItem( "Load array resources" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				File f = doOpen();
-				if (f != null) {
-					AndroidEditor.instance().setArrays(f);
+				if ( f != null ) {
+					AndroidEditor.instance().setArrays( f );
 				}
 			}
-		});
-		menu.add(it);
-		
-		it = new JMenuItem("Set drawables directory");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		} );
+		menu.add( it );
+
+		it = new JMenuItem( "Set drawables directory" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				File f = doOpenDir();
-				if (f != null) {
-					AndroidEditor.instance().setDrawableDirectory(f);
+				if ( f != null ) {
+					AndroidEditor.instance().setDrawableDirectory( f );
 				}
 			}
-		});
-		menu.add(it);
-		
-		
-		
+		} );
+		menu.add( it );
+
+
 		menu.addSeparator();
-		
-		it = new JMenuItem("Load resource directory");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+
+		it = new JMenuItem( "Load resource directory" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				File f = doOpenDir();
-				if (f != null) {
-					File drawable = new File(f, "drawable");
-					if (drawable.exists() && drawable.isDirectory()) {
-						AndroidEditor.instance().setDrawableDirectory(f);
+				if ( f != null ) {
+					File drawable = new File( f, "drawable" );
+					if ( drawable.exists() && drawable.isDirectory() ) {
+						AndroidEditor.instance().setDrawableDirectory( f );
 					}
-					
-					f = new File(f, "values");
-					if (f.exists() && f.isDirectory()) {
-						File strings = new File(f, "strings.xml");
-						if (strings.exists()) {
-							AndroidEditor.instance().setStrings(strings);
+
+					f = new File( f, "values" );
+					if ( f.exists() && f.isDirectory() ) {
+						File strings = new File( f, "strings.xml" );
+						if ( strings.exists() ) {
+							AndroidEditor.instance().setStrings( strings );
 						}
-						File colors = new File(f, "colors.xml");
-						if (colors.exists()) {
-							AndroidEditor.instance().setColors(colors);
+						File colors = new File( f, "colors.xml" );
+						if ( colors.exists() ) {
+							AndroidEditor.instance().setColors( colors );
 						}
-						File arrays = new File(f, "arrays.xml");
-						if (arrays.exists()) {
-							AndroidEditor.instance().setArrays(arrays);
+						File arrays = new File( f, "arrays.xml" );
+						if ( arrays.exists() ) {
+							AndroidEditor.instance().setArrays( arrays );
 						}
 					}
 				}
 			}
-		});
-		menu.add(it);
+		} );
+		menu.add( it );
 		menu.addSeparator();
-		
-		it = new JMenuItem("Send GUI to device");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+
+		it = new JMenuItem( "Send GUI to device" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
 				try {
 					ByteArrayOutputStream ba = new ByteArrayOutputStream();
-					PrintWriter pw = new PrintWriter(ba);
-					AndroidEditor.instance().generate(pw);
+					PrintWriter pw = new PrintWriter( ba );
+					AndroidEditor.instance().generate( pw );
 					pw.flush();
 					ba.flush();
-					if (LayoutUploader.upload("127.0.0.1", 6100, new ByteArrayInputStream(ba.toByteArray())))
-						JOptionPane.showMessageDialog(jf, "Upload suceeded");
+					if ( LayoutUploader.upload( "127.0.0.1", 6100, new ByteArrayInputStream( ba.toByteArray() ) ) )
+						JOptionPane.showMessageDialog( jf, "Upload suceeded" );
 					else
-						JOptionPane.showMessageDialog(jf, "Upload failed.  Is AnDroidDraw running?");
+						JOptionPane.showMessageDialog( jf, "Upload failed.  Is AnDroidDraw running?" );
 				}
-				catch (IOException ex) {
-					AndroidEditor.instance().error(ex);
+				catch ( IOException ex ) {
+					AndroidEditor.instance().error( ex );
 				}
 			}
-		});
-		menu.add(it);
-		
-		mb.add(menu);
-		
-		menu = new JMenu("Help");
-		it = new JMenuItem("Tutorial");
-		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H, ctl_key));
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		} );
+		menu.add( it );
+
+		mb.add( menu );
+
+		menu = new JMenu( "Help" );
+		it = new JMenuItem( "Tutorial" );
+		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_H, ctl_key ) );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
 				try {
 					BrowserLauncher l = new BrowserLauncher();
-					l.openURLinBrowser("http://www.droiddraw.org/tutorial.html");
+					l.openURLinBrowser( "http://www.droiddraw.org/tutorial.html" );
 				}
-				catch (UnsupportedOperatingSystemException ex) {AndroidEditor.instance().error(ex);}
-				catch (BrowserLaunchingInitializingException ex) {AndroidEditor.instance().error(ex);}
+				catch ( UnsupportedOperatingSystemException ex ) {
+					AndroidEditor.instance().error( ex );
+				}
+				catch ( BrowserLaunchingInitializingException ex ) {
+					AndroidEditor.instance().error( ex );
+				}
 			}
-		});
-		menu.add(it);
-		
-		if (!osx) {
-			it = new JMenuItem("About");
-			it.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
+		} );
+		menu.add( it );
+
+		if ( !osx ) {
+			it = new JMenuItem( "About" );
+			it.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent arg0 ) {
 					about();
 				}
-			});
-			menu.add(it);
+			} );
+			menu.add( it );
 		}
-		
-		it = new JMenuItem("Donate");
-		it.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+
+		it = new JMenuItem( "Donate" );
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
 				try {
 					BrowserLauncher l = new BrowserLauncher();
-					l.openURLinBrowser("https://www.paypal.com/us/cgi-bin/webscr?cmd=_xclick&business=brendan.d.burns@gmail.com&item_name=Support%20DroidDraw&currency_code=USD");
+					l.openURLinBrowser( "https://www.paypal.com/us/cgi-bin/webscr?cmd=_xclick&business=brendan.d.burns@gmail.com&item_name=Support%20DroidDraw&currency_code=USD" );
 				}
-				catch (UnsupportedOperatingSystemException ex) {AndroidEditor.instance().error(ex);}
-				catch (BrowserLaunchingInitializingException ex) {AndroidEditor.instance().error(ex);}
+				catch ( UnsupportedOperatingSystemException ex ) {
+					AndroidEditor.instance().error( ex );
+				}
+				catch ( BrowserLaunchingInitializingException ex ) {
+					AndroidEditor.instance().error( ex );
+				}
 			}
-		});
-		menu.add(it);
-		
-		mb.add(menu);
-		jf.setJMenuBar(mb);
-		
-		jf.getContentPane().add(ddp);
+		} );
+		menu.add( it );
+
+		mb.add( menu );
+		jf.setJMenuBar( mb );
+
+		jf.getContentPane().add( ddp );
 		jf.pack();
-		jf.setVisible(true);
+		jf.setVisible( true );
 	}
 
-	public void handleAbout(ApplicationEvent ev) {
+	public void handleAbout( ApplicationEvent ev ) {
 		about();
-		ev.setHandled(true);
+		ev.setHandled( true );
 	}
 
-	public void handleOpenApplication(ApplicationEvent arg0) {}
+	public void handleOpenApplication( ApplicationEvent arg0 ) {
+	}
 
-	public void handleOpenFile(ApplicationEvent ev) {
+	public void handleOpenFile( ApplicationEvent ev ) {
 		String f = ev.getFilename();
-		if (f.endsWith(".xml")) {
-			open(ev.getFilename());
-			ev.setHandled(true);
+		if ( f.endsWith( ".xml" ) ) {
+			open( ev.getFilename() );
+			ev.setHandled( true );
 		}
 	}
 
-	public void handlePreferences(ApplicationEvent arg0) {
+	public void handlePreferences( ApplicationEvent arg0 ) {
 		preferences();
 	}
 
-	public void handlePrintFile(ApplicationEvent arg0) {
+	public void handlePrintFile( ApplicationEvent arg0 ) {
 	}
 
-	public void handleQuit(ApplicationEvent arg0) {
+	public void handleQuit( ApplicationEvent arg0 ) {
 		quit();
 	}
 
-	public void handleReopenApplication(ApplicationEvent arg0) {
+	public void handleReopenApplication( ApplicationEvent arg0 ) {
 	}
 
-	public void openURL(String url) {
+	public void openURL( String url ) {
 		try {
 			BrowserLauncher l = new BrowserLauncher();
-			l.openURLinBrowser(url);
+			l.openURLinBrowser( url );
 		}
-		catch (UnsupportedOperatingSystemException ex) {AndroidEditor.instance().error(ex);}
-		catch (BrowserLaunchingInitializingException ex) {AndroidEditor.instance().error(ex);}
+		catch ( UnsupportedOperatingSystemException ex ) {
+			AndroidEditor.instance().error( ex );
+		}
+		catch ( BrowserLaunchingInitializingException ex ) {
+			AndroidEditor.instance().error( ex );
+		}
 	}
 }

@@ -53,255 +53,251 @@ public class DroidDrawHandler extends DefaultHandler {
 
 	Stack<Vector<String>> layout_props;
 	Stack<Layout> layoutStack;
-	
+
 	public DroidDrawHandler() {
 		all_props = new Vector<String>();
-		all_props.add("android:layout_width");
-		all_props.add("android:layout_height");
-		all_props.add("android:background");
-		all_props.add("android:padding");
-		all_props.add("android:id");
-		all_props.add("android:visibility");
-		all_props.add("android:layout_marginTop");
-		all_props.add("android:layout_marginBottom");
-		all_props.add("android:layout_marginLeft");
-		all_props.add("android:layout_marginRight");
-		
-		
-		layout_props = new Stack<Vector<String> >();
+		all_props.add( "android:layout_width" );
+		all_props.add( "android:layout_height" );
+		all_props.add( "android:background" );
+		all_props.add( "android:padding" );
+		all_props.add( "android:id" );
+		all_props.add( "android:visibility" );
+		all_props.add( "android:layout_marginTop" );
+		all_props.add( "android:layout_marginBottom" );
+		all_props.add( "android:layout_marginLeft" );
+		all_props.add( "android:layout_marginRight" );
+
+
+		layout_props = new Stack<Vector<String>>();
 		layoutStack = new Stack<Layout>();
 	}
-	
-	protected boolean isLayout(String name) {
-		return name.endsWith("Layout") || name.equals("RadioGroup") || name.equals("Ticker") || name.equals("TableRow") || name.equals("ScrollView");
+
+	protected boolean isLayout( String name ) {
+		return name.endsWith( "Layout" ) || name.equals( "RadioGroup" ) || name.equals( "Ticker" ) || name.equals( "TableRow" ) || name.equals( "ScrollView" );
 	}
-	
+
 	@Override
-	public void startElement(String uri, String lName, String qName, Attributes atts) 
-		throws SAXException 
-	{
-		if (isLayout(qName)) {
+	public void startElement( String uri, String lName, String qName, Attributes atts )
+	throws SAXException {
+		if ( isLayout( qName ) ) {
 			Layout l = null;
 			Vector<String> l_props = new Vector<String>();
-			if (qName.equals("AbsoluteLayout")) 
+			if ( qName.equals( "AbsoluteLayout" ) )
 				l = new AbsoluteLayout();
-			else if (qName.equals("LinearLayout") || (qName.equals("RadioGroup"))) {
-				if (qName.equals("LinearLayout")) {
+			else if ( qName.equals( "LinearLayout" ) || ( qName.equals( "RadioGroup" ) ) ) {
+				if ( qName.equals( "LinearLayout" ) ) {
 					l = new LinearLayout();
 				}
-				else if (qName.equals("RadioGroup")) {
+				else if ( qName.equals( "RadioGroup" ) ) {
 					l = new RadioGroup();
-					l.setPropertyByAttName("android:checkedButton", atts.getValue("android:checkedButton"));
+					l.setPropertyByAttName( "android:checkedButton", atts.getValue( "android:checkedButton" ) );
 				}
-				l.setPropertyByAttName("android:gravity", atts.getValue("android:gravity"));
-				if (atts.getValue("android:orientation") == null) {
-					l.setPropertyByAttName("android:orientation", "horizontal");
+				l.setPropertyByAttName( "android:gravity", atts.getValue( "android:gravity" ) );
+				if ( atts.getValue( "android:orientation" ) == null ) {
+					l.setPropertyByAttName( "android:orientation", "horizontal" );
 				}
 				else {
-					l.setPropertyByAttName("android:orientation", atts.getValue("android:orientation"));
+					l.setPropertyByAttName( "android:orientation", atts.getValue( "android:orientation" ) );
 				}
-				l_props.add("android:layout_gravity");
-				l_props.add("android:layout_weight");
+				l_props.add( "android:layout_gravity" );
+				l_props.add( "android:layout_weight" );
 			}
-			else if (qName.equals("RelativeLayout"))  {
+			else if ( qName.equals( "RelativeLayout" ) ) {
 				l = new RelativeLayout();
-				for (int i=0;i<RelativeLayout.propNames.length;i++) {
-					l_props.add(RelativeLayout.propNames[i]);
+				for ( int i = 0; i < RelativeLayout.propNames.length; i++ ) {
+					l_props.add( RelativeLayout.propNames[ i ] );
 				}
 			}
-			else if (qName.equals("FrameLayout")) {
+			else if ( qName.equals( "FrameLayout" ) ) {
 				l = new FrameLayout();
 			}
-			else if (qName.equals("TableLayout")) {
+			else if ( qName.equals( "TableLayout" ) ) {
 				l = new TableLayout();
-				l.setPropertyByAttName("android:stretchColumns", atts.getValue("android:stretchColumns"));
+				l.setPropertyByAttName( "android:stretchColumns", atts.getValue( "android:stretchColumns" ) );
 			}
-			else if (qName.equals("TableRow")) {
+			else if ( qName.equals( "TableRow" ) ) {
 				l = new TableRow();
-				l_props.add("android:layout_column");
-				l_props.add("android:layout_span");
+				l_props.add( "android:layout_column" );
+				l_props.add( "android:layout_span" );
 			}
-			else if (qName.equals("Ticker")) {
+			else if ( qName.equals( "Ticker" ) ) {
 				l = new Ticker();
 			}
-			else if (qName.equals("ScrollView")) {
+			else if ( qName.equals( "ScrollView" ) ) {
 				l = new ScrollView();
 			}
-			if (layoutStack.size() == 0) {
-				l.setPosition(AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y);
-				for (String prop : all_props) {
-					if (atts.getValue(prop) != null) {
-						l.setPropertyByAttName(prop, atts.getValue(prop));	
+			if ( layoutStack.size() == 0 ) {
+				l.setPosition( AndroidEditor.OFFSET_X, AndroidEditor.OFFSET_Y );
+				for ( String prop : all_props ) {
+					if ( atts.getValue( prop ) != null ) {
+						l.setPropertyByAttName( prop, atts.getValue( prop ) );
 					}
 				}
 				l.apply();
-				AndroidEditor.instance().setLayout(l, false);
+				AndroidEditor.instance().setLayout( l, false );
 			}
 			else {
-				addWidget(l, atts);
+				addWidget( l, atts );
 			}
-			layoutStack.push(l);
-			layout_props.push(l_props);
+			layoutStack.push( l );
+			layout_props.push( l_props );
 		}
-		else if (layoutStack.size() == 0) {
-			throw new SAXException("Error, no Layout!");
+		else if ( layoutStack.size() == 0 ) {
+			throw new SAXException( "Error, no Layout!" );
 		}
 		else {
 			Widget w = null;
-			if (qName.equals("Button")) {
-				String txt = atts.getValue("android:text");
-				Button b = new Button(txt);
+			if ( qName.equals( "Button" ) ) {
+				String txt = atts.getValue( "android:text" );
+				Button b = new Button( txt );
 				w = b;
 			}
-			else if (qName.equals("TextView")) {
-				String txt = atts.getValue("android:text");
-				w = new TextView(txt);
-				if (atts.getValue("android:textAlign") != null) {
-					w.setPropertyByAttName("android:textAlign", atts.getValue("android:textAlign"));
+			else if ( qName.equals( "TextView" ) ) {
+				String txt = atts.getValue( "android:text" );
+				w = new TextView( txt );
+				if ( atts.getValue( "android:textAlign" ) != null ) {
+					w.setPropertyByAttName( "android:textAlign", atts.getValue( "android:textAlign" ) );
 				}
 			}
-			else if (qName.equals("EditText")) {
-				String txt = atts.getValue("android:text");
-				EditView et = new EditView(txt);
-				for (int i=0;i<EditView.propertyNames.length;i++) {
-					et.setPropertyByAttName(EditView.propertyNames[i], atts.getValue(EditView.propertyNames[i]));
+			else if ( qName.equals( "EditText" ) ) {
+				String txt = atts.getValue( "android:text" );
+				EditView et = new EditView( txt );
+				for ( int i = 0; i < EditView.propertyNames.length; i++ ) {
+					et.setPropertyByAttName( EditView.propertyNames[ i ], atts.getValue( EditView.propertyNames[ i ] ) );
 				}
 				w = et;
 			}
-			else if (qName.equals("CheckBox") || qName.equals("RadioButton")) {
-				String txt = atts.getValue("android:text");
-				if (qName.equals("CheckBox"))
-					w = new CheckBox(txt);
-				else if (qName.equals("RadioButton"))
-					w = new RadioButton(txt);
-				w.setPropertyByAttName("android:checked", atts.getValue("android:checked"));
+			else if ( qName.equals( "CheckBox" ) || qName.equals( "RadioButton" ) ) {
+				String txt = atts.getValue( "android:text" );
+				if ( qName.equals( "CheckBox" ) )
+					w = new CheckBox( txt );
+				else if ( qName.equals( "RadioButton" ) )
+					w = new RadioButton( txt );
+				w.setPropertyByAttName( "android:checked", atts.getValue( "android:checked" ) );
 			}
-			else if (qName.equals("DigitalClock")) {
+			else if ( qName.equals( "DigitalClock" ) ) {
 				w = new DigitalClock();
 			}
-			else if (qName.equals("AnalogClock")) {
+			else if ( qName.equals( "AnalogClock" ) ) {
 				w = new AnalogClock();
 			}
-			else if (qName.equals("TimePicker")) {
+			else if ( qName.equals( "TimePicker" ) ) {
 				w = new TimePicker();
 			}
-			else if (qName.equals("ListView")) {
+			else if ( qName.equals( "ListView" ) ) {
 				w = new ListView();
 			}
-			else if (qName.equals("Spinner")) {
+			else if ( qName.equals( "Spinner" ) ) {
 				w = new Spinner();
 			}
-			else if (qName.equals("AutoCompleteTextView")) {
-				w = new AutoCompleteTextView("AutoComplete");
+			else if ( qName.equals( "AutoCompleteTextView" ) ) {
+				w = new AutoCompleteTextView( "AutoComplete" );
 			}
-			else if (qName.equals("ImageButton")) {
+			else if ( qName.equals( "ImageButton" ) ) {
 				w = new ImageButton();
 			}
-			else if (qName.equals("ImageView")) {
-				w = new ImageView();
+			else if ( qName.equals( "ImageView" ) ) {
+				ImageView iv = new ImageView();
+				iv.setPropertyByAttName( "android:src", atts.getValue( "android:src" ) );
+				w = iv;
 			}
-			else if (qName.equals("ProgressBar")) {
+			else if ( qName.equals( "ProgressBar" ) ) {
 				w = new ProgressBar();
-				for (int i=0;i<ProgressBar.propertyNames.length;i++) {
-					w.setPropertyByAttName(ProgressBar.propertyNames[i], 
-							atts.getValue(ProgressBar.propertyNames[i]));
+				for ( int i = 0; i < ProgressBar.propertyNames.length; i++ ) {
+					w.setPropertyByAttName( ProgressBar.propertyNames[ i ],
+							atts.getValue( ProgressBar.propertyNames[ i ] ) );
 				}
 			}
-			else if (qName.equals("View")) {
+			else if ( qName.equals( "View" ) ) {
 				w = new View();
 			}
-			else if (qName.equals("GridView")) {
+			else if ( qName.equals( "GridView" ) ) {
 				w = new GridView();
-				for (int i=0;i<GridView.propertyNames.length;i++) {
-					w.setPropertyByAttName(GridView.propertyNames[i], 
-							atts.getValue(GridView.propertyNames[i]));
+				for ( int i = 0; i < GridView.propertyNames.length; i++ ) {
+					w.setPropertyByAttName( GridView.propertyNames[ i ],
+							atts.getValue( GridView.propertyNames[ i ] ) );
 				}
 			}
-			else if (qName.equals("Gallery")) {
+			else if ( qName.equals( "Gallery" ) ) {
 				w = new Gallery();
-				for (int i=0;i<Gallery.propertyNames.length;i++) {
-					w.setPropertyByAttName(Gallery.propertyNames[i], 
-							atts.getValue(Gallery.propertyNames[i]));
+				for ( int i = 0; i < Gallery.propertyNames.length; i++ ) {
+					w.setPropertyByAttName( Gallery.propertyNames[ i ],
+							atts.getValue( Gallery.propertyNames[ i ] ) );
 				}
 			}
-			else if (qName.equals("DatePicker")) {
+			else if ( qName.equals( "DatePicker" ) ) {
 				w = new DatePicker();
 			}
-			if (w != null) {
-				addWidget(w, atts);
+			if ( w != null ) {
+				addWidget( w, atts );
 			}
 		}
 	}
-	
-	
+
+
 	@Override
-	public void endElement(String ns, String lName, String qName) 
-	{
-		if (isLayout(qName)) {
+	public void endElement( String ns, String lName, String qName ) {
+		if ( isLayout( qName ) ) {
 			layout_props.pop();
 			layoutStack.pop();
 		}
 	}
-	
-	protected void addWidget(Widget w, Attributes atts) {
-		if (w instanceof TextView) {
-			for (int i=0;i<TextView.propertyNames.length;i++) {
-				w.setPropertyByAttName(TextView.propertyNames[i], atts.getValue(TextView.propertyNames[i]));
+
+	protected void addWidget( Widget w, Attributes atts ) {
+		if ( w instanceof TextView ) {
+			for ( int i = 0; i < TextView.propertyNames.length; i++ ) {
+				w.setPropertyByAttName( TextView.propertyNames[ i ], atts.getValue( TextView.propertyNames[ i ] ) );
 			}
 		}
-		
-		for (String prop : all_props) {
-			if (atts.getValue(prop) != null) {
-				w.setPropertyByAttName(prop, atts.getValue(prop));	
+
+		for ( String prop : all_props ) {
+			if ( atts.getValue( prop ) != null ) {
+				w.setPropertyByAttName( prop, atts.getValue( prop ) );
 			}
 		}
-		for (String prop : layout_props.peek()) {
-			if (atts.getValue(prop) != null) {
-				w.setPropertyByAttName(prop, atts.getValue(prop));	
+		for ( String prop : layout_props.peek() ) {
+			if ( atts.getValue( prop ) != null ) {
+				w.setPropertyByAttName( prop, atts.getValue( prop ) );
 			}
 		}
 		Layout layout = layoutStack.peek();
 		w.apply();
-		if (layout instanceof LinearLayout) {
-			w.setPosition(layout.getWidth(),layout.getHeight());
+		if ( layout instanceof LinearLayout ) {
+			w.setPosition( layout.getWidth(), layout.getHeight() );
 		}
-		layout.addWidget(w);
-		if (layout instanceof AbsoluteLayout) {
-			int x = DisplayMetrics.readSize(atts.getValue("android:layout_x"));
-			int y = DisplayMetrics.readSize(atts.getValue("android:layout_y"));
-			w.setPropertyByAttName("android:layout_x", atts.getValue("android:layout_x"));
-			w.setPropertyByAttName("android:layout_y", atts.getValue("android:layout_y"));
-			w.setPosition(x, y);
+		layout.addWidget( w );
+		if ( layout instanceof AbsoluteLayout ) {
+			int x = DisplayMetrics.readSize( atts.getValue( "android:layout_x" ) );
+			int y = DisplayMetrics.readSize( atts.getValue( "android:layout_y" ) );
+			w.setPropertyByAttName( "android:layout_x", atts.getValue( "android:layout_x" ) );
+			w.setPropertyByAttName( "android:layout_y", atts.getValue( "android:layout_y" ) );
+			w.setPosition( x, y );
 		}
 	}
 
-	public static void loadFromString(String content) 
-		throws SAXException, ParserConfigurationException, IOException
-	{
-		load(new InputSource(new StringReader(content)));
-	}
-	
-	
-	public static void load(File f) 
-	throws SAXException, ParserConfigurationException, IOException, FileNotFoundException
-	{
-		load(new FileReader(f));
+	public static void loadFromString( String content )
+	throws SAXException, ParserConfigurationException, IOException {
+		load( new InputSource( new StringReader( content ) ) );
 	}
 
-	public static void load(Reader r) 
-	throws SAXException, ParserConfigurationException, IOException
-	{
-		load(new InputSource(r));
+
+	public static void load( File f )
+	throws SAXException, ParserConfigurationException, IOException, FileNotFoundException {
+		load( new FileReader( f ) );
 	}
-	
-	public static void load(InputSource in) 
-		throws SAXException, ParserConfigurationException, IOException
-	{
+
+	public static void load( Reader r )
+	throws SAXException, ParserConfigurationException, IOException {
+		load( new InputSource( r ) );
+	}
+
+	public static void load( InputSource in )
+	throws SAXException, ParserConfigurationException, IOException {
 		DroidDrawHandler ddh = new DroidDrawHandler();
-		
+
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser parser = factory.newSAXParser();
-		parser.parse(in, ddh);
+		parser.parse( in, ddh );
 		AndroidEditor.instance().getLayout().repositionAllWidgets();
 	}
 }

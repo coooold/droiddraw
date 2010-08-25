@@ -39,8 +39,8 @@ import org.droiddraw.util.FileCopier;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
 
-public class PropertiesPanel 
-extends JPanel 
+public class PropertiesPanel
+extends JPanel
 implements ActionListener, PropertyChangeListener, KeyListener
 {
 	private static final long serialVersionUID = 1L;
@@ -71,7 +71,7 @@ implements ActionListener, PropertyChangeListener, KeyListener
 	public void setApplet(boolean applet) {
 		this.applet = applet;
 	}
-	
+
 	public void setProperties(Vector<Property> properties, Widget w) {
 		this.properties = properties;
 		this.removeAll();
@@ -98,10 +98,10 @@ implements ActionListener, PropertyChangeListener, KeyListener
 					jcb.setSelected(((BooleanProperty)prop).getBooleanValue());
 					components.put(prop, jcb);
 					items.add(jcb);
-				}	
+				}
 				else if (prop instanceof IntProperty) {
 					items.add(new JLabel(prop.getEnglishName()));
-					JTextField jf = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 5);	
+					JTextField jf = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 5);
 					JPanel jp = new JPanel();
 					jp.setLayout(fl);
 					jp.add(jf);
@@ -110,7 +110,7 @@ implements ActionListener, PropertyChangeListener, KeyListener
 				}
 				else if (prop instanceof ImageProperty) {
 					items.add(new JLabel(prop.getEnglishName()));
-					final JTextField jf = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 10);	
+					final JTextField jf = new JTextField(prop.getValue()!=null?prop.getValue().toString():"", 10);
 					JPanel jp = new JPanel();
 					jp.setLayout(fl);
 					jp.add(jf);
@@ -127,7 +127,7 @@ implements ActionListener, PropertyChangeListener, KeyListener
 								}
 								File dir = AndroidEditor.instance().getDrawableDirectory();
 								if (dir != null) {
-									File img = Main.doOpen(dir);
+									File img = Main.doOpenImage(dir);
 									if (img != null) {
 										if (!img.getParentFile().equals(dir)) {
 											try {
@@ -170,7 +170,7 @@ implements ActionListener, PropertyChangeListener, KeyListener
 					}
 					else {
 						if (prop.getAtttributeName().equals("android:layout_width") ||
-								prop.getAtttributeName().equals("android:layout_height")) 
+								prop.getAtttributeName().equals("android:layout_height"))
 						{
 							Vector<String> v = new Vector<String>();
 							v.add("");

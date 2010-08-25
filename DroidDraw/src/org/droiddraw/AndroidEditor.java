@@ -43,7 +43,7 @@ public class AndroidEditor {
 
 	public static int MAJOR_VERSION = 0;
 	public static int MINOR_VERSION = 11;
-	
+
 	Layout layout;
 	Widget selected;
 	Viewer viewer;
@@ -57,28 +57,28 @@ public class AndroidEditor {
 	File arrayFile = null;
 	Hashtable<String, Vector<String>> arrays;
 	Preferences prefs;
-	
+
 	UndoManager undo;
-	
+
 	Vector<ChangeListener> changeListeners;
-	
+
 	boolean changed;
-	
+
 	File drawable_dir;
 	URLOpener opener;
-	
+
 	String theme;
-	
-	
+
+
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
-	
+
 	private static AndroidEditor inst;
-	
+
 	private AndroidEditor() {
 		this(ScreenMode.HVGA_PORTRAIT);
 	}
-	
+
 	public boolean isLatestVersion() {
 		try {
 			URL u = new URL("http://www.droiddraw.org/version.txt");
@@ -99,8 +99,8 @@ public class AndroidEditor {
 			return true;
 		}
 	}
-	
-	
+
+
 	private AndroidEditor(ScreenMode mode) {
 		setScreenMode(mode);
 		this.pp = new PropertiesPanel(false);
@@ -109,7 +109,7 @@ public class AndroidEditor {
 		this.arrays = new Hashtable<String, Vector<String>>();
 		this.undo = new UndoManager();
 		this.changeListeners = new Vector<ChangeListener>();
-		
+
 		colors.put("black", Color.black);
 		colors.put("darkgray", Color.darkGray);
 		colors.put("gray", Color.gray);
@@ -121,58 +121,61 @@ public class AndroidEditor {
 		colors.put("cyan", Color.cyan);
 		colors.put("magenta", Color.magenta);
 		colors.put("white", Color.white);
-	
+
 		this.changed = false;
 	}
-	
+
 	public void queueUndoRecord(UndoableEdit edit) {
-	  this.undo.addEdit(edit);
-	  setChanged(true);
+		this.undo.addEdit(edit);
+		setChanged(true);
 	}
-	
+
 	public void undo() {
-	  if (undo.canUndo()) {
-	    undo.undo();
-	    setChanged(true);
-	  }
+		if (undo.canUndo()) {
+			undo.undo();
+			setChanged(true);
+		}
 	}
-	
+
 	public void redo() {
-	  if (undo.canRedo()) {
-	    undo.redo();
-	    setChanged(true);
-	  }
+		if (undo.canRedo()) {
+			undo.redo();
+			setChanged(true);
+		}
 	}
-	
+
 	public boolean isChanged() {
 		return changed;
 	}
-	
+
 	public void setChanged(boolean changed) {
 		this.changed = changed;
 		if (changed) {
-		  for (ChangeListener cl : changeListeners) {
-		    cl.stateChanged(new ChangeEvent(layout));
-		  }
+			for (ChangeListener cl : changeListeners) {
+				cl.stateChanged(new ChangeEvent(layout));
+			}
 		}
 	}
-	
+
 	public void addChangeListener(ChangeListener cl) {
-	  this.changeListeners.add(cl);
+		this.changeListeners.add(cl);
 	}
-	
+
 	public PropertiesPanel getPropertiesPanel() {
 		return pp;
 	}
 
 	public void setDrawableDirectory(File dir) {
+		if ( !dir.isDirectory() ) {
+			throw new IllegalArgumentException( "Can not set drawable directory, given file is not a directory!" );
+		}
 		this.drawable_dir = dir;
 	}
-	
+
 	public File getDrawableDirectory() {
 		return this.drawable_dir;
 	}
-	
+
 	public BufferedImage findDrawable(String src) {
 		if (this.getDrawableDirectory() == null) {
 			return null;
@@ -204,7 +207,7 @@ public class AndroidEditor {
 		}
 		return null;
 	}
-	
+
 	public Hashtable<String, String> getStrings() {
 		return strings;
 	}
@@ -216,7 +219,7 @@ public class AndroidEditor {
 	public File getStringFile() {
 		return stringFile;
 	}
-	
+
 	public void setStrings(File f) {
 		try { 
 			setStrings(StringHandler.load(new FileInputStream(f)));
@@ -232,11 +235,11 @@ public class AndroidEditor {
 			error(ex);
 		}
 	}
-	
+
 	public File getColorFile() {
 		return colorFile;
 	}
-	
+
 	public void setColors(File f) {
 		try { 
 			setColors(ColorHandler.load(new FileInputStream(f)));
@@ -252,8 +255,8 @@ public class AndroidEditor {
 			error(ex);
 		}
 	}
-	
-	
+
+
 	public Hashtable<String, Color> getColors() {
 		return colors;
 	}
@@ -261,16 +264,16 @@ public class AndroidEditor {
 	public void error(String message) {
 		JOptionPane.showMessageDialog(viewer, message, "Error", JOptionPane.WARNING_MESSAGE);
 	}
-	
+
 	public void error(Exception ex) {
 		error(ex.getMessage());
 		ex.printStackTrace();
 	}
-	
+
 	public void message(String title, String message) {
 		JOptionPane.showMessageDialog(viewer, message, title, JOptionPane.INFORMATION_MESSAGE);
 	}
-	
+
 	public void setColors(Hashtable<String, Color> colors) {
 		for (String key : colors.keySet()) {
 			colors.put(key, colors.get(key));
@@ -282,11 +285,11 @@ public class AndroidEditor {
 			inst = new AndroidEditor();
 		return inst;
 	}
-	
+
 	public ScreenMode getScreenMode() {
 		return screen;
 	}
-	
+
 	public void setScreenMode(ScreenMode mode) {
 		this.screen = mode;
 		if (screen == ScreenMode.QVGA_LANDSCAPE) {
@@ -329,24 +332,24 @@ public class AndroidEditor {
 			this.getLayout().repositionAllWidgets();
 		}
 	}
-	
+
 	public int getScreenX() {
 		return sx;
 	}
-	
+
 	public int getScreenY() {
 		return sy;
 	}
-	
+
 	public void setViewer(Viewer v) {
 		this.viewer = v;
 		this.pp.setViewer(v);
 	}
-	
+
 	public void setIdsFromLabels() {
 		setIdsFromLabels(layout);
 	}
-	
+
 	public void setIdsFromLabels(Layout l) {
 		for (Widget w : l.getWidgets()) {
 			if (w instanceof Layout) {
@@ -361,17 +364,17 @@ public class AndroidEditor {
 		}
 	}
 
-	
+
 	public void setLayout(Layout l) {
 		setLayout(l, true);
 	}
-	
+
 	public void setLayout(Layout l, boolean fill) {
 		if (fill) {
 			l.setPropertyByAttName("android:layout_width", "fill_parent");
 			l.setPropertyByAttName("android:layout_height", "fill_parent");
 		}
-		
+
 		if (this.layout != null) {
 			Vector<Widget> widgets = layout.getWidgets();
 			for (Widget w : widgets) {
@@ -382,17 +385,17 @@ public class AndroidEditor {
 		this.layout = l;
 		if (l.getPropertyByAttName("xmlns:android") == null) {
 			l.addProperty(new StringProperty("xmlns", "xmlns:android", "http://schemas.android.com/apk/res/android", false));
-			
+
 		}
 		if (selected == null) {
 			pp.setProperties(l.getProperties(), l);
 		}
 	}
-	
+
 	public Layout getLayout() {
 		return layout;
 	}
-	
+
 	public Widget getSelected() {
 		return selected;
 	}
@@ -421,17 +424,17 @@ public class AndroidEditor {
 			changed = true;
 		}
 	}
-	
+
 	public void removeAllWidgets() {
 		layout.removeAllWidgets();
 		selected = null;
 		changed = true;
 	}
-	
+
 	public Vector<Layout> findLayouts(int x, int y) {
 		return findLayout(layout, x, y);
 	}
-	
+
 	protected Vector<Layout> findLayout(Layout l, int x, int y) {
 		Vector<Layout> res = new Vector<Layout>();
 		if (l.clickedOn(x, y)) {
@@ -447,11 +450,11 @@ public class AndroidEditor {
 		}
 		return res;
 	}
-	
+
 	public Vector<Widget> findWidgets(int x, int y) {
 		return findWidgets(layout, x, y);
 	}
-	
+
 	public Vector<Widget> findWidgets(Layout l, int x, int y) {
 		Vector<Widget> res = new Vector<Widget>();
 		for (Widget w : l.getWidgets()) {
@@ -481,7 +484,7 @@ public class AndroidEditor {
 			generateSource(w, pw, pkg);
 		}
 	}
-	
+
 	public void generateSource(Widget w, PrintWriter pw, String pkg) {
 		if (w instanceof Layout) {
 			generateSource((Layout)w, pw, pkg);
@@ -499,13 +502,13 @@ public class AndroidEditor {
 			}
 		}
 	}
-	
+
 	public void generate(PrintWriter pw) {
 		pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
 		generateWidget(layout, pw);
 		pw.flush();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected void generateWidget(Widget w, PrintWriter pw) {
 		pw.println("<"+w.getTagName());
@@ -528,7 +531,7 @@ public class AndroidEditor {
 		}
 		pw.println("</"+w.getTagName()+">");
 	}
-	
+
 	public void setURLOpener(URLOpener open) {
 		this.opener = open;
 	}
@@ -552,7 +555,7 @@ public class AndroidEditor {
 	public void setArrays(Hashtable<String, Vector<String>> arrays) {
 		this.arrays = arrays;
 	}
-	
+
 	public void setArrays(File f) {
 		setArrayFile(f);
 		try {
@@ -576,7 +579,7 @@ public class AndroidEditor {
 	public void setTheme(String theme) {
 		this.theme = theme;
 	}
-	
+
 	public Preferences getPreferences() {
 		if (prefs == null) {
 			prefs = new Preferences();
@@ -587,5 +590,5 @@ public class AndroidEditor {
 		}
 		return prefs;
 	}
-	
+
 }
