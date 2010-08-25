@@ -30,6 +30,8 @@ import javax.swing.JToolBar;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.event.UndoableEditListener;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.droiddraw.AndroidEditor;
@@ -209,6 +211,12 @@ public class DroidDrawPanel extends JPanel {
 		}
 		else {
 			jtext = new JTextArea(10,50);
+			jtext.getDocument().addUndoableEditListener(new UndoableEditListener() {
+				public void undoableEditHappened(UndoableEditEvent e) {
+					AndroidEditor.instance().queueUndoRecord(e.getEdit());
+				}
+				
+			});
 		}
 		
 		AbsoluteLayout al = new AbsoluteLayout();
