@@ -171,7 +171,7 @@ public class Viewer extends JPanel implements DropTargetListener, ChangeListener
 				off_y = w.getParent().getScreenY();
 			}
 		
-			g.setColor(Color.lightGray);
+			g.setColor(Color.yellow);
 			g.drawRect(w.getX()+off_x, w.getY()+off_y, w.getWidth(), w.getHeight());
 		}
 	}
