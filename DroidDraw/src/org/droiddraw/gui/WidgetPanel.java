@@ -14,6 +14,8 @@ import java.awt.dnd.DragSourceDropEvent;
 import java.awt.dnd.DragSourceEvent;
 import java.awt.dnd.DragSourceListener;
 import java.awt.dnd.InvalidDnDOperationException;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
@@ -40,7 +42,26 @@ public class WidgetPanel extends JPanel implements DragGestureListener, DragSour
 	
 		this.img = new BufferedImage(w.getWidth(), w.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
 		Graphics g = img.getGraphics();
-		w.paint(g);	
+		w.paint(g);
+		
+		this.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() > 1) {
+					AndroidEditor.instance().getLayout().addWidget(
+							ViewerListener.createWidget(WidgetPanel.this.w.getTagName()));
+					AndroidEditor.instance().setChanged(true);
+				} else {
+					if (WidgetPanel.this.w.getParent() != null) {
+						AndroidEditor.instance().select(WidgetPanel.this.w);
+					}
+				}
+			}
+
+			public void mouseEntered(MouseEvent e) { }
+			public void mouseExited(MouseEvent e) { }
+			public void mousePressed(MouseEvent e) { }
+			public void mouseReleased(MouseEvent e) { }
+		});
 	}
 	
 	@Override
