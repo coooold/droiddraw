@@ -278,6 +278,7 @@ implements ActionListener, PropertyChangeListener, KeyListener
 								prop.getAtttributeName().equals("android:layout_height")){
 							if(!jtf.getText().endsWith("px") && !jtf.getText().equals("wrap_content") && !jtf.getText().equals("fill_parent")){
 								AndroidEditor.instance().error("Incorrect Syntax for: " + prop.getEnglishName() + "\n\"px\" is required after a width or height entry");
+								((StringProperty)prop).setStringValue(jtf.getText() + "px");
 							}
 							else
 								((StringProperty)prop).setStringValue(jtf.getText());

@@ -211,13 +211,13 @@ public class Main implements ApplicationListener, URLOpener {
 			int res = jfc.showSaveDialog( ddp );
 			if ( res == JFileChooser.APPROVE_OPTION ) {
 				f = jfc.getSelectedFile();
-                                FileFilter ff = jfc.getFileFilter();
-                                if (FileFilterExtension.class.isInstance(ff)) {
-                                    String extension = ((FileFilterExtension)ff).getExtension();
-                                    if (extension.length() > 0 && !f.getName().endsWith(extension)) {
-                                        f = new File(f.getAbsolutePath() + "." + extension);
-                                    }
-                                }
+				FileFilter ff = jfc.getFileFilter();
+				if (FileFilterExtension.class.isInstance(ff)) {
+					String extension = ((FileFilterExtension)ff).getExtension();
+					if (extension.length() > 0 && !f.getName().endsWith(extension)) {
+						f = new File(f.getAbsolutePath() + "." + extension);
+					}
+				}
 			}
 		}
 		else {
