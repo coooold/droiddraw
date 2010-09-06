@@ -62,6 +62,7 @@ import org.simplericity.macify.eawt.DefaultApplication;
 import edu.stanford.ejalbert.BrowserLauncher;
 import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
 import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
+import org.droiddraw.util.FileFilterExtension;
 
 
 public class Main implements ApplicationListener, URLOpener {
@@ -71,7 +72,7 @@ public class Main implements ApplicationListener, URLOpener {
 	static JFileChooser jfc = null;
 	static FileDialog fd = null;
 	static public boolean osx;
-	static FileFilter xmlFilter = null;
+	static FileFilterExtension xmlFilter = null;
 	static FileFilter dirFilter = null;
 	static FileFilter imgFilter = null;
 
@@ -210,6 +211,13 @@ public class Main implements ApplicationListener, URLOpener {
 			int res = jfc.showSaveDialog( ddp );
 			if ( res == JFileChooser.APPROVE_OPTION ) {
 				f = jfc.getSelectedFile();
+                                FileFilter ff = jfc.getFileFilter();
+                                if (FileFilterExtension.class.isInstance(ff)) {
+                                    String extension = ((FileFilterExtension)ff).getExtension();
+                                    if (extension.length() > 0 && !f.getName().endsWith(extension)) {
+                                        f = new File(f.getAbsolutePath() + "." + extension);
+                                    }
+                                }
 			}
 		}
 		else {
@@ -461,17 +469,7 @@ public class Main implements ApplicationListener, URLOpener {
 		fd = new FileDialog( jf );
 		jfc = new JFileChooser();
 
-		xmlFilter = new FileFilter() {
-			@Override
-			public boolean accept( File arg ) {
-				return arg.getName().endsWith( ".xml" ) || arg.isDirectory();
-			}
-
-			@Override
-			public String getDescription() {
-				return "Android Layout file (.xml)";
-			}
-		};
+		xmlFilter = new FileFilterExtension("xml", "Android Layout file (.xml)");
 
 		dirFilter = new FileFilter() {
 			@Override

@@ -34,7 +34,11 @@ public class Preferences {
 		if (screenPref < 0 || screenPref >= ScreenMode.values().length) {
 			screenPref = 3;
 		}
-		screen = ScreenMode.values()[3];
+		if (3 < ScreenMode.values().length) {
+			screen = ScreenMode.values()[3];
+		} else {
+			screen = ScreenMode.QVGA_PORTRAIT;
+		}
 		int layoutPref = prefs.getInt(LAYOUT, 0);
 		if (layoutPref < 0 || layoutPref >= Layout.values().length) {
 			layoutPref = 0;
