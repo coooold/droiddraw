@@ -52,9 +52,9 @@ public class EditView extends TextView {
 		if (theme == null || theme.equals("default")) {
 			fontSz.setStringValue("18sp");
 			fontSize = 18;
-			img_base = ImageResources.instance().getImage("def/textfield.9");
+			img_base = ImageResources.instance().getImage("mdpi/textfield_default.9");
 			if (img_base != null) {
-				this.img = new NineWayImage(img_base, 10, 10);
+				this.img = new NineWayImage(img_base, 11, 6);
 			}
 			pad_x = 20;
 			pad_y = 0;

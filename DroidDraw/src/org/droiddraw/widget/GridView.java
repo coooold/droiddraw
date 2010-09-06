@@ -5,11 +5,12 @@ import java.awt.Graphics;
 
 import org.droiddraw.property.IntProperty;
 import org.droiddraw.property.StringProperty;
+import org.droiddraw.property.WidthProperty;
 
 public class GridView extends AbstractWidget {
 	IntProperty columnCount;
 	StringProperty columnWidth;
-	IntProperty hSpacing, vSpacing;
+	WidthProperty hSpacing, vSpacing;
 	
 	public static final String[] propertyNames = {"android:numColumns", "android:columnWidth", "android:horizontalSpacing", "android:verticalSpacing"};
 	
@@ -19,8 +20,8 @@ public class GridView extends AbstractWidget {
 		columnCount.setIntValue(5);
 		columnWidth = new StringProperty("Column Width", "android:columnWidth", "");
 		columnWidth.setStringValue("20px");
-		hSpacing = new IntProperty("Horiz. Spacing", "android:horizontalSpacing", 0);
-		vSpacing = new IntProperty("Vert. Spacing", "android:verticalSpacing", 0);
+		hSpacing = new WidthProperty("Horiz. Spacing", "android:horizontalSpacing", 0);
+		vSpacing = new WidthProperty("Vert. Spacing", "android:verticalSpacing", 0);
 		
 		
 		addProperty(columnCount);

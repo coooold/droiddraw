@@ -438,6 +438,8 @@ public class Main implements ApplicationListener, URLOpener {
 		loadImage( "def/spinner_normal.9" );
 		loadImage( "def/btn_dropdown_neither.9" );
 
+		loadImage( "mdpi/textfield_default.9");
+		
 		jf = new JFrame( "DroidDraw" );
 		jf.addWindowListener( new WindowAdapter() {
 			@Override
