@@ -26,17 +26,17 @@ public class NineWayImage {
 		
 		int w = bi.getWidth();
 		int h = bi.getHeight();
-		if (dx1 > 0 && dy1 > 0) images[0] = bi.getSubimage(0, 0, dx1, dy1);
-		if (dy1 > 0)			images[1] = bi.getSubimage(dx1, 0, wx, dy1);
-		if (dx2 > 0 && dy1 > 0) images[2] = bi.getSubimage(w-dx2, 0, dx2, dy1);
+		if (dx1 > 0 && dy1 > 0) images[0] = bi.getSubimage(1, 1, dx1, dy1);
+		if (dy1 > 0)			images[1] = bi.getSubimage(dx1, 1, wx, dy1);
+		if (dx2 > 0 && dy1 > 0) images[2] = bi.getSubimage(w-dx2 - 1, 1, dx2, dy1);
 		
-		if (dx1 > 0) 			images[3] = bi.getSubimage(0, dy1, dx1, wy);
+		if (dx1 > 0) 			images[3] = bi.getSubimage(1, dy1, dx1, wy);
 								images[4] = bi.getSubimage(dx1, dy1,wx, wy);
-		if (dx2 > 0)			images[5] = bi.getSubimage(w-dx2,dy1,dx2,wy);
+		if (dx2 > 0)			images[5] = bi.getSubimage(w-dx2 - 1,dy1,dx2,wy);
 		
-		if (dx1 > 0 && dy2 > 0) images[6] = bi.getSubimage(0,h-dy2,dx1,dy2);
-		if (dy2 > 0)			images[7] = bi.getSubimage(dx1,h-dy2,wx,dy2);
-		if (dx2 > 0 && dy2 > 0) images[8] = bi.getSubimage(w-dx2,h-dy2, dx2, dy2);
+		if (dx1 > 0 && dy2 > 0) images[6] = bi.getSubimage(1,h-dy2 - 1,dx1,dy2);
+		if (dy2 > 0)			images[7] = bi.getSubimage(dx1,h-dy2 - 1,wx,dy2);
+		if (dx2 > 0 && dy2 > 0) images[8] = bi.getSubimage(w-dx2 - 1,h-dy2 - 1, dx2, dy2);
 	}
 	
 	public void paint(Graphics g, int x, int y, int sx, int sy) {
