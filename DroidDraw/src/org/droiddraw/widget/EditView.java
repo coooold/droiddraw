@@ -84,7 +84,7 @@ public class EditView extends TextView {
 		if (password != null && password.getBooleanValue()) {
 			String s = "";
 			for (int i=0;i<text.getStringValue().length();i++) 
-				s = s+'¥';
+				s = s+'\245';
 			return stringLength(s)+pad_x;
 		}
 		else {
@@ -127,7 +127,7 @@ public class EditView extends TextView {
 		if (password.getBooleanValue()) {
 			s = "";
 			for (int i=0;i<text.getStringValue().length();i++) 
-				s = s+'¥';
+				s = s+'\245';
 		}
 		else {
 			s = text.getStringValue();
