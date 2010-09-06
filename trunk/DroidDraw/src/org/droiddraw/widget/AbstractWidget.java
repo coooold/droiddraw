@@ -9,6 +9,7 @@ import org.droiddraw.property.ColorProperty;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
+import org.droiddraw.property.WidthProperty;
 import org.droiddraw.util.DisplayMetrics;
 
 
@@ -26,10 +27,10 @@ public abstract class AbstractWidget implements Widget {
 	protected static int widget_num = 0;
 	Layout parent;
 	
-	StringProperty widthProp;
-	StringProperty heightProp;
+	WidthProperty widthProp;
+	WidthProperty heightProp;
 	StringProperty pad;
-	SelectProperty visibility;
+	StringProperty visibility;
 	
 	StringProperty marginBottom;
 	StringProperty marginTop;
@@ -43,9 +44,9 @@ public abstract class AbstractWidget implements Widget {
 		this.props = new Vector<Property>();
 		this.id = new StringProperty("Id", "android:id", "");
 		this.id.setStringValue("@+id/widget"+(widget_num++));
-		this.widthProp = new StringProperty("Width", "android:layout_width", "");
+		this.widthProp = new WidthProperty("Width", "android:layout_width", "");
 		this.widthProp.setStringValue("wrap_content");
-		this.heightProp = new StringProperty("Height", "android:layout_height", "");
+		this.heightProp = new WidthProperty("Height", "android:layout_height", "");
 		this.heightProp.setStringValue("wrap_content");
 		this.background = new ColorProperty("Background Color", "android:background", null);
 		this.pad = new StringProperty("Padding", "android:padding", "0px");
