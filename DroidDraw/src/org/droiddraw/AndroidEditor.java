@@ -1,20 +1,5 @@
 package org.droiddraw;
 
-import org.droiddraw.gui.Preferences;
-import org.droiddraw.gui.PropertiesPanel;
-import org.droiddraw.gui.Viewer;
-import org.droiddraw.property.Property;
-import org.droiddraw.property.StringProperty;
-import org.droiddraw.util.ArrayHandler;
-import org.droiddraw.util.ColorHandler;
-import org.droiddraw.util.StringHandler;
-import org.droiddraw.widget.AbstractWidget;
-import org.droiddraw.widget.Button;
-import org.droiddraw.widget.CheckBox;
-import org.droiddraw.widget.Layout;
-import org.droiddraw.widget.Widget;
-import org.xml.sax.SAXException;
-
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -36,6 +21,22 @@ import javax.swing.event.ChangeListener;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.lang.StringEscapeUtils;
+import org.droiddraw.gui.Preferences;
+import org.droiddraw.gui.PropertiesPanel;
+import org.droiddraw.gui.Viewer;
+import org.droiddraw.property.Property;
+import org.droiddraw.property.StringProperty;
+import org.droiddraw.util.ArrayHandler;
+import org.droiddraw.util.ColorHandler;
+import org.droiddraw.util.StringHandler;
+import org.droiddraw.widget.AbstractWidget;
+import org.droiddraw.widget.Button;
+import org.droiddraw.widget.CheckBox;
+import org.droiddraw.widget.Layout;
+import org.droiddraw.widget.Widget;
+import org.xml.sax.SAXException;
 
 
 public class AndroidEditor {
@@ -520,7 +521,13 @@ public class AndroidEditor {
 				// Work around an android bug... *sigh*
 				if (w instanceof CheckBox && prop.getAtttributeName().equals("android:padding"))
 					continue;
-				pw.println(prop.getAtttributeName()+"=\""+prop.getValue()+"\"");
+				String value;
+				if (prop instanceof StringProperty) {
+					value = StringEscapeUtils.escapeXml(((StringProperty)prop).getStringValue());
+				} else {
+					value = prop.getValue().toString();
+				}
+				pw.println(prop.getAtttributeName()+"=\""+ value +"\"");
 			}
 		}
 		pw.println(">");
