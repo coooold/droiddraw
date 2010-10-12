@@ -134,6 +134,19 @@ public class Main implements ApplicationListener, URLOpener {
 		} );
 	}
 
+
+	public static void doClear(boolean confirm) {
+		int res = JOptionPane.YES_OPTION;
+		if (confirm) {
+			res = JOptionPane.showConfirmDialog( jf, "This will delete your entire GUI.  Proceed?", "Clear Screen?", JOptionPane.YES_NO_OPTION );
+		}
+		if ( res == JOptionPane.YES_OPTION ) {
+			AndroidEditor.instance().getLayout().removeAllWidgets();
+			AndroidEditor.instance().select( AndroidEditor.instance().getLayout() );
+			ddp.repaint();
+		}
+	}
+	
 	public static File doOpen() {
 		return doOpen( null );
 	}
@@ -512,6 +525,14 @@ public class Main implements ApplicationListener, URLOpener {
 		JMenuBar mb = new JMenuBar();
 		JMenu menu = new JMenu( "File" );
 		JMenuItem it;
+		it = new JMenuItem("New");
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				doClear(false);
+			}
+		});
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, ctl_key));
+		menu.add(it);
 		it = new JMenuItem( "Open" );
 		it.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent ev ) {
@@ -696,12 +717,7 @@ public class Main implements ApplicationListener, URLOpener {
 		it = new JMenuItem( "Clear Screen" );
 		it.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent arg0 ) {
-				int res = JOptionPane.showConfirmDialog( jf, "This will delete your entire GUI.  Proceed?", "Clear Screen?", JOptionPane.YES_NO_OPTION );
-				if ( res == JOptionPane.YES_OPTION ) {
-					AndroidEditor.instance().getLayout().removeAllWidgets();
-					AndroidEditor.instance().select( AndroidEditor.instance().getLayout() );
-					ddp.repaint();
-				}
+				doClear(true);
 			}
 		} );
 		menu.add( it );
