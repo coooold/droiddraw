@@ -41,7 +41,7 @@ public class ImageView extends AbstractWidget {
 	@Override
   public void apply() {
 		super.apply();
-		if (src.getStringValue().startsWith("@drawable")) {
+		if (src.getStringValue() != null && src.getStringValue().startsWith("@drawable")) {
 			img = AndroidEditor.instance().findDrawable(src.getStringValue());
 		}
 	}
