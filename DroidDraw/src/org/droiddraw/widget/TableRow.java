@@ -5,10 +5,13 @@ import java.util.Vector;
 import org.droiddraw.property.StringProperty;
 
 public class TableRow extends LinearLayout {
+	
+	public static final String TAG_NAME = "TableRow";
+	
 	Vector<Integer> widths;
 	
 	public TableRow() {
-		this.tagName = "TableRow";
+		this.setTagName(TAG_NAME);
 		this.orientation.setStringValue("horizontal");
 		this.orientation.setEditable(false);
 		this.widthProp.setStringValue("fill_parent");

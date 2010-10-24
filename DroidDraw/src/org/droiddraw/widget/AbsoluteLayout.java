@@ -6,8 +6,11 @@ import org.droiddraw.property.Property;
 import org.droiddraw.property.StringProperty;
 
 public class AbsoluteLayout extends AbstractLayout {
+	
+	public static final String TAG_NAME = "AbsoluteLayout";
+	
 	public AbsoluteLayout() {
-		super("AbsoluteLayout");
+		super(TAG_NAME);
 	}
 
 	@Override

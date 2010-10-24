@@ -11,13 +11,14 @@ import org.droiddraw.property.StringProperty;
 
 public class ProgressBar extends AbstractWidget {
 	public static final String[] propertyNames = new String[] {"android:indeterminate", "android:max"};
+	public static final String TAG_NAME = "ProgressBar";
 	BooleanProperty indeterminate;
 	Image base;
 	Image dot;
 	Image indet;
 	
 	public ProgressBar() {
-		super("ProgressBar");	
+		super(TAG_NAME);
 		indeterminate = new BooleanProperty("Indeterminate", "android:indeterminate", false);
 		addProperty(indeterminate);
 		addProperty(new StringProperty("Max. Value", "android:max", "100"));

@@ -8,12 +8,13 @@ import org.droiddraw.AndroidEditor;
 import org.droiddraw.gui.ImageResources;
 
 public class RadioButton extends CompoundButton {
+	public static final String TAG_NAME = "RadioButton";
 	Image on;
 	Image off;
 	
 	public RadioButton(String text) {
 		super(text);
-		this.tagName = "RadioButton";
+		this.setTagName(TAG_NAME);
 		
 		pad_y = 6;
 		

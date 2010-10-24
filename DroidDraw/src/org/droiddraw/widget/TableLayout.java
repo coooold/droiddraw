@@ -6,12 +6,13 @@ import java.util.Vector;
 import org.droiddraw.property.StringProperty;
 
 public class TableLayout extends LinearLayout {
+	public static final String TAG_NAME = "TableLayout";
 	Vector<Integer> max_widths;
 	Vector<Integer> stretchColumns;
 	StringProperty stretch;
 	
 	public TableLayout() {
-		this.tagName = "TableLayout";
+		this.setTagName(TAG_NAME);
 		this.max_widths = new Vector<Integer>();
 	
 		this.stretch = new StringProperty("Stretchable Column", "android:stretchColumns", "");

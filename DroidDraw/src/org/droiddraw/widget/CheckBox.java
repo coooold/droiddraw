@@ -8,12 +8,13 @@ import org.droiddraw.gui.ImageResources;
 
 
 public class CheckBox extends CompoundButton {
+	public static final String TAG_NAME = "CheckBox";
 	Image off;
 	Image on;
 	
 	public CheckBox(String text) {
 		super(text);
-		this.tagName = "CheckBox";
+		setTagName(TAG_NAME);
 		
 		apply();
 	}

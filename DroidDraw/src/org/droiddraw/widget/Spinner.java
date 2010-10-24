@@ -11,6 +11,7 @@ import org.droiddraw.gui.NineWayImage;
 import org.droiddraw.property.BooleanProperty;
 
 public class Spinner extends AbstractWidget {
+	public static final String TAG_NAME = "Spinner";
 	NineWayImage img;
 	NineWayImage arrows;
 	Image image_base;
@@ -20,7 +21,7 @@ public class Spinner extends AbstractWidget {
 	Font f;
 	
 	public Spinner() {
-		super("Spinner");
+		super(TAG_NAME);
 		
 		image_base = null;
 		

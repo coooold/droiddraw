@@ -9,13 +9,14 @@ import org.droiddraw.gui.ImageResources;
 import org.droiddraw.property.ImageProperty;
 
 public class ImageView extends AbstractWidget {
+	public static final String TAG_NAME = "ImageView";
 	Image paint;
 	BufferedImage img;
 	
 	ImageProperty src;
 	
 	public ImageView() {
-		super("ImageView");
+		super(TAG_NAME);
 		paint = ImageResources.instance().getImage("paint");
 		src = new ImageProperty("Image Source", "android:src", "");
 		addProperty(src);

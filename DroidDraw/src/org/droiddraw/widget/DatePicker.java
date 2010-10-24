@@ -7,8 +7,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DatePicker extends AbstractWidget {
+	
+	public static final String TAG_NAME = "DatePicker";
+	
 	public DatePicker() {
-		super("DatePicker");
+		super(TAG_NAME);
 		apply();
 	}
 	

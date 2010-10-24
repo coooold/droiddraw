@@ -8,8 +8,11 @@ import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
 
 public class ListView extends AbstractWidget {
+	
+	public static final String TAG_NAME = "ListView";
+	
 	public ListView() {
-		super("ListView");
+		super(TAG_NAME);
 		props.add(new StringProperty("List Selector", "android:listSelector", ""));
 		props.add(new BooleanProperty("Selector on Top", "android:drawSelectorOnTop", false));
 		

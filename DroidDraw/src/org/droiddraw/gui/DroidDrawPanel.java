@@ -60,6 +60,8 @@ import org.droiddraw.widget.RadioGroup;
 import org.droiddraw.widget.RelativeLayout;
 import org.droiddraw.widget.ScrollView;
 import org.droiddraw.widget.Spinner;
+import org.droiddraw.widget.TabHost;
+import org.droiddraw.widget.TabWidget;
 import org.droiddraw.widget.TableLayout;
 import org.droiddraw.widget.TableRow;
 import org.droiddraw.widget.TextView;
@@ -320,7 +322,7 @@ public class DroidDrawPanel extends JPanel {
 		//tb.add(lbl);
 		//sl.putConstraint(SpringLayout.WEST, lbl, 5, SpringLayout.WEST, p);
 		
-		final JComboBox layout = new JComboBox(new String[] {"AbsoluteLayout", "LinearLayout", "RelativeLayout", "ScrollView", "TableLayout"});
+		final JComboBox layout = new JComboBox(new String[] {AbsoluteLayout.TAG_NAME, LinearLayout.TAG_NAME, RelativeLayout.TAG_NAME, ScrollView.TAG_NAME, TableLayout.TAG_NAME, TabHost.TAG_NAME});
 		if (!System.getProperty("os.name").toLowerCase().contains("mac os x"))
 			layout.setLightWeightPopupEnabled(false);
 		
@@ -329,20 +331,23 @@ public class DroidDrawPanel extends JPanel {
 				if (e.getActionCommand().equals("comboBoxChanged")) {
 					String select = (String)((JComboBox)e.getSource()).getSelectedItem();
 					Layout l = null;
-					if (select.equals("AbsoluteLayout")) {
+					if (select.equals(AbsoluteLayout.TAG_NAME)) {
 						l = new AbsoluteLayout();
 					}
-					else if (select.equals("LinearLayout")) {
+					else if (select.equals(LinearLayout.TAG_NAME)) {
 						l = new LinearLayout();
 					}
-					else if (select.equals("RelativeLayout")) {
+					else if (select.equals(RelativeLayout.TAG_NAME)) {
 						l = new RelativeLayout();
 					}
-					else if (select.equals("ScrollView")) {
+					else if (select.equals(ScrollView.TAG_NAME)) {
 						l = new ScrollView();
 					}
-					else if (select.equals("TableLayout")) {
+					else if (select.equals(TableLayout.TAG_NAME)) {
 						l = new TableLayout();
+					}
+					else if (select.equals(TabHost.TAG_NAME)) {
+						l = new TabHost();
 					}
 					viewer.repaint();
 					setupRootLayout(l);
@@ -430,17 +435,17 @@ public class DroidDrawPanel extends JPanel {
 		JPanel mp = new JPanel();
 		wp.setLayout(new GridLayout(0,1));
 		
-		Button b = new Button("Button");
+		Button b = new Button(Button.TAG_NAME);
 		((ColorProperty)b.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
 		mp.add(new WidgetPanel(b));
 		
-		CheckBox cb = new CheckBox("CheckBox");
+		CheckBox cb = new CheckBox(CheckBox.TAG_NAME);
 		((ColorProperty)cb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
 		mp.add(new WidgetPanel(cb));
 		
 		
 
-		RadioButton rb = new RadioButton("RadioButton");
+		RadioButton rb = new RadioButton(RadioButton.TAG_NAME);
 		((ColorProperty)rb.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
 		mp.add(new WidgetPanel(rb));
 		
@@ -460,7 +465,7 @@ public class DroidDrawPanel extends JPanel {
 		mp.setLayout(new FlowLayout(FlowLayout.LEFT));
 		mp.add(new WidgetPanel(new Spinner()));
 		
-		EditView ev = new EditView("EditText");
+		EditView ev = new EditView(EditView.TAG_NAME);
 		((ColorProperty)ev.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
 		mp.add(new WidgetPanel(ev));
 
@@ -469,7 +474,7 @@ public class DroidDrawPanel extends JPanel {
 		((ColorProperty)actv.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
 		mp.add(new WidgetPanel(actv));
 		
-		TextView tv = new TextView("TextView");
+		TextView tv = new TextView(TextView.TAG_NAME);
 		((ColorProperty)tv.getPropertyByAttName("android:textColor")).setColorValue(Color.black);
 		mp.add(new WidgetPanel(tv));
 		
@@ -498,6 +503,10 @@ public class DroidDrawPanel extends JPanel {
 		mp.add(new WidgetPanel(new ListView()));
 		mp.add(new WidgetPanel(new ImageSwitcher()));
 		wp.add(mp);
+		mp = new JPanel();
+		mp.setLayout(new FlowLayout(FlowLayout.LEFT));
+		mp.add(new WidgetPanel(new TabWidget()));
+		wp.add(mp);
 		//wp.setSize(wp.getWidth(), 150);
 		JPanel ppp = new JPanel();
 		ppp.add(wp);
@@ -522,7 +531,7 @@ public class DroidDrawPanel extends JPanel {
 		mp.add(new WidgetPanel(new TableLayout()));
 		
 		mp.add(new WidgetPanel(new Ticker()));
-		
+		mp.add(new WidgetPanel(new TabHost()));
 		lp.add(mp);
 		mp = new JPanel();
 		mp.add(lp);

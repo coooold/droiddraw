@@ -3,8 +3,11 @@ package org.droiddraw.widget;
 import java.awt.Graphics;
 
 public class View extends AbstractWidget {
+	
+	public static final String TAG_NAME = "View";
+	
 	public View() {
-		super("View");
+		super(TAG_NAME);
 	}
 
 	@Override

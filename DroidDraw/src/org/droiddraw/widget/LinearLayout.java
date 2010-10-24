@@ -7,6 +7,9 @@ import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
 
 public class LinearLayout extends AbstractLayout {
+	
+	public static final String TAG_NAME = "LinearLayout";
+	
 	SelectProperty orientation;
 	SelectProperty gravity;
 	
@@ -25,7 +28,7 @@ public class LinearLayout extends AbstractLayout {
 	}
 
 	public LinearLayout(boolean vertical) {
-		super("LinearLayout");
+		super(TAG_NAME);
 		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 0);
 		this.orientation.setSelectedIndex(1);
 		this.gravity = new SelectProperty("Gravity", "android:gravity", new String[] {"top", "bottom", "left", "right"}, 0);

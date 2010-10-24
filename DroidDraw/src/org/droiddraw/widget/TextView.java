@@ -14,6 +14,7 @@ import org.droiddraw.property.StringProperty;
 import org.droiddraw.util.DisplayMetrics;
 
 public class TextView extends AbstractWidget {
+	public static final String TAG_NAME = "TextView";
 	public static final int START = 0;
 	public static final int CENTER = 1;
 	public static final int END = 2;
@@ -40,7 +41,7 @@ public class TextView extends AbstractWidget {
 		new String[] {"android:textSize", "android:textStyle", "android:typeface", "android:textColor"};
 
 	public TextView(String str) {
-		super("TextView");
+		super(TAG_NAME);
 
 		text = new StringProperty("Text", "android:text", "");
 		if (str != null) {

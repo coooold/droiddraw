@@ -12,13 +12,16 @@ import java.util.Date;
 import org.droiddraw.gui.ImageResources;
 
 public class AnalogClock extends AbstractWidget {
+	
+	public static final String TAG_NAME = "AnalogClock";
+	
 	BufferedImage face, face_scale;
 	BufferedImage hour, hour_scale;
 	BufferedImage minute, minute_scale;
 	int offx;
 	
 	public AnalogClock() {
-		super("AnalogClock");
+		super(TAG_NAME);
 		apply();
 		if (face == null) {
 			Image img = ImageResources.instance().getImage("light/clock_dial");
