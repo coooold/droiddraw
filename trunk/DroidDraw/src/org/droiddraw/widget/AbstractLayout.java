@@ -16,7 +16,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	
 	@Override
   public String toString() {
-		return tagName;
+		return getTagName();
 	}
 	
 	public void addWidget(Widget w) {
@@ -56,7 +56,7 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 		
 		g.setColor(Color.black);
 		if (widgets.size() == 0) {
-			g.drawString(tagName, 2, 15);
+			g.drawString(getTagName(), 2, 15);
 		}	
 		g.drawRect(0, 0, getWidth(), getHeight());
 		for (Widget w : widgets) {

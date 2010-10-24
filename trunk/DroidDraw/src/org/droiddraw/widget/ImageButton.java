@@ -8,6 +8,7 @@ import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.NineWayImage;
 
 public class ImageButton extends ImageView {
+	public static final String TAG_NAME = "ImageButton";
 	NineWayImage img;
 	Image img_base;
 	int cw;
@@ -29,7 +30,7 @@ public class ImageButton extends ImageView {
 			}
 			cw = 50;
 		}
-		this.tagName = "ImageButton";
+		this.setTagName(TAG_NAME);
 		apply();
 	}
 

@@ -12,6 +12,9 @@ import org.droiddraw.property.Property;
 import org.droiddraw.property.StringProperty;
 
 public class RelativeLayout extends AbstractLayout {
+	
+	public static final String TAG_NAME = "RelativeLayout";
+	
 	Hashtable<Widget, Vector<Relation>> relations;
 	boolean repositioning = false;
 	
@@ -57,7 +60,7 @@ public class RelativeLayout extends AbstractLayout {
 	};
 
 	public RelativeLayout() {
-		super("RelativeLayout");
+		super(TAG_NAME);
 		relations = new Hashtable<Widget, Vector<Relation>>();
 	}
 

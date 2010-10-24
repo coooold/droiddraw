@@ -8,6 +8,9 @@ import org.droiddraw.property.StringProperty;
 import org.droiddraw.property.WidthProperty;
 
 public class GridView extends AbstractWidget {
+	
+	public static final String TAG_NAME = "GridView";
+	
 	IntProperty columnCount;
 	StringProperty columnWidth;
 	WidthProperty hSpacing, vSpacing;
@@ -15,7 +18,7 @@ public class GridView extends AbstractWidget {
 	public static final String[] propertyNames = {"android:numColumns", "android:columnWidth", "android:horizontalSpacing", "android:verticalSpacing"};
 	
 	public GridView() {
-		super("GridView");
+		super(TAG_NAME);
 		columnCount = new IntProperty("Columns", "android:numColumns", -1);
 		columnCount.setIntValue(5);
 		columnWidth = new StringProperty("Column Width", "android:columnWidth", "");

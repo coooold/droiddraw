@@ -19,7 +19,7 @@ public abstract class AbstractWidget implements Widget {
 	
 	int baseline;
 	int width, height;
-	String tagName;
+	private String tagName;
 	Vector<Property> props;
 	PropertyChangeListener listener;
 	
@@ -40,7 +40,7 @@ public abstract class AbstractWidget implements Widget {
 	ColorProperty background;
 	
 	public AbstractWidget(String tagName) {
-		this.tagName = tagName;
+		this.setTagName(tagName);
 		this.props = new Vector<Property>();
 		this.id = new StringProperty("Id", "android:id", "");
 		this.id.setStringValue("@+id/widget"+(widget_num++));
@@ -337,4 +337,11 @@ public abstract class AbstractWidget implements Widget {
 	
 	protected abstract int getContentWidth();
 	protected abstract int getContentHeight();
+
+	/**
+	 * @param tagName the tagName to set
+	 */
+	public void setTagName(String tagName) {
+		this.tagName = tagName;
+	}
 }

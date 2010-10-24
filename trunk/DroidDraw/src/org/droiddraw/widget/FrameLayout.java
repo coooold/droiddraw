@@ -5,8 +5,11 @@ import java.util.Vector;
 import org.droiddraw.property.Property;
 
 public class FrameLayout extends AbstractLayout {
+	
+	public static final String TAG_NAME = "FrameLayout"; 
+	
 	public FrameLayout() {
-		super("FrameLayout");
+		super(TAG_NAME);
 	}
 	
 	public void addEditableProperties(Widget w) {}

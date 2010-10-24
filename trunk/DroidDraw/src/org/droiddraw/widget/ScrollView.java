@@ -8,13 +8,14 @@ import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
 
 public class ScrollView extends FrameLayout {
+	public static final String TAG_NAME = "ScrollView";
 	StringProperty scrollbar_size;
 	StringProperty scrollbar_fade;
 	SelectProperty scrollbars;
 	NineWayImage field;
 	
 	public ScrollView() {
-		this.tagName = "ScrollView";
+		this.setTagName(TAG_NAME);
 		scrollbar_size = new StringProperty("Scrollbar Size", "android:scrollbarSize", "");
 		scrollbar_fade = new StringProperty("Scrollbar Fade Duration", "android:scrollbarFadeDuration", "");
 		scrollbars = new SelectProperty("Scrollbars", "android:scrollbars", new String[] {"none", "horizontal", "vertical"}, 0);

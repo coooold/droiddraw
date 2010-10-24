@@ -1,5 +1,21 @@
 package org.droiddraw.gui;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.Vector;
+
+import javax.swing.JComboBox;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+
 import org.droiddraw.AndroidEditor;
+import org.droiddraw.property.StringProperty;
 import org.droiddraw.widget.AbsoluteLayout;
 import org.droiddraw.widget.AnalogClock;
 import org.droiddraw.widget.AutoCompleteTextView;
@@ -23,6 +39,8 @@ import org.droiddraw.widget.RadioGroup;
 import org.droiddraw.widget.RelativeLayout;
 import org.droiddraw.widget.ScrollView;
 import org.droiddraw.widget.Spinner;
+import org.droiddraw.widget.TabHost;
+import org.droiddraw.widget.TabWidget;
 import org.droiddraw.widget.TableLayout;
 import org.droiddraw.widget.TableRow;
 import org.droiddraw.widget.TextView;
@@ -30,20 +48,6 @@ import org.droiddraw.widget.Ticker;
 import org.droiddraw.widget.TimePicker;
 import org.droiddraw.widget.Widget;
 
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.util.Vector;
-
-import javax.swing.JComboBox;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
 
 
 public class ViewerListener implements MouseListener, MouseMotionListener, KeyListener {
@@ -63,7 +67,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 
 	Viewer viewer;
 	AndroidEditor app;
-	JComboBox widgetType = new JComboBox(new String[] {"AnalogClock","AutoCompleteTextView", "Button", "CheckBox", "DigitalClock","EditText", "ImageButton", "ImageView", "ListView", "ProgressBar", "RadioButton","RadioGroup", "Spinner", "TableRow", "TextView", "TimePicker", "AbsoluteLayout", "LinearLayout", "RelativeLayout", "TableLayout", "Ticker"});
+	JComboBox widgetType = new JComboBox(new String[] {AnalogClock.TAG_NAME, AutoCompleteTextView.TAG_NAME, Button.TAG_NAME, CheckBox.TAG_NAME, DigitalClock.TAG_NAME, EditView.TAG_NAME, ImageButton.TAG_NAME, ImageView.TAG_NAME, ListView.TAG_NAME, ProgressBar.TAG_NAME, RadioButton.TAG_NAME, RadioGroup.TAG_NAME, Spinner.TAG_NAME, TableRow.TAG_NAME, TextView.TAG_NAME, TimePicker.TAG_NAME, AbsoluteLayout.TAG_NAME, LinearLayout.TAG_NAME, RelativeLayout.TAG_NAME, TableLayout.TAG_NAME, Ticker.TAG_NAME, TabHost.TAG_NAME, TabWidget.TAG_NAME});
 
 	DroidDrawPanel ddp;
 	private boolean dragging;
@@ -87,60 +91,64 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 	}
 
 	public static Widget createWidget(String str) {
-		if (str.equals("Button"))
-			return new Button("Button");
-		else if (str.equals("CheckBox"))
-			return new CheckBox("CheckBox");
-		else if (str.equals("EditText"))
-			return new EditView("EditText");
-		else if (str.equals("TextView"))
-			return new TextView("TextView");
-		else if (str.equals("AnalogClock"))
+		if (str.equals(Button.TAG_NAME))
+			return new Button(Button.TAG_NAME);
+		else if (str.equals(CheckBox.TAG_NAME))
+			return new CheckBox(CheckBox.TAG_NAME);
+		else if (str.equals(EditView.TAG_NAME))
+			return new EditView(EditView.TAG_NAME);
+		else if (str.equals(TextView.TAG_NAME))
+			return new TextView(TextView.TAG_NAME);
+		else if (str.equals(AnalogClock.TAG_NAME))
 			return new AnalogClock();
-		else if (str.equals("DigitalClock"))
+		else if (str.equals(DigitalClock.TAG_NAME))
 			return new DigitalClock();
-		else if (str.equals("ProgressBar"))
+		else if (str.equals(ProgressBar.TAG_NAME))
 			return new ProgressBar();
-		else if (str.equals("LinearLayout"))
+		else if (str.equals(LinearLayout.TAG_NAME))
 			return new LinearLayout();
-		else if (str.equals("AbsoluteLayout"))
+		else if (str.equals(AbsoluteLayout.TAG_NAME))
 			return new AbsoluteLayout();
-		else if (str.equals("RelativeLayout"))
+		else if (str.equals(RelativeLayout.TAG_NAME))
 			return new RelativeLayout();
-		else if (str.equals("RadioButton"))
-			return new RadioButton("RadioButton");
-		else if (str.equals("RadioGroup"))
+		else if (str.equals(RadioButton.TAG_NAME))
+			return new RadioButton(RadioButton.TAG_NAME);
+		else if (str.equals(RadioGroup.TAG_NAME))
 			return new RadioGroup();
-		else if (str.equals("TimePicker"))
+		else if (str.equals(TimePicker.TAG_NAME))
 			return new TimePicker();
-		else if (str.equals("ListView"))
+		else if (str.equals(ListView.TAG_NAME))
 			return new ListView();
-		else if (str.equals("Ticker"))
+		else if (str.equals(Ticker.TAG_NAME))
 			return new Ticker();
-		else if (str.equals("Spinner"))
+		else if (str.equals(Spinner.TAG_NAME))
 			return new Spinner();
-		else if (str.equals("ImageView"))
+		else if (str.equals(ImageView.TAG_NAME))
 			return new ImageView();
-		else if (str.equals("ImageButton"))
+		else if (str.equals(ImageButton.TAG_NAME))
 			return new ImageButton();
-		else if (str.equals("AutoCompleteTextView"))
+		else if (str.equals(AutoCompleteTextView.TAG_NAME))
 			return new AutoCompleteTextView("AutoComplete");
-		else if (str.equals("TableRow"))
+		else if (str.equals(TableRow.TAG_NAME))
 			return new TableRow();
-		else if (str.equals("TableLayout"))
+		else if (str.equals(TableLayout.TAG_NAME))
 			return new TableLayout();
-		else if (str.equals("FrameLayout"))
+		else if (str.equals(FrameLayout.TAG_NAME))
 			return new FrameLayout();
-		else if (str.equals("ScrollView"))
+		else if (str.equals(ScrollView.TAG_NAME))
 			return new ScrollView();
-		else if (str.equals("GridView"))
+		else if (str.equals(GridView.TAG_NAME))
 			return new GridView();
-		else if (str.equals("Gallery"))
+		else if (str.equals(Gallery.TAG_NAME))
 			return new Gallery();
-		else if (str.equals("DatePicker"))
+		else if (str.equals(DatePicker.TAG_NAME))
 			return new DatePicker();
-		else if (str.equals("ImageSwitcher"))
+		else if (str.equals(ImageSwitcher.TAG_NAME))
 			return new ImageSwitcher();
+		else if (str.equals(TabHost.TAG_NAME)) 
+			return new TabHost();
+		else if (str.equals(TabWidget.TAG_NAME))
+			return new TabWidget();
 		else
 			return null;
 	}
@@ -246,6 +254,22 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 			final int id = i;
 			it.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
+					
+					/* If the widget to be added is a TabWidget, then validate before adding it. */
+					if (!isTabWidgetValid(ls.get(id), w)) {
+						return;
+					} 
+					
+					/* Perform this check ONLY when using a FrameLayout in conjunction with a
+					 * TabWidget, in order to customize the id that is displayed in the final
+					 * xml file.
+					 */
+					if(FrameLayout.TAG_NAME.equals(w.getTagName()) &&
+							LinearLayout.TAG_NAME.equals(ls.get(id).getTagName()) &&
+							isFrameLayoutForTab(ls.get(id), w)) {
+						((StringProperty)w.getProperties().get(w.getProperties().indexOf(w.getPropertyByAttName("android:id")))).setStringValue("@android:id/tabcontent");//getgetPropertyByAttName("Id")).setValue("@android:id/tabcontent");//setValue("@android:id/tabcontent"); //getProperties().get(w.getProperties().indexOf(w.getId()))).setStringValue("@android:id/tabcontent");
+					}
+					
 					addWidget(w, ls.get(id), x, y);
 				}
 			});
@@ -254,8 +278,68 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 		menu.show(viewer, x, y);			
 		}
 		if (l != null) {
+			if (!isTabWidgetValid(l, w)) {
+				return;
+			}
 			addWidget(w, l, x, y);
 		}
+	}
+	
+	/**
+	 * This method will check to see if the LinearLayout widget belongs to the root layout.
+	 * @param layout
+	 * @param widget
+	 * @return
+	 */
+	private boolean isFrameLayoutForTab(Layout layout, Widget widget) {
+		
+		boolean found = false;
+		
+		if (!TabHost.TAG_NAME.equals((app.getLayout().getTagName()))) {
+			AndroidEditor.instance().error( "Please ensure that the root layout is a TabHost layout." );
+			return false;
+		}
+		
+		Vector<Widget>widgets = app.getLayout().getWidgets();
+		
+		for (Widget w : widgets) {
+			if (LinearLayout.TAG_NAME.equals(w.getTagName())) {
+				found = true;
+				break;
+			}
+		}
+		
+		return found;
+	}
+	
+	/**
+	 * This method will check if the use of a TabWidget is valid in terms of what widgets should exist
+	 * before the TabWidget is to be used.
+	 * 
+	 * @param layout	The layout that will contain the TabWidget directly.
+	 * @param widget	The widget to be check, must be a TabWidget.
+	 * @return
+	 */
+	private boolean isTabWidgetValid(Layout layout, Widget widget) {
+		
+		/* If the widget to be dropped into the Viewer is a TabWidget, then check if the root layout
+		 * is a TabHost layout.
+		 */
+		if (!TabHost.TAG_NAME.equals(app.getLayout().getTagName()) &&
+				TabWidget.TAG_NAME.equals(widget.getTagName())) {
+			AndroidEditor.instance().error( "A TabWidget can only be contained by TabHost layout." );
+			return false;
+		}
+		
+		/* If a TabHost Layout exists, then check if the TabHost contains a LinearLayout, which
+		 * will directly contain the TabWidget.
+		 */
+		if (!(LinearLayout.TAG_NAME.equals(layout.getTagName())) &&
+				(TabWidget.TAG_NAME.equals(widget.getTagName()))) {
+			AndroidEditor.instance().error( "First add a LinearLayout widget to the TabHost Layout." );
+			return false;
+		}
+		return true;
 	}
 
 	protected void addWidget(Widget w, Layout l, int x, int y) 

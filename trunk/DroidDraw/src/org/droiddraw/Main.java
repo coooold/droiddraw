@@ -51,9 +51,11 @@ import org.droiddraw.gui.Preferences;
 import org.droiddraw.gui.PreferencesPanel;
 import org.droiddraw.gui.ScrollViewPainter;
 import org.droiddraw.gui.WidgetRegistry;
+import org.droiddraw.util.FileFilterExtension;
 import org.droiddraw.util.LayoutUploader;
 import org.droiddraw.widget.AbstractLayout;
 import org.droiddraw.widget.ScrollView;
+import org.droiddraw.widget.TabWidget;
 import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
@@ -62,7 +64,6 @@ import org.simplericity.macify.eawt.DefaultApplication;
 import edu.stanford.ejalbert.BrowserLauncher;
 import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
 import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
-import org.droiddraw.util.FileFilterExtension;
 
 
 public class Main implements ApplicationListener, URLOpener {
@@ -254,22 +255,24 @@ public class Main implements ApplicationListener, URLOpener {
 			jf.setTitle( "DroidDraw: " + f.getName() );
 			ddp.save( f );
 			saveFile = f;
+			return true;	/* 2010/10/16: Added this line of code as a result of commenting out the code block at line 263. */
 
-			File src = new File( f.getParentFile(), "Foo.java" );
-			try {
-				FileWriter fw = new FileWriter( src );
-				PrintWriter pw = new PrintWriter( fw );
-				AndroidEditor.instance().generateSource( pw, "foo.bar" );
-				pw.flush();
-				fw.flush();
-				pw.close();
-				fw.close();
-				return true;
-			}
-			catch ( IOException ex ) {
-				ex.printStackTrace();
-				return false;
-			}
+/*	2010/10/16: Disabled this code block, as per email conversation with Brendan Burns */
+//			File src = new File( f.getParentFile(), "Foo.java" );
+//			try {
+//				FileWriter fw = new FileWriter( src );
+//				PrintWriter pw = new PrintWriter( fw );
+//				AndroidEditor.instance().generateSource( pw, "foo.bar" );
+//				pw.flush();
+//				fw.flush();
+//				pw.close();
+//				fw.close();
+//				return true;
+//			}
+//			catch ( IOException ex ) {
+//				ex.printStackTrace();
+//				return false;
+//			}
 		}
 		else return false;
 	}
@@ -450,7 +453,7 @@ public class Main implements ApplicationListener, URLOpener {
 
 		loadImage( "def/spinner_normal.9" );
 		loadImage( "def/btn_dropdown_neither.9" );
-
+		loadImage( TabWidget.IMAGE_NAME );
 		loadImage( "mdpi/textfield_default.9");
 		
 		jf = new JFrame( "DroidDraw" );

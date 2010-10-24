@@ -9,13 +9,14 @@ import org.droiddraw.gui.ImageResources;
 import org.droiddraw.gui.NineWayImage;
 
 public class TimePicker extends AbstractWidget {
+	public static final String TAG_NAME = "TimePicker";
 	Image up_arrow;
 	Image down_arrow;
 	Image btn;
 	NineWayImage img;
 	
 	public TimePicker() {
-		super("TimePicker");
+		super(TAG_NAME);
 		up_arrow = ImageResources.instance().getImage("light/arrow_up_float");
 		down_arrow = ImageResources.instance().getImage("light/arrow_down_float");
 	

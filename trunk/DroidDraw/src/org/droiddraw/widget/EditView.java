@@ -13,6 +13,9 @@ import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
 
 public class EditView extends TextView {
+	
+	public static final String TAG_NAME = "EditText";
+	
 	BooleanProperty password;
 	SelectProperty numeric;
 	BooleanProperty phone;
@@ -28,8 +31,7 @@ public class EditView extends TextView {
 	
 	public EditView(String txt) {
 		super(txt);
-		// This is a hack and bad oo, I know...
-		this.tagName="EditText";
+		this.setTagName(TAG_NAME);
 		
 		
 		password = new BooleanProperty("Password", "android:password", false);

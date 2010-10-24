@@ -10,14 +10,15 @@ import org.droiddraw.property.StringProperty;
 
 
 public class Button extends TextView {
+	
+	public static final String TAG_NAME = "Button";
 	NineWayImage img;
 	Image img_base;
 	StringProperty onClick;
 	
 	public Button(String txt) {
 		super(txt);
-		// This is a hack and bad oo, I know...
-		this.tagName = "Button";
+		this.setTagName(TAG_NAME);
 		
 		pad_x = 10;
 		pad_y = 0;

@@ -9,6 +9,7 @@ import org.droiddraw.property.IntProperty;
 
 public class Gallery extends AbstractWidget {
 	
+	public static final String TAG_NAME = "Gallery";
 	public static String[] propertyNames = {"android:spacing", "android:animationDuration"};
 	
 	IntProperty spacing;
@@ -16,7 +17,7 @@ public class Gallery extends AbstractWidget {
 	
 	Image paint;
 	public Gallery() {
-		super("Gallery");
+		super(TAG_NAME);
 		paint = ImageResources.instance().getImage("paint");
 	
 		animationDuration = new IntProperty("Anim. Duration", "android:animationDuration", 200);
