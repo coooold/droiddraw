@@ -13,6 +13,9 @@ public class NineWayImage {
 	}
 	
 	public NineWayImage(Image img, int dx1, int dy1, int dx2, int dy2) {
+		if (img == null) {
+			throw new IllegalArgumentException();
+		}
 		this.images = new BufferedImage[9];
 		this.dx1 = dx1;
 		this.dy1 = dy1;

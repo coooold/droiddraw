@@ -31,7 +31,7 @@ public class LinearLayout extends AbstractLayout {
 		super(TAG_NAME);
 		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 0);
 		this.orientation.setSelectedIndex(1);
-		this.gravity = new SelectProperty("Gravity", "android:gravity", new String[] {"top", "bottom", "left", "right"}, 0);
+		this.gravity = new SelectProperty("Gravity", "android:gravity", new String[] {"top", "bottom", "left", "right", "center"}, 0);
 		addProperty(orientation);
 		addProperty(gravity);
 	}
@@ -149,7 +149,6 @@ public class LinearLayout extends AbstractLayout {
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_gravity");
 			if (prop != null)
 				gravity = prop.getStringValue();
-
 			if (vertical) {
 				int width_w_pad = (w.getPadding(Widget.LEFT)+w.getWidth()+w.getPadding(Widget.RIGHT));
 				if (gravity.contains("right"))

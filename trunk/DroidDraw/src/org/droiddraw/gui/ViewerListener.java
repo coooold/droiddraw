@@ -471,8 +471,10 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 		if (selected != null) {
 			int x = selected.getParent().getScreenX()+selected.getX()+viewer.getOffX();
 			int y = selected.getParent().getScreenY()+selected.getY()+viewer.getOffY();
-			boolean close_r = Math.abs(ex-(x+selected.getWidth())) < 5 && ey > y && ey < y+selected.getHeight();
-			boolean close_b = Math.abs(ey-(y+selected.getHeight())) < 5 && ex > x && ex < x+selected.getWidth();
+			int distance_x = ex - (x+selected.getWidth());
+			int distance_y = ey - (y + selected.getHeight());
+			boolean close_r = distance_x > -8 && distance_x < -1 && ey > y && ey < y+selected.getHeight();
+			boolean close_b = distance_y > -8 && distance_y < -1 && ex > x && ex < x+selected.getWidth();
 
 
 			if (close_r) {
