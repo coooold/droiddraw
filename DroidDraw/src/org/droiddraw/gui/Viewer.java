@@ -100,7 +100,7 @@ public class Viewer extends JPanel implements DropTargetListener, ChangeListener
 		int dx = getOffX();
 		int dy = getOffY();
 		g2d.transform(AffineTransform.getTranslateInstance(dx, dy));
-
+		
 		g.setColor(Color.white);
 		g.fillRect(0,0, app.getScreenX(), app.getScreenY());
 		String theme = AndroidEditor.instance().getTheme();
