@@ -196,11 +196,11 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if ( qName.equals( "ImageButton" ) ) {
 				w = new ImageButton();
+				w.setPropertyByAttName( "android:src", getValue(atts,  "android:src" ) );
 			}
 			else if ( qName.equals( "ImageView" ) ) {
-				ImageView iv = new ImageView();
-				iv.setPropertyByAttName( "android:src", getValue(atts,  "android:src" ) );
-				w = iv;
+				w = new ImageView();
+				w.setPropertyByAttName( "android:src", getValue(atts,  "android:src" ) );
 			}
 			else if ( qName.equals( "ProgressBar" ) ) {
 				w = new ProgressBar();
