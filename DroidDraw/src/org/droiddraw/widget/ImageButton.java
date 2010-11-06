@@ -56,6 +56,4 @@ public class ImageButton extends ImageView {
 			g.drawImage(paint, getX()+10, getY()+10, getWidth()-20, getHeight()-20, null);
 		}
 	}
-	
-	
 }
