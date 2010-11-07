@@ -50,12 +50,16 @@ import org.droiddraw.gui.LayoutPainter;
 import org.droiddraw.gui.Preferences;
 import org.droiddraw.gui.PreferencesPanel;
 import org.droiddraw.gui.ScrollViewPainter;
+import org.droiddraw.gui.WidgetDeleteRecord;
 import org.droiddraw.gui.WidgetRegistry;
 import org.droiddraw.util.FileFilterExtension;
 import org.droiddraw.util.LayoutUploader;
 import org.droiddraw.widget.AbstractLayout;
+import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.ScrollView;
 import org.droiddraw.widget.TabWidget;
+import org.droiddraw.widget.Widget;
+import org.droiddraw.widget.WidgetTransferable;
 import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
@@ -669,10 +673,21 @@ public class Main implements ApplicationListener, URLOpener {
 		it = new JMenuItem( "Cut" );
 		it.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent arg0 ) {
-				String txt = ddp.getSelectedText();
-				ddp.deleteSelectedText();
-				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-				c.setContents( new StringSelection( txt ), null );
+				if (ddp.hasFocus()) {
+					String txt = ddp.getSelectedText();
+					ddp.deleteSelectedText();
+					Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+					c.setContents( new StringSelection( txt ), null );
+				} else {
+					Widget w = AndroidEditor.instance().getSelected();
+					if (w != null) {
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new WidgetTransferable(w), null);
+						AndroidEditor.instance().removeWidget(w);
+						Layout l = w.getParent();
+						AndroidEditor.instance().queueUndoRecord(new WidgetDeleteRecord(l, w));
+						AndroidEditor.instance().viewer.repaint();
+					}
+				}
 			}
 		} );
 		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_X, ctl_key ) );
@@ -680,24 +695,48 @@ public class Main implements ApplicationListener, URLOpener {
 		it = new JMenuItem( "Copy" );
 		it.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent arg0 ) {
-				Toolkit.getDefaultToolkit().getSystemClipboard().setContents( new StringSelection( ddp.getSelectedText() ), null );
-			}
-		} );
+				if (ddp.hasFocus()) {
+					if (ddp.getSelectedText() != null && ddp.getSelectedText().length() != 0) {
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents( new StringSelection( ddp.getSelectedText() ), null );
+					}
+				} else {
+					Widget w = AndroidEditor.instance().getSelected();
+					if (w != null) {
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new WidgetTransferable(w), null);
+					}
+				}
+			}});
 		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_C, ctl_key ) );
 		menu.add( it );
 		it = new JMenuItem( "Paste" );
 		it.addActionListener( new ActionListener() {
 			public void actionPerformed( ActionEvent e ) {
 				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-				try {
-					String txt = ( String ) c.getData( DataFlavor.stringFlavor );
-					if ( txt != null ) {
-						ddp.insertText( txt );
+				if (ddp != null && ddp.hasFocus()) {
+					try {
+						String txt = ( String ) c.getData( DataFlavor.stringFlavor );
+						if ( txt != null ) {
+							ddp.insertText( txt );
+						}
 					}
-				}
-				catch ( UnsupportedFlavorException ex ) {
-				}
-				catch ( IOException ex ) {
+					catch ( UnsupportedFlavorException ex ) {
+					}
+					catch ( IOException ex ) {
+					}
+				} else {
+					DataFlavor flavor = new DataFlavor(Widget.class, "DroidDraw Widget");
+					if (c.isDataFlavorAvailable(flavor)) {
+						try {
+							Widget w = (Widget)c.getData(flavor);
+							if (w != null) {
+								AndroidEditor.instance().addWidget(w, 50, 50);
+							}
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						} catch (UnsupportedFlavorException ex) {
+							ex.printStackTrace();
+						}
+					} 
 				}
 			}
 		} );
