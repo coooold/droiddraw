@@ -344,4 +344,15 @@ public abstract class AbstractWidget implements Widget {
 	public void setTagName(String tagName) {
 		this.tagName = tagName;
 	}
+	
+	public Widget copy() {
+		try {
+			AbstractWidget w = (AbstractWidget)this.clone();
+			w.setId("@+id/widget"+(widget_num++));
+			return w;
+		} catch (CloneNotSupportedException ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
 }

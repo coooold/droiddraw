@@ -26,6 +26,7 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.droiddraw.gui.Preferences;
 import org.droiddraw.gui.PropertiesPanel;
 import org.droiddraw.gui.Viewer;
+import org.droiddraw.gui.WidgetAddRecord;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.StringProperty;
 import org.droiddraw.util.ArrayHandler;
@@ -511,7 +512,7 @@ public class AndroidEditor {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected void generateWidget(Widget w, PrintWriter pw) {
+	public void generateWidget(Widget w, PrintWriter pw) {
 		pw.println("<"+w.getTagName());
 		Vector<Property> props = (Vector<Property>)w.getProperties().clone();
 		if (w != layout)
@@ -598,4 +599,8 @@ public class AndroidEditor {
 		return prefs;
 	}
 
+	public void addWidget(Widget w, int x, int y) {
+		viewer.addWidget(w, layout, x, y);
+		queueUndoRecord(new WidgetAddRecord(layout, w));
+	}
 }

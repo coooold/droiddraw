@@ -5,6 +5,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Vector;
 
+import org.droiddraw.AndroidEditor;
+
 public abstract class AbstractLayout extends AbstractWidget implements Layout {
 	protected Vector<Widget> widgets;
 	
@@ -159,5 +161,10 @@ public abstract class AbstractLayout extends AbstractWidget implements Layout {
 			}
 		}
 		return false;
+	}
+	
+	public Widget copy() {
+		AndroidEditor.instance().error("Cloning layouts is not supported (yet)");
+		return null;
 	}
 }

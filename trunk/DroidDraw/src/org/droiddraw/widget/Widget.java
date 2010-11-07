@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import org.droiddraw.property.Property;
 
-public interface Widget {
+public interface Widget extends Cloneable {
 	public static final int TOP = 0;
 	public static final int LEFT = 1;
 	public static final int BOTTOM = 2;
@@ -43,4 +43,6 @@ public interface Widget {
 	public boolean isVisible();
 	
 	public int getMargin(int which);
+	
+	public Widget copy();
 }

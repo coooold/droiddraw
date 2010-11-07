@@ -342,7 +342,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 		return true;
 	}
 
-	protected void addWidget(Widget w, Layout l, int x, int y) 
+	public void addWidget(Widget w, Layout l, int x, int y) 
 	{
 		boolean prefersGrid = AndroidEditor.instance().getPreferences().getSnap();
 		if (l instanceof AbsoluteLayout && ((shift && !prefersGrid) ||  (!shift && prefersGrid)))

@@ -209,4 +209,8 @@ public class Viewer extends JPanel implements DropTargetListener, ChangeListener
       repaint();
     }
   }
+  
+  public void addWidget(Widget w, Layout layout, int x, int y) {
+	  vl.addWidget(w, layout, x, y);
+  }
 }
