@@ -37,7 +37,7 @@ public class ColorPanel extends JPanel {
 		Vector<String> colors = new Vector<String>();
 		colors.add("");
 		for (String key : AndroidEditor.instance().getColors().keySet()) {
-			colors.add("@drawable/"+key);
+			colors.add("@color/"+key);
 		}
 		jt = new JTextField();
 		jac = new JAutoComboBox(colors);
