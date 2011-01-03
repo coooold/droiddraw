@@ -531,7 +531,6 @@ public class DroidDrawPanel extends JPanel {
 		mp.add(new WidgetPanel(new TableLayout()));
 		
 		mp.add(new WidgetPanel(new Ticker()));
-		mp.add(new WidgetPanel(new TabHost()));
 		lp.add(mp);
 		mp = new JPanel();
 		mp.add(lp);

@@ -43,4 +43,8 @@ public class SelectProperty extends StringProperty {
 	public int getSelectedIndex() {
 		return selected_ix;
 	}
+
+	public void setDefaultIndex(int ix) {
+		this.default_ix = ix;
+	}
 }
