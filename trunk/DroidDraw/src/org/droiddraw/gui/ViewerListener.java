@@ -327,7 +327,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 		 */
 		if (!TabHost.TAG_NAME.equals(app.getLayout().getTagName()) &&
 				TabWidget.TAG_NAME.equals(widget.getTagName())) {
-			AndroidEditor.instance().error( "A TabWidget can only be contained by TabHost layout." );
+			AndroidEditor.instance().error( "Please select TabHost as the root layout." );
 			return false;
 		}
 		
@@ -336,7 +336,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 		 */
 		if (!(LinearLayout.TAG_NAME.equals(layout.getTagName())) &&
 				(TabWidget.TAG_NAME.equals(widget.getTagName()))) {
-			AndroidEditor.instance().error( "First add a LinearLayout widget to the TabHost Layout." );
+			AndroidEditor.instance().error( "First add a LinearLayout widget to the TabHost Layout.  " +
+					"Then add the TabWidget to that LinearLayout" );
 			return false;
 		}
 		return true;
