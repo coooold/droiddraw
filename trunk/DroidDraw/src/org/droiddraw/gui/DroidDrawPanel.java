@@ -368,11 +368,14 @@ public class DroidDrawPanel extends JPanel {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
 					AndroidEditor.instance().removeAllWidgets();
+					String layoutXML;
 					if (text != null)
-						DroidDrawHandler.loadFromString(text.getText());
+						layoutXML = text.getText();
 					else
-						DroidDrawHandler.loadFromString(jtext.getText());
-								
+						layoutXML = jtext.getText();
+					if (layoutXML.length() > 0) {
+						DroidDrawHandler.loadFromString(layoutXML);
+					}		
 					layout.removeActionListener(layoutActionListener);
 					layout.setSelectedItem(AndroidEditor.instance().getLayout().toString());
 					layout.addActionListener(layoutActionListener);
@@ -619,5 +622,14 @@ public class DroidDrawPanel extends JPanel {
 		
 		validate();
 	}
-	
+
+	public void clear() {
+		AndroidEditor.instance().getLayout().removeAllWidgets();
+		AndroidEditor.instance().select( AndroidEditor.instance().getLayout() );
+		if (text != null) {
+			text.setText("");
+		} else {
+			jtext.setText("");
+		}
+	}
 }

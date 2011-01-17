@@ -146,8 +146,7 @@ public class Main implements ApplicationListener, URLOpener {
 			res = JOptionPane.showConfirmDialog( jf, "This will delete your entire GUI.  Proceed?", "Clear Screen?", JOptionPane.YES_NO_OPTION );
 		}
 		if ( res == JOptionPane.YES_OPTION ) {
-			AndroidEditor.instance().getLayout().removeAllWidgets();
-			AndroidEditor.instance().select( AndroidEditor.instance().getLayout() );
+			ddp.clear();
 			ddp.repaint();
 		}
 	}
