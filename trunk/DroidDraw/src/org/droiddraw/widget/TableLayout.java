@@ -9,6 +9,7 @@ public class TableLayout extends LinearLayout {
 	public static final String TAG_NAME = "TableLayout";
 	Vector<Integer> max_widths;
 	Vector<Integer> stretchColumns;
+	boolean stretchAll;
 	StringProperty stretch;
 	
 	public TableLayout() {
@@ -19,6 +20,7 @@ public class TableLayout extends LinearLayout {
 		props.add(stretch);
 		
 		this.stretchColumns = new Vector<Integer>();
+		this.stretchAll = false;
 		apply();
 	}
 
@@ -52,11 +54,18 @@ public class TableLayout extends LinearLayout {
 			total += i;
 		}
 		int extra = getWidth()-total;
-		if (extra > 0 && stretchColumns.size() > 0) {
-			int share = extra/stretchColumns.size();
-			for (int col : stretchColumns) {
-				if (col < max_widths.size())
-					max_widths.set(col, max_widths.get(col)+share);
+		if (extra > 0 && (stretchColumns.size() > 0 || stretchAll)) {
+			if (stretchAll) {
+				int share = extra / max_widths.size();
+				for (int i = 0; i < max_widths.size(); ++i) {
+					max_widths.set(i, max_widths.get(i) + share);
+				}
+			} else {
+				int share = extra/stretchColumns.size();
+				for (int col : stretchColumns) {
+					if (col < max_widths.size())
+						max_widths.set(col, max_widths.get(col)+share);
+				}
 			}
 		}
 	}
@@ -67,9 +76,13 @@ public class TableLayout extends LinearLayout {
 			String cols = stretch.getStringValue();
 			stretchColumns.clear();
 			if (cols != null) {
-				StringTokenizer toks = new StringTokenizer(cols, ",");
-				while (toks.hasMoreTokens()) {
-					stretchColumns.add(new Integer(toks.nextToken()));
+				if (cols.equals("*")) {
+					stretchAll = true;
+				} else {
+					StringTokenizer toks = new StringTokenizer(cols, ",");
+					while (toks.hasMoreTokens()) {
+						stretchColumns.add(new Integer(toks.nextToken()));
+					}
 				}
 			}
 		}
