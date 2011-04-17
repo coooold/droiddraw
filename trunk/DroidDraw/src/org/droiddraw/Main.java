@@ -294,6 +294,12 @@ public class Main implements ApplicationListener, URLOpener {
 
 	public static final int BUFFER = 4096;
 
+	protected static void makeAPK2(File dir, boolean install) {
+		String pathToAndroid = "/Users/bburns/devel/android-sdk-mac/";
+		File f = new File(pathToAndroid + File.pathSeparator + "tools" +
+				File.pathSeparator + "android");
+	}
+	
 	protected static void makeAPK( File dir, boolean install )
 	throws IOException {
 		URL u = ClassLoader.getSystemClassLoader().getResource( "data/activity.zip" );
@@ -325,7 +331,11 @@ public class Main implements ApplicationListener, URLOpener {
 		}
 		zis.close();
 
+
+		String[] cmd = install ? new String[]{"ant", "install"} : new String[]{"ant"};
 		File wd = new File( dir, "activity" );
+		run(cmd, wd);
+		
 		File res = new File( wd, "res" );
 		res = new File( res, "layout" );
 		res = new File( res, "main.xml" );
@@ -334,19 +344,30 @@ public class Main implements ApplicationListener, URLOpener {
 		pw.flush();
 		pw.close();
 
-		String[] cmd = install ? new String[]{"ant", "install"} : new String[]{"ant"};
+	}
 
-		Process p = Runtime.getRuntime().exec( cmd, null, new File( dir, "activity" ) );
+	private static boolean run(String[] cmd, File workingDirectory) throws IOException {	
+		Process p = Runtime.getRuntime().exec( cmd, null, workingDirectory);
 		try {
 			int ret = p.waitFor();
 			if ( ret != 0 ) {
-				AndroidEditor.instance().error( "Error running ant: " + ret );
+				InputStream input = p.getErrorStream();
+				byte[] buff = new byte[4096];
+				for (int i = input.read(buff); i != -1; i = input.read(buff)) {
+					System.err.write(buff, 0, i);
+				}
+				input = p.getInputStream();
+				for (int i = input.read(buff); i != -1; i = input.read(buff)) {
+					System.out.write(buff, 0, i);
+				}
+				return false;
 			}
 		}
 		catch ( InterruptedException ex ) {
 		}
+		return true;
 	}
-
+	
 	public static void copy( File from, File to )
 	throws IOException {
 		FileInputStream fis = new FileInputStream( from );
@@ -861,7 +882,7 @@ public class Main implements ApplicationListener, URLOpener {
 					pw.flush();
 					ba.flush();
 					if ( LayoutUploader.upload( "127.0.0.1", 6100, new ByteArrayInputStream( ba.toByteArray() ) ) )
-						JOptionPane.showMessageDialog( jf, "Upload suceeded" );
+						JOptionPane.showMessageDialog( jf, "Upload succeeded" );
 					else
 						JOptionPane.showMessageDialog( jf, "Upload failed.  Is AnDroidDraw running?" );
 				}
@@ -870,6 +891,7 @@ public class Main implements ApplicationListener, URLOpener {
 				}
 			}
 		} );
+		it.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ctl_key));
 		menu.add( it );
 
 		mb.add( menu );

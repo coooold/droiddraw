@@ -1,11 +1,12 @@
 package org.droiddraw.widget;
 import java.awt.Graphics;
 import java.beans.PropertyChangeListener;
+import java.io.Serializable;
 import java.util.Vector;
 
 import org.droiddraw.property.Property;
 
-public interface Widget extends Cloneable {
+public interface Widget extends Cloneable, Serializable {
 	public static final int TOP = 0;
 	public static final int LEFT = 1;
 	public static final int BOTTOM = 2;
