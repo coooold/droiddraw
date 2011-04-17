@@ -559,7 +559,7 @@ public class DroidDrawPanel extends JPanel {
 			}
 		});
 		JButton redo = new JButton("Redo");
-		undo.addActionListener(new ActionListener() {
+		redo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				AndroidEditor.instance().redo();
 			}

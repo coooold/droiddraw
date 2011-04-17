@@ -2,6 +2,8 @@ package org.droiddraw.widget;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Vector;
 
 import org.droiddraw.AndroidEditor;
@@ -347,6 +349,11 @@ public abstract class AbstractWidget implements Widget {
 	
 	public Widget copy() {
 		try {
+			//StringWriter sw = new StringWriter();
+			//PrintWriter pw = new PrintWriter(sw);
+			//pw.println("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+			//AndroidEditor.instance().generateWidget(this, pw);
+			//AndroidEditor.instance().
 			AbstractWidget w = (AbstractWidget)this.clone();
 			w.setId("@+id/widget"+(widget_num++));
 			return w;

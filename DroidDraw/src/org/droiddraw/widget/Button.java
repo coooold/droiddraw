@@ -37,7 +37,7 @@ public class Button extends TextView {
 				this.img = new NineWayImage(img_base, 10, 10);
 			}
 		}
-		this.onClick = new StringProperty("Click Listener Classname", "droiddraw:onClickListener", null);
+		this.onClick = new StringProperty("Click Listener Classname", "android:onClickListener", null);
 		addProperty(onClick);
 		apply();
 	}
