@@ -102,6 +102,8 @@ public class DroidDraw extends JApplet implements URLOpener {
 		loadImage("stat_sys_battery_charge_100");
 		loadImage("stat_sys_signal_3");
 		
+		loadImage("mapview");
+		
 		loadImage("scrollbar.9");
 		loadImage("scrollfield.9");
 		

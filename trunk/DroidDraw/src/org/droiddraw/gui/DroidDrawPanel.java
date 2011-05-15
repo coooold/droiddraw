@@ -54,6 +54,7 @@ import org.droiddraw.widget.ImageView;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.LinearLayout;
 import org.droiddraw.widget.ListView;
+import org.droiddraw.widget.MapView;
 import org.droiddraw.widget.ProgressBar;
 import org.droiddraw.widget.RadioButton;
 import org.droiddraw.widget.RadioGroup;
@@ -509,6 +510,10 @@ public class DroidDrawPanel extends JPanel {
 		mp = new JPanel();
 		mp.setLayout(new FlowLayout(FlowLayout.LEFT));
 		mp.add(new WidgetPanel(new TabWidget()));
+		MapView mapView = new MapView();
+		mapView.setHeight(100);
+		mapView.setWidth(100);
+		mp.add(new WidgetPanel(mapView));
 		wp.add(mp);
 		//wp.setSize(wp.getWidth(), 150);
 		JPanel ppp = new JPanel();
