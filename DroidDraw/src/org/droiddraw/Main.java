@@ -446,6 +446,8 @@ public class Main implements ApplicationListener, URLOpener {
 
 		loadImage( "scrollbar.9" );
 		loadImage( "scrollfield.9" );
+		
+		loadImage("mapview");
 
 
 		loadImage( "light/checkbox_off_background" );

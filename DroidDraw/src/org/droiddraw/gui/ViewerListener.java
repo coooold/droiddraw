@@ -33,6 +33,7 @@ import org.droiddraw.widget.ImageView;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.LinearLayout;
 import org.droiddraw.widget.ListView;
+import org.droiddraw.widget.MapView;
 import org.droiddraw.widget.ProgressBar;
 import org.droiddraw.widget.RadioButton;
 import org.droiddraw.widget.RadioGroup;
@@ -149,6 +150,8 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 			return new TabHost();
 		else if (str.equals(TabWidget.TAG_NAME))
 			return new TabWidget();
+		else if (str.equals(MapView.TAG_NAME))
+			return new MapView();
 		else
 			return null;
 	}
