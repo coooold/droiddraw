@@ -163,6 +163,10 @@ public class DroidDrawHandler extends DefaultHandler {
 			else if ( qName.equals( "EditText" ) ) {
 				String txt = getValue(atts,  "android:text" );
 				EditView et = new EditView( txt );
+				String hint = getValue(atts, "android:hint");
+				if (hint != null) {
+					et.setPropertyByAttName("android:hint", hint);
+				}
 				for ( int i = 0; i < EditView.propertyNames.length; i++ ) {
 					et.setPropertyByAttName( EditView.propertyNames[ i ], getValue(atts,  EditView.propertyNames[ i ] ) );
 				}
