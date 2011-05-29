@@ -693,75 +693,15 @@ public class Main implements ApplicationListener, URLOpener {
 
 
 		it = new JMenuItem( "Cut" );
-		it.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent arg0 ) {
-				if (ddp.hasFocus()) {
-					String txt = ddp.getSelectedText();
-					ddp.deleteSelectedText();
-					Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-					c.setContents( new StringSelection( txt ), null );
-				} else {
-					Widget w = AndroidEditor.instance().getSelected();
-					if (w != null) {
-						Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new WidgetTransferable(w), null);
-						AndroidEditor.instance().removeWidget(w);
-						Layout l = w.getParent();
-						AndroidEditor.instance().queueUndoRecord(new WidgetDeleteRecord(l, w));
-						AndroidEditor.instance().viewer.repaint();
-					}
-				}
-			}
-		} );
+		addCutAction(it);
 		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_X, ctl_key ) );
 		menu.add( it );
 		it = new JMenuItem( "Copy" );
-		it.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent arg0 ) {
-				if (ddp.hasFocus()) {
-					if (ddp.getSelectedText() != null && ddp.getSelectedText().length() != 0) {
-						Toolkit.getDefaultToolkit().getSystemClipboard().setContents( new StringSelection( ddp.getSelectedText() ), null );
-					}
-				} else {
-					Widget w = AndroidEditor.instance().getSelected();
-					if (w != null) {
-						Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new WidgetTransferable(w), null);
-					}
-				}
-			}});
+		addCopyAction(it);
 		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_C, ctl_key ) );
 		menu.add( it );
 		it = new JMenuItem( "Paste" );
-		it.addActionListener( new ActionListener() {
-			public void actionPerformed( ActionEvent e ) {
-				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
-				if (ddp != null && ddp.hasFocus()) {
-					try {
-						String txt = ( String ) c.getData( DataFlavor.stringFlavor );
-						if ( txt != null ) {
-							ddp.insertText( txt );
-						}
-					}
-					catch ( UnsupportedFlavorException ex ) {
-					}
-					catch ( IOException ex ) {
-					}
-				} else {
-					DataFlavor flavor = new DataFlavor(Widget.class, "DroidDraw Widget");
-					if (c.isDataFlavorAvailable(flavor)) {
-						try {
-							Widget w = (Widget)c.getData(flavor);
-							if (w != null) {
-								AndroidEditor.instance().addWidget(w, 50, 50);
-							}
-						} catch (IOException ex) {
-							ex.printStackTrace();
-						} catch (UnsupportedFlavorException ex) {
-							ex.printStackTrace();
-						}
-					} 
-				}
-			}
-		} );
+		addPasteAction(it);
 		it.setAccelerator( KeyStroke.getKeyStroke( KeyEvent.VK_V, ctl_key ) );
 		menu.add( it );
 
@@ -950,6 +890,78 @@ public class Main implements ApplicationListener, URLOpener {
 		jf.getContentPane().add( ddp );
 		jf.pack();
 		jf.setVisible( true );
+	}
+
+	public static void addPasteAction(JMenuItem it) {
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent e ) {
+				Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+				if (ddp != null && ddp.hasFocus()) {
+					try {
+						String txt = ( String ) c.getData( DataFlavor.stringFlavor );
+						if ( txt != null ) {
+							ddp.insertText( txt );
+						}
+					}
+					catch ( UnsupportedFlavorException ex ) {
+					}
+					catch ( IOException ex ) {
+					}
+				} else {
+					DataFlavor flavor = new DataFlavor(Widget.class, "DroidDraw Widget");
+					if (c.isDataFlavorAvailable(flavor)) {
+						try {
+							Widget w = (Widget)c.getData(flavor);
+							if (w != null) {
+								AndroidEditor.instance().addWidget(w, 50, 50);
+							}
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						} catch (UnsupportedFlavorException ex) {
+							ex.printStackTrace();
+						}
+					} 
+				}
+			}
+		} );
+	}
+
+	public static void addCopyAction(JMenuItem it) {
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
+				if (ddp.hasFocus()) {
+					if (ddp.getSelectedText() != null && ddp.getSelectedText().length() != 0) {
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents( new StringSelection( ddp.getSelectedText() ), null );
+					}
+				} else {
+					Widget w = AndroidEditor.instance().getSelected();
+					if (w != null) {
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new WidgetTransferable(w), null);
+					}
+				}
+			}});
+	}
+
+	public static void addCutAction(JMenuItem it) {
+		it.addActionListener( new ActionListener() {
+			public void actionPerformed( ActionEvent arg0 ) {
+				if (ddp.hasFocus()) {
+					String txt = ddp.getSelectedText();
+					ddp.deleteSelectedText();
+					Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+					c.setContents( new StringSelection( txt ), null );
+				} else {
+					Widget w = AndroidEditor.instance().getSelected();
+					if (w != null) {
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new WidgetTransferable(w), null);
+						AndroidEditor.instance().removeWidget(w);
+						Layout l = w.getParent();
+						AndroidEditor.instance().queueUndoRecord(new WidgetDeleteRecord(l, w));
+						AndroidEditor.instance().viewer.repaint();
+					}
+				}
+			}
+		} );
 	}
 
 	public void handleAbout( ApplicationEvent ev ) {
