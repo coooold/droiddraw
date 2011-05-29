@@ -7,8 +7,15 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.TextArea;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,7 +28,9 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
@@ -35,6 +44,7 @@ import javax.swing.event.UndoableEditListener;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.droiddraw.AndroidEditor;
+import org.droiddraw.Main;
 import org.droiddraw.property.ColorProperty;
 import org.droiddraw.util.DroidDrawHandler;
 import org.droiddraw.widget.AbsoluteLayout;
@@ -78,6 +88,7 @@ public class DroidDrawPanel extends JPanel {
 	JTabbedPane jtb = new JTabbedPane();
 	TextArea text;
 	JTextArea jtext;
+	private JPopupMenu popup;
 	
 	public String getSelectedText() {
 		if (text != null) {
@@ -218,7 +229,51 @@ public class DroidDrawPanel extends JPanel {
 				public void undoableEditHappened(UndoableEditEvent e) {
 					AndroidEditor.instance().queueUndoRecord(e.getEdit());
 				}
-				
+			});
+			popup = new JPopupMenu();
+			JMenuItem it = new JMenuItem("Cut");
+			popup.add(it);
+			it.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent arg0 ) {
+					if (getSelectedText() != null && getSelectedText().length() != 0) {
+						Toolkit.getDefaultToolkit().getSystemClipboard().setContents( new StringSelection( getSelectedText() ), null );
+						deleteSelectedText();
+					}
+				}
+			});
+			it = new JMenuItem("Copy");
+			it.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent arg0 ) {
+					if (getSelectedText() != null && getSelectedText().length() != 0) {
+							Toolkit.getDefaultToolkit().getSystemClipboard().setContents( new StringSelection( getSelectedText() ), null );
+						}
+				}
+			});
+			Main.addCopyAction(it);
+			popup.add(it);
+			it = new JMenuItem("Paste");
+			it.addActionListener( new ActionListener() {
+				public void actionPerformed( ActionEvent e ) {
+					Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+					try {
+						String txt = ( String ) c.getData( DataFlavor.stringFlavor );
+						if ( txt != null ) {
+							insertText( txt );
+						}
+					}
+					catch ( UnsupportedFlavorException ex ) { ex.printStackTrace(); }
+					catch ( IOException ex ) { ex.printStackTrace(); }
+				}
+			});
+			popup.add(it);
+
+			
+			jtext.addMouseListener(new MouseAdapter() {
+				public void mousePressed(MouseEvent e) {
+					if (e.isPopupTrigger()) {
+						popup.show(jtext, e.getX() + 3, e.getY() + 3);
+					}
+				}
 			});
 		}
 		
