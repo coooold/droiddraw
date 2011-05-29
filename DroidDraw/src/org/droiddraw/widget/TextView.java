@@ -22,6 +22,7 @@ public class TextView extends AbstractWidget {
 	int fontSize = 14;
 
 	StringProperty text;
+	StringProperty hint;
 	StringProperty fontSz;
 	SelectProperty face;
 	SelectProperty style;
@@ -38,7 +39,7 @@ public class TextView extends AbstractWidget {
 	boolean osx;
 
 	public static final String[] propertyNames = 
-		new String[] {"android:textSize", "android:textStyle", "android:typeface", "android:textColor"};
+		new String[] {"android:hint", "android:textSize", "android:textStyle", "android:typeface", "android:textColor"};
 
 	public TextView(String str) {
 		super(TAG_NAME);
@@ -47,12 +48,14 @@ public class TextView extends AbstractWidget {
 		if (str != null) {
 			text.setStringValue(str);
 		}
+		hint = new StringProperty("Default Text", "android:hint", "");
 		fontSz = new StringProperty("Font Size", "android:textSize", fontSize+"sp");
 		face = new SelectProperty("Font Face", "android:typeface", new String[] {"normal","sans","serif","monospace"}, 0);
 		style = new SelectProperty("Font Style", "android:textStyle", new String[] {"normal", "bold", "italic", "bold|italic"}, 0);
 		textColor = new ColorProperty("Text Color", "android:textColor", null);
 		align = new SelectProperty("Text Alignment", "android:gravity", new String[] {"left","center","right"}, 2);
 		props.add(text);
+		props.add(hint);
 		props.add(fontSz);
 		props.add(face);
 		props.add(style);
@@ -131,9 +134,17 @@ public class TextView extends AbstractWidget {
 		return bg.getGraphics().getFontMetrics(f).stringWidth(str);
 	}
 
+  protected String getText() {
+	  String txt = text.getStringValue();
+	  if (txt == null || txt.length() == 0) {
+		  txt = hint.getStringValue();
+	  }
+	  return txt;
+  }
+	
 	@Override
   protected int getContentWidth() {
-		int l = stringLength(text.getStringValue())+pad_x;
+		int l = stringLength(getText())+pad_x;
 		if (l > AndroidEditor.instance().getScreenX())
 			l = AndroidEditor.instance().getScreenX()-getX();
 		return l;
@@ -141,7 +152,7 @@ public class TextView extends AbstractWidget {
 
 	@Override
   protected int getContentHeight() {
-		Vector<String> texts = buildLineBreaks(text.getStringValue());
+		Vector<String> texts = buildLineBreaks(getText());
 		if (texts.size() == 0) return fontSize+pad_y;
 		int h = texts.size()*(fontSize+1)+pad_y;
 		return h;
@@ -160,7 +171,8 @@ public class TextView extends AbstractWidget {
 
 	protected void drawText(Graphics g, int dx, int h, int align) {
 		int x = 0;
-		for (String s : buildLineBreaks(text.getStringValue())) {
+		String txt = getText();
+		for (String s : buildLineBreaks(txt)) {
 			int l = stringLength(s);
 			if (align == END) {
 				x = getX()+getWidth()-l-pad_x/2+dx;
@@ -196,7 +208,7 @@ public class TextView extends AbstractWidget {
 	public void paint(Graphics g) {
 		drawBackground(g);
 
-		if (text.getStringValue() != null) {
+		if (getText() != null) {
 			setTextColor(g);
 			g.setFont(f);
 
