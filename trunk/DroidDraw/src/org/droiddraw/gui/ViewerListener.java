@@ -37,6 +37,7 @@ import org.droiddraw.widget.MapView;
 import org.droiddraw.widget.ProgressBar;
 import org.droiddraw.widget.RadioButton;
 import org.droiddraw.widget.RadioGroup;
+import org.droiddraw.widget.RatingBar;
 import org.droiddraw.widget.RelativeLayout;
 import org.droiddraw.widget.ScrollView;
 import org.droiddraw.widget.Spinner;
@@ -92,6 +93,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 	}
 
 	public static Widget createWidget(String str) {
+		// TODO(brendan) : Clean this up using reflection.
 		if (str.equals(Button.TAG_NAME))
 			return new Button(Button.TAG_NAME);
 		else if (str.equals(CheckBox.TAG_NAME))
@@ -152,6 +154,9 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 			return new TabWidget();
 		else if (str.equals(MapView.TAG_NAME))
 			return new MapView();
+		else if (str.equals(RatingBar.TAG_NAME)) {
+			return new RatingBar();
+		}
 		else
 			return null;
 	}

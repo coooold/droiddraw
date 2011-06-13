@@ -34,6 +34,7 @@ import org.droiddraw.widget.ListView;
 import org.droiddraw.widget.ProgressBar;
 import org.droiddraw.widget.RadioButton;
 import org.droiddraw.widget.RadioGroup;
+import org.droiddraw.widget.RatingBar;
 import org.droiddraw.widget.RelativeLayout;
 import org.droiddraw.widget.ScrollView;
 import org.droiddraw.widget.Spinner;
@@ -206,8 +207,16 @@ public class DroidDrawHandler extends DefaultHandler {
 				w = new ImageView();
 				w.setPropertyByAttName( "android:src", getValue(atts,  "android:src" ) );
 			}
-			else if ( qName.equals( "ProgressBar" ) ) {
-				w = new ProgressBar();
+			else if ( qName.equals( "ProgressBar" ) || qName.equals("RatingBar")) {
+				if (qName.equals("ProgressBar")) {
+					w = new ProgressBar();
+				} else {
+					w = new RatingBar();
+					for (int i = 0; i < RatingBar.propertyNames.length; i++) {
+						w.setPropertyByAttName(RatingBar.propertyNames[i],
+								getValue(atts, RatingBar.propertyNames[i]));
+					}
+				}
 				for ( int i = 0; i < ProgressBar.propertyNames.length; i++ ) {
 					w.setPropertyByAttName( ProgressBar.propertyNames[ i ],
 							getValue(atts,  ProgressBar.propertyNames[ i ] ) );

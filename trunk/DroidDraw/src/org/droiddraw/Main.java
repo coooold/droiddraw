@@ -449,6 +449,9 @@ public class Main implements ApplicationListener, URLOpener {
 		
 		loadImage("mapview");
 
+		loadImage("rate_star_big_on");
+		loadImage("rate_star_med_on");
+		loadImage("rate_star_small_on");
 
 		loadImage( "light/checkbox_off_background" );
 		loadImage( "light/checkbox_on_background" );

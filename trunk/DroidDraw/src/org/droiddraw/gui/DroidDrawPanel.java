@@ -68,6 +68,7 @@ import org.droiddraw.widget.MapView;
 import org.droiddraw.widget.ProgressBar;
 import org.droiddraw.widget.RadioButton;
 import org.droiddraw.widget.RadioGroup;
+import org.droiddraw.widget.RatingBar;
 import org.droiddraw.widget.RelativeLayout;
 import org.droiddraw.widget.ScrollView;
 import org.droiddraw.widget.Spinner;
@@ -569,7 +570,11 @@ public class DroidDrawPanel extends JPanel {
 		mapView.setHeight(100);
 		mapView.setWidth(100);
 		mp.add(new WidgetPanel(mapView));
+		RatingBar rating = new RatingBar();
+		mp.add(new WidgetPanel(rating));
+
 		wp.add(mp);
+		
 		//wp.setSize(wp.getWidth(), 150);
 		JPanel ppp = new JPanel();
 		ppp.add(wp);
