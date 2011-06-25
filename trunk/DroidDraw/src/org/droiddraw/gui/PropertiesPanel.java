@@ -174,8 +174,9 @@ implements ActionListener, PropertyChangeListener, KeyListener
 						{
 							Vector<String> v = new Vector<String>();
 							v.add("");
-							v.add("fill_parent");
+							v.add("match_parent");
 							v.add("wrap_content");
+							v.add("fill_parent");
 							//JAutoComboBox jat = new JAutoComboBox(v);
 							JAutoTextField jat = new JAutoTextField(v);
 							jat.setStrict(false);
@@ -276,7 +277,7 @@ implements ActionListener, PropertyChangeListener, KeyListener
 							AndroidEditor.instance().error("Couldn't find text for: "+prop.getAtttributeName());
 						else if(prop.getAtttributeName().equals("android:layout_width") ||
 								prop.getAtttributeName().equals("android:layout_height")){
-							if(!jtf.getText().endsWith("px") && !jtf.getText().equals("wrap_content") && !jtf.getText().equals("fill_parent")){
+							if(!jtf.getText().endsWith("px") && !isAbstractWidth(jtf.getText())){
 								AndroidEditor.instance().error("Incorrect Syntax for: " + prop.getEnglishName() + "\n\"px\" is required after a width or height entry");
 								((StringProperty)prop).setStringValue(jtf.getText() + "px");
 							}
@@ -299,6 +300,10 @@ implements ActionListener, PropertyChangeListener, KeyListener
 
 		if (viewer != null)
 			viewer.repaint();
+	}
+
+	private boolean isAbstractWidth(String text) {
+		return text.equals("wrap_content") || text.equals("fill_parent") || text.equals("match_parent");
 	}
 
 	@SuppressWarnings("unchecked")

@@ -238,7 +238,8 @@ public abstract class AbstractWidget implements Widget {
 			h = getContentHeight();
 		}
 		
-		if (widthProp.getStringValue().equals("fill_parent")) {
+		if (widthProp.getStringValue().equals("fill_parent") ||
+			widthProp.getStringValue().equals("match_parent")) {
 			if (getParent() != null) {
 				StringProperty prop = (StringProperty)parent.getPropertyByAttName("android:layout_width");
 				if (prop.getStringValue().equals("wrap_content"))
@@ -251,7 +252,8 @@ public abstract class AbstractWidget implements Widget {
 			}
 			w = w-getX()-padding[RIGHT];
 		}
-		if (heightProp.getStringValue().equals("fill_parent")) {
+		if (heightProp.getStringValue().equals("fill_parent") ||
+		    heightProp.getStringValue().equals("match_parent")) {
 			if (getParent() != null) {
 				StringProperty prop = (StringProperty)parent.getPropertyByAttName("android:layout_height");
 				if (prop.getStringValue().equals("wrap_content"))
