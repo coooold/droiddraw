@@ -14,6 +14,7 @@ import org.droiddraw.property.StringProperty;
 import org.droiddraw.util.DisplayMetrics;
 
 public class TextView extends AbstractWidget {
+	private static final long serialVersionUID = 474121181702366786L;
 	public static final String TAG_NAME = "TextView";
 	public static final int START = 0;
 	public static final int CENTER = 1;
@@ -95,6 +96,9 @@ public class TextView extends AbstractWidget {
 
 	protected Vector<String> buildLineBreaks(String textVal) {
 		Vector<String> res = new Vector<String>();
+		if (textVal == null) {
+			return res;
+		}
 		String str = textVal;
 		int ix;
 		do {
@@ -172,6 +176,9 @@ public class TextView extends AbstractWidget {
 	protected void drawText(Graphics g, int dx, int h, int align) {
 		int x = 0;
 		String txt = getText();
+		if (txt == null) {
+			return;
+		}
 		for (String s : buildLineBreaks(txt)) {
 			int l = stringLength(s);
 			if (align == END) {
