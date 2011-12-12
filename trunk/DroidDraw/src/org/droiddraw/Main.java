@@ -293,12 +293,6 @@ public class Main implements ApplicationListener, URLOpener {
 	}
 
 	public static final int BUFFER = 4096;
-
-	protected static void makeAPK2(File dir, boolean install) {
-		String pathToAndroid = "/Users/bburns/devel/android-sdk-mac/";
-		File f = new File(pathToAndroid + File.pathSeparator + "tools" +
-				File.pathSeparator + "android");
-	}
 	
 	protected static void makeAPK( File dir, boolean install )
 	throws IOException {
