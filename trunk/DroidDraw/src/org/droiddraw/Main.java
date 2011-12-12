@@ -893,6 +893,13 @@ public class Main implements ApplicationListener, URLOpener {
 		jf.getContentPane().add( ddp );
 		jf.pack();
 		jf.setVisible( true );
+		
+		if (args.length > 0) {
+			String file = args[0];
+			if (file.endsWith(".xml")) {
+				open(new File(file));
+			}
+		}
 	}
 
 	public static void addPasteAction(JMenuItem it) {
