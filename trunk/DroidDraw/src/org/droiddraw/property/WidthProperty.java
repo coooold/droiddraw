@@ -22,9 +22,9 @@ public class WidthProperty extends StringProperty {
 	public Object getValue() {
 		String val = getStringValue();
 		try {
-			// This is kind of hacky, try to parse into an int, if that works, append px.
+			// This is kind of hacky, try to parse into an int, if that works, append dp.
 			int value = Integer.parseInt(val);
-			return value + "px";
+			return value + "dp";
 		} catch (Exception ignore) {
 		}
 		return val;
