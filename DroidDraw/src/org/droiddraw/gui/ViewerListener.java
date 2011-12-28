@@ -48,6 +48,7 @@ import org.droiddraw.widget.TableRow;
 import org.droiddraw.widget.TextView;
 import org.droiddraw.widget.Ticker;
 import org.droiddraw.widget.TimePicker;
+import org.droiddraw.widget.ToggleButton;
 import org.droiddraw.widget.Widget;
 
 
@@ -94,7 +95,9 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 
 	public static Widget createWidget(String str) {
 		// TODO(brendan) : Clean this up using reflection.
-		if (str.equals(Button.TAG_NAME))
+		if (str.equals(ToggleButton.TAG_NAME))
+			return new ToggleButton("Toggle On", "Toggle Off");
+		else if (str.equals(Button.TAG_NAME))
 			return new Button(Button.TAG_NAME);
 		else if (str.equals(CheckBox.TAG_NAME))
 			return new CheckBox(CheckBox.TAG_NAME);

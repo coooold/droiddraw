@@ -2,8 +2,6 @@ package org.droiddraw.widget;
 import java.awt.Graphics;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Vector;
 
 import org.droiddraw.AndroidEditor;
@@ -16,6 +14,10 @@ import org.droiddraw.util.DisplayMetrics;
 
 
 public abstract class AbstractWidget implements Widget {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7133114664909292147L;
 	int x, y;
 	int[] padding;
 	

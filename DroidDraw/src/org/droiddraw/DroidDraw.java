@@ -144,6 +144,10 @@ public class DroidDraw extends JApplet implements URLOpener {
 		
 		loadImage( "mdpi/textfield_default.9");
 		
+		loadImage("def/btn_toggle_off.9");
+		loadImage("def/btn_toggle_on.9");
+
+		
 		for (int i=0;i<ix;i++) {
 			try {
 				md.waitForID(i);

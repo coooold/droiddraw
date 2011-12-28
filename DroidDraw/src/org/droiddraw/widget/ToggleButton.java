@@ -26,17 +26,19 @@ public class ToggleButton extends Button {
 		if (theme == null || theme.equals("default")) {
 			Image img_base = ImageResources.instance().getImage("def/btn_toggle_on.9");
 			if (img_base != null) {
-				this.on = new NineWayImage(img_base, 10, 10);
+				this.on = new NineWayImage(img_base, 10, 5);
 			}
 			img_base = ImageResources.instance().getImage("def/btn_toggle_off.9");
 			if (img_base != null) {
-				this.off = new NineWayImage(img_base, 10, 10);
+				this.off = new NineWayImage(img_base, 5, 5);
 			}
 		}
 		
-		textOn = new StringProperty("Text when on", "textOn", "On");
-		textOff = new StringProperty("Text when off", "textOff", "Off");
-
+		// Empty defaults, so always print.
+		this.textOn = new StringProperty("Text when on", "android:textOn", "");
+		this.textOn.setStringValue(txtOn);
+		this.textOff = new StringProperty("Text when off", "android:textOff", "");
+		this.textOff.setStringValue(txtOff);
 		this.addProperty(textOn);
 		this.addProperty(textOff);
 	}
@@ -53,7 +55,7 @@ public class ToggleButton extends Button {
 		else {
 			img.paint(g, getX(), getY(), getWidth(), getHeight());
 			if (on != null) {
-				on.paint(g, getX() + 2, getY() + 10, 10, 5);
+				on.paint(g, getX() + 15, getY() + getHeight() - 15, getWidth() - 30, 5);
 			}
 			g.setColor(Color.black);
 		}
@@ -61,6 +63,13 @@ public class ToggleButton extends Button {
 		g.setColor(textColor.getColorValue());
 
 		drawText(g, textOn.getStringValue(), 0, getHeight()/2+fontSize/2-5, CENTER);
+	}
+	
+	@Override
+	protected int getContentWidth() {
+		int l1 = (textOn == null ? 0 : stringLength(textOn.getStringValue()) + pad_x);
+		int l2 = (textOff == null ? 0 : stringLength(textOff.getStringValue()) + pad_x);
+		return Math.max(Math.max(l1,  l2), 40);
 	}
 
 	/**
