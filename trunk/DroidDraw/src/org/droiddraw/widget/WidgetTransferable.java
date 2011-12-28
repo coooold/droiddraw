@@ -17,14 +17,13 @@ public class WidgetTransferable implements Transferable {
 
 	public Object getTransferData(DataFlavor flavor)
 			throws UnsupportedFlavorException, IOException {
-		if (flavor.equals(DataFlavor.stringFlavor)) {
+		if (flavor.equals(DataFlavor.stringFlavor) ||
+		    flavor.getRepresentationClass().equals(Widget.class)) {
 			StringWriter sw = new StringWriter();
 			PrintWriter pw = new PrintWriter(sw);
 			AndroidEditor.instance().generateWidget(w, pw);
 			pw.flush();
 			return sw.toString();
-		} else if (flavor.getRepresentationClass().equals(Widget.class)){
-			return w.copy();
 		} else {
 			throw new UnsupportedFlavorException(flavor);
 		}

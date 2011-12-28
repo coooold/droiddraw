@@ -43,6 +43,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.droiddraw.gui.DroidDrawPanel;
 import org.droiddraw.gui.ImageResources;
@@ -52,6 +53,7 @@ import org.droiddraw.gui.PreferencesPanel;
 import org.droiddraw.gui.ScrollViewPainter;
 import org.droiddraw.gui.WidgetDeleteRecord;
 import org.droiddraw.gui.WidgetRegistry;
+import org.droiddraw.util.DroidDrawHandler;
 import org.droiddraw.util.FileFilterExtension;
 import org.droiddraw.util.LayoutUploader;
 import org.droiddraw.widget.AbstractLayout;
@@ -64,6 +66,7 @@ import org.simplericity.macify.eawt.Application;
 import org.simplericity.macify.eawt.ApplicationEvent;
 import org.simplericity.macify.eawt.ApplicationListener;
 import org.simplericity.macify.eawt.DefaultApplication;
+import org.xml.sax.SAXException;
 
 import edu.stanford.ejalbert.BrowserLauncher;
 import edu.stanford.ejalbert.exception.BrowserLaunchingInitializingException;
@@ -917,15 +920,27 @@ public class Main implements ApplicationListener, URLOpener {
 				} else {
 					DataFlavor flavor = new DataFlavor(Widget.class, "DroidDraw Widget");
 					if (c.isDataFlavorAvailable(flavor)) {
+						boolean ok = false;
 						try {
-							Widget w = (Widget)c.getData(flavor);
+							String s = (String)c.getData(flavor);
+							Widget w = DroidDrawHandler.parseFromString(s);
+							String id = w.getId() + "_copy";
+							w.setPropertyByAttName("android:id", id);
 							if (w != null) {
 								AndroidEditor.instance().addWidget(w, 50, 50);
 							}
+							ok = true;
 						} catch (IOException ex) {
 							ex.printStackTrace();
 						} catch (UnsupportedFlavorException ex) {
 							ex.printStackTrace();
+						} catch (SAXException ex) {
+							ex.printStackTrace();
+						} catch (ParserConfigurationException ex) {
+							ex.printStackTrace();
+						}
+						if (!ok) {
+							AndroidEditor.instance().error("Paste failed.");
 						}
 					} 
 				}
