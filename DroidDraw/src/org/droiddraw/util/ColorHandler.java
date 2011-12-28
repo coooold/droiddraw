@@ -83,7 +83,7 @@ public class ColorHandler extends DefaultHandler {
 		for (String key : colors.keySet()) {
 			Color value = colors.get(key);
 			String clr = String.format("#%02x%02x%02x%02x", value.getAlpha(), value.getRed(), value.getGreen(), value.getBlue());
-			pw.println("<color name=\""+key+"\">"+clr+"</drawable>");
+			pw.println("<color name=\""+key+"\">"+clr+"</color>");
 		}
 		pw.println("</resources>");
 		pw.flush();
