@@ -57,7 +57,12 @@ public class DroidDrawHandler extends DefaultHandler {
 	Stack<Vector<String>> layout_props;
 	Stack<Layout> layoutStack;
 
-	public DroidDrawHandler() {
+	Layout root;
+	Widget widget;
+
+	boolean requireLayout;
+	
+	public DroidDrawHandler(boolean requireLayout) {
 		all_props = new Vector<String>();
 		all_props.add( "android:layout_width" );
 		all_props.add( "android:layout_height" );
@@ -73,6 +78,8 @@ public class DroidDrawHandler extends DefaultHandler {
 
 		layout_props = new Stack<Vector<String>>();
 		layoutStack = new Stack<Layout>();
+		root = null;
+		this.requireLayout = requireLayout;
 	}
 
 	protected boolean isLayout( String name ) {
@@ -80,7 +87,7 @@ public class DroidDrawHandler extends DefaultHandler {
 	}
 
 	@Override
-	public void startElement( String uri, String lName, String qName, Attributes atts )
+	public void startElement( String ignore_uri, String ignore_lname, String qName, Attributes atts )
 	throws SAXException {
 		if ( isLayout( qName ) ) {
 			Layout l = null;
@@ -137,7 +144,7 @@ public class DroidDrawHandler extends DefaultHandler {
 					}
 				}
 				l.apply();
-				AndroidEditor.instance().setLayout( l, false );
+				root = l;
 			}
 			else {
 				addWidget( l, atts );
@@ -145,7 +152,7 @@ public class DroidDrawHandler extends DefaultHandler {
 			layoutStack.push( l );
 			layout_props.push( l_props );
 		}
-		else if ( layoutStack.size() == 0 ) {
+		else if ( layoutStack.size() == 0 && requireLayout ) {
 			throw new SAXException( "Error, no Layout!" );
 		}
 		else {
@@ -249,6 +256,7 @@ public class DroidDrawHandler extends DefaultHandler {
 				w.setPropertyByAttName("android:textOff", getValue(atts, "android:textOff"));
 			}
 			if ( w != null ) {
+				widget = w;
 				addWidget( w, atts );
 			}
 		}
@@ -274,6 +282,9 @@ public class DroidDrawHandler extends DefaultHandler {
 			if ( getValue(atts,  prop ) != null ) {
 				w.setPropertyByAttName( prop, getValue(atts,  prop ) );
 			}
+		}
+		if (layout_props.size() == 0 || layoutStack.size() == 0) {
+			return;
 		}
 		for ( String prop : layout_props.peek() ) {
 			if ( getValue(atts,  prop ) != null ) {
@@ -304,7 +315,6 @@ public class DroidDrawHandler extends DefaultHandler {
 		load( new InputSource( new StringReader( content ) ) );
 	}
 
-
 	public static void load( File f )
 	throws SAXException, ParserConfigurationException, IOException, FileNotFoundException {
 		load( new FileReader( f ) );
@@ -316,12 +326,39 @@ public class DroidDrawHandler extends DefaultHandler {
 	}
 
 	public static void load( InputSource in )
+	throws SAXException, ParserConfigurationException, IOException {		
+		DroidDrawHandler ddh = new DroidDrawHandler(true);
+		parseInternal(ddh, in);
+		AndroidEditor.instance().setLayout( ddh.root, false );
+		AndroidEditor.instance().getLayout().repositionAllWidgets();
+	}
+	
+	public static void parseInternal(DroidDrawHandler ddh, InputSource in)
 	throws SAXException, ParserConfigurationException, IOException {
-		DroidDrawHandler ddh = new DroidDrawHandler();
-
+		
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		SAXParser parser = factory.newSAXParser();
 		parser.parse( in, ddh );
-		AndroidEditor.instance().getLayout().repositionAllWidgets();
+	}
+
+	public static Widget parseFromString( String content )
+	throws SAXException, ParserConfigurationException, IOException {
+		return parse( new InputSource( new StringReader( content ) ) );
+	}
+
+	public static Widget parse( Reader r )
+	throws SAXException, ParserConfigurationException, IOException {
+		return parse( new InputSource( r ) );
+	}
+
+	public static Widget parse( InputSource in )
+	throws SAXException, ParserConfigurationException, IOException {		
+		DroidDrawHandler ddh = new DroidDrawHandler(false);
+		parseInternal(ddh, in);
+		if (ddh.root != null) {
+			return ddh.root;
+		} else {
+			return ddh.widget;
+		}
 	}
 }
