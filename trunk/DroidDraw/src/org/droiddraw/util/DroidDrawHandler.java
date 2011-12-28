@@ -43,6 +43,7 @@ import org.droiddraw.widget.TableRow;
 import org.droiddraw.widget.TextView;
 import org.droiddraw.widget.Ticker;
 import org.droiddraw.widget.TimePicker;
+import org.droiddraw.widget.ToggleButton;
 import org.droiddraw.widget.View;
 import org.droiddraw.widget.Widget;
 import org.xml.sax.Attributes;
@@ -241,6 +242,11 @@ public class DroidDrawHandler extends DefaultHandler {
 			}
 			else if ( qName.equals( "DatePicker" ) ) {
 				w = new DatePicker();
+			}
+			else if (qName.equals("ToggleButton")) {
+				w = new ToggleButton("", "");
+				w.setPropertyByAttName("android:textOn", getValue(atts, "android:textOn"));
+				w.setPropertyByAttName("android:textOff", getValue(atts, "android:textOff"));
 			}
 			if ( w != null ) {
 				addWidget( w, atts );

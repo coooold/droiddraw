@@ -79,6 +79,7 @@ import org.droiddraw.widget.TableRow;
 import org.droiddraw.widget.TextView;
 import org.droiddraw.widget.Ticker;
 import org.droiddraw.widget.TimePicker;
+import org.droiddraw.widget.ToggleButton;
 import org.droiddraw.widget.Widget;
 import org.xml.sax.SAXException;
 
@@ -573,6 +574,11 @@ public class DroidDrawPanel extends JPanel {
 		RatingBar rating = new RatingBar();
 		mp.add(new WidgetPanel(rating));
 
+		ToggleButton togg = new ToggleButton("Toggle", "Toggle Off");
+		togg.setHeight(50);
+		togg.setWidth(100);
+		mp.add(new WidgetPanel(togg));
+		
 		wp.add(mp);
 		
 		//wp.setSize(wp.getWidth(), 150);

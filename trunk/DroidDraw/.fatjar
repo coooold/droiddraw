@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Thu Mar 20 22:25:01 EDT 2008
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=droiddrawr1b9.jar
+manifest.mergeall=true
+manifest.mainclass=org.droiddraw.Main
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=<po|DroidDraw>~java.policy.applet;<po|DroidDraw>~strings.xml
+includes=

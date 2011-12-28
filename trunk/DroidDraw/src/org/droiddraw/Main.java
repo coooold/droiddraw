@@ -479,6 +479,9 @@ public class Main implements ApplicationListener, URLOpener {
 		loadImage( TabWidget.IMAGE_NAME );
 		loadImage( "mdpi/textfield_default.9");
 		
+		loadImage("def/btn_toggle_off.9");
+		loadImage("def/btn_toggle_on.9");
+		
 		jf = new JFrame( "DroidDraw" );
 		jf.addWindowListener( new WindowAdapter() {
 			@Override
