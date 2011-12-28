@@ -277,8 +277,8 @@ implements ActionListener, PropertyChangeListener, KeyListener
 							AndroidEditor.instance().error("Couldn't find text for: "+prop.getAtttributeName());
 						else if(prop.getAtttributeName().equals("android:layout_width") ||
 								prop.getAtttributeName().equals("android:layout_height")){
-							if(!jtf.getText().endsWith("px") && !isAbstractWidth(jtf.getText())){
-								AndroidEditor.instance().error("Incorrect Syntax for: " + prop.getEnglishName() + "\n\"px\" is required after a width or height entry");
+							if(!isValidWidthMeasurement(jtf.getText()) && !isAbstractWidth(jtf.getText())){
+								AndroidEditor.instance().error("Incorrect Syntax for: " + prop.getEnglishName() + "\n\"(px | dp)\" is required after a width or height entry");
 								((StringProperty)prop).setStringValue(jtf.getText() + "px");
 							}
 							else
@@ -300,6 +300,10 @@ implements ActionListener, PropertyChangeListener, KeyListener
 
 		if (viewer != null)
 			viewer.repaint();
+	}
+
+	private boolean isValidWidthMeasurement(String text) {
+		return text.endsWith("px") || text.endsWith("dp");
 	}
 
 	private boolean isAbstractWidth(String text) {
