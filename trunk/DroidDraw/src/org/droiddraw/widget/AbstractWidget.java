@@ -210,7 +210,7 @@ public abstract class AbstractWidget implements Widget {
 	}
 
 	public void move(int dx, int dy) {
-		setPosition(this.x+dx, this.y+dy);
+		setPosition(this.x + dx, this.y + dy);
 	}
 	
 	public String getTagName() {
