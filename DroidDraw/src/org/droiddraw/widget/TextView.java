@@ -174,23 +174,27 @@ public class TextView extends AbstractWidget {
 	}
 
 	protected void drawText(Graphics g, int dx, int h, int align) {
-		int x = 0;
 		String txt = getText();
+		drawText(g, txt, dx, h, align);
+	}
+	
+	protected void drawText(Graphics g, String txt, int dx, int h, int align) {
+		int tx = 0;
 		if (txt == null) {
 			return;
 		}
 		for (String s : buildLineBreaks(txt)) {
 			int l = stringLength(s);
 			if (align == END) {
-				x = getX()+getWidth()-l-pad_x/2+dx;
+				tx = getX()+getWidth()-l-pad_x/2+dx;
 			}
 			else if (align == CENTER) {
-				x = getX()+getWidth()/2-l/2+dx;
+				tx = getX()+getWidth()/2-l/2+dx;
 			}	
 			else {
-				x = getX()+pad_x/2+dx;
+				tx = getX()+pad_x/2+dx;
 			}	
-			g.drawString(s, x, getY()+h);
+			g.drawString(s, tx, getY()+h);
 			h += fontSize+1;
 			if (h > getHeight())
 				break;
