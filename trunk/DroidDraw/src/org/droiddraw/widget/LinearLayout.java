@@ -9,6 +9,11 @@ import org.droiddraw.property.StringProperty;
 
 public class LinearLayout extends AbstractLayout {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7312596353183907497L;
+
 	public static final String TAG_NAME = "LinearLayout";
 	
 	SelectProperty orientation;
@@ -21,7 +26,7 @@ public class LinearLayout extends AbstractLayout {
 	public static int VERTICAL_PADDING = 2;
 	public static int HORIZONTAL_PADDING = 2;
 
-	int share;
+	int extra;
 	private static final String[] OPTIONS = new String[] {"left", "right","center_horizontal", "top", "bottom", "center_vertical"};
 
 
@@ -34,10 +39,12 @@ public class LinearLayout extends AbstractLayout {
 		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 0);
 		this.orientation.setSelectedIndex(1);
 		this.gravity = new SelectProperty("Gravity", "android:gravity", new String[] {"top", "bottom", "left", "right", "center"}, 0);
-		this.weightSum = new FloatProperty("Weight Sum", "android:weightSum", 1.0f);
+		this.weightSum = new FloatProperty("Weight Sum", "android:weightSum", -1.0f);
 		addProperty(orientation);
 		addProperty(gravity);
 		addProperty(weightSum);
+		
+		extra = 0;
 	}
 	
 	@Override
@@ -128,28 +135,27 @@ public class LinearLayout extends AbstractLayout {
 			}
 
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
-			if (prop != null && "1".equals(prop.getStringValue()))
+			if (prop != null) {
 				with_weight.add(w);
+			}
 			if (vertical)
 				y +=w.getPadding(TOP)+w.getHeight()+w.getPadding(BOTTOM)+w.getMargin(TOP)+w.getMargin(BOTTOM);
 			else
 				x += w.getPadding(LEFT)+w.getWidth()+w.getPadding(RIGHT)+w.getMargin(LEFT)+w.getMargin(RIGHT);
 		}
-		int extra=0;
+		extra = 0;
 		if (vertical) {
 			extra = getHeight()-y;
 		}
 		else {
 			extra = getWidth()-x;
 		}
-		if (with_weight.size() > 0) {
-			share = extra/with_weight.size();
-		}
 		y=0;
 		x=0;
 		for (Widget w : widgets) {
 			String gravity = "left";
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_gravity");
+			int share = calculateShare(w);
 			if (prop != null)
 				gravity = prop.getStringValue();
 			if (vertical) {
@@ -215,14 +221,51 @@ public class LinearLayout extends AbstractLayout {
 				((Layout)w).resizeForRendering();
 			}
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
-			boolean weight = (prop != null && "1".equals(prop.getStringValue()));
-			if (weight) {
+			if (prop != null) {
+				int share = calculateShare(prop);
 				if (vertical) 
-					w.setSizeInternal(w.getWidth(), w.getHeight()+share);
+					w.setSizeInternal(w.getWidth(), w.getHeight() + share);
 				else
-					w.setSizeInternal(w.getWidth()+share, w.getHeight());
+					w.setSizeInternal(w.getWidth() + share, w.getHeight());
 			}
 		}
+	}
+
+	private int calculateShare(StringProperty prop) {
+		try {
+			float share = Float.parseFloat(prop.getStringValue());
+			float total = (Float)weightSum.getValue();
+			if (total == -1) {
+				total = sumWeights();
+			}
+			float percent = share / total;
+			return (int)(percent * extra);
+		} catch (NumberFormatException ex) {
+			ex.printStackTrace();
+		}
+		return 0;
+	}
+
+	private float sumWeights() {
+		float sum = 0;
+		for (Widget w : widgets) {
+			StringProperty prop =
+					(StringProperty)w.getPropertyByAttName("android:layout_weight");
+			if (prop == null) {
+				continue;
+			}
+			try {
+				sum += Float.parseFloat(prop.getStringValue());
+			} catch (NumberFormatException ex) {
+				ex.printStackTrace();
+			}
+		}
+		return sum;
+	}
+
+	private int calculateShare(Widget w) {
+		return calculateShare(
+				(StringProperty)w.getPropertyByAttName("android:layout_weight"));
 	}
 
 	public void addOutputProperties(Widget w, Vector<Property> properties) {}
