@@ -2,6 +2,8 @@ package org.droiddraw.android;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Hashtable;
 import java.util.Stack;
 
@@ -11,6 +13,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,7 +172,7 @@ public class ViewInflater {
 		if (result == null)
 			return null;
 		
-		String id = findAttribute(atts, "id");
+		String id = findAttribute(atts, "android:id");
 
 		if (id != null) {
 			int idNumber = lookupId(id);
@@ -235,6 +238,16 @@ public class ViewInflater {
 		
 		if (result instanceof View) {
 			View v = (View)result;
+			/* API 11 
+			 String alpha = findAttribute(atts, "android:alpha");
+			 if (alpha != null) {
+				v.setAlpha(Float.parseFloat(alpha));
+			 }
+			*/
+			maybeSetBoolean(v, "setClickable", atts, "android:clickable");
+			maybeSetBoolean(v, "setFocusable", atts, "android:focusable");
+			maybeSetBoolean(v, "setHapticFeedbackEnabled", atts, "android:hapticFeedbackEnabled");
+			
 			String visibility = findAttribute(atts, "android:visibility");
 		    if (visibility != null){
 		    	int code = -1;
@@ -257,6 +270,10 @@ public class ViewInflater {
 		return result;
 	}
 	
+	private boolean maybeSetBoolean(View v, String method, AttributeSet atts, String arg) {
+		return maybeSetBoolean(v, method, findAttribute(atts, arg));
+	}
+
 	protected static boolean isLayout(String name) {
 		return name.endsWith("Layout") ||
 				name.equals("RadioGroup") ||
@@ -393,6 +410,35 @@ public class ViewInflater {
 		else {
 			return ViewGroup.LayoutParams.WRAP_CONTENT;
 		}
+	}
+	
+	boolean maybeSetBoolean(View view, String method, String value) {
+		if (value == null) {
+			return false;
+		}
+		value = value.toLowerCase();
+		Boolean boolValue = null;
+		if ("true".equals(value)) {
+			boolValue = Boolean.TRUE;
+		} else if ("false".equals(value)) {
+			boolValue = Boolean.FALSE;
+		} else {
+			return false;
+		}
+		try {
+			Method m = View.class.getMethod(method, boolean.class);
+			m.invoke(view, boolValue);
+			return true;
+		} catch (NoSuchMethodException ex) {
+			Log.e("ViewInflater", "No such method: " + method, ex);
+		} catch (IllegalArgumentException e) {
+			Log.e("ViewInflater", "Call", e);
+		} catch (IllegalAccessException e) {
+			Log.e("ViewInflater", "Call", e);
+		} catch (InvocationTargetException e) {
+			Log.e("ViewInflater", "Call", e);
+		}
+		return false;
 	}
 	
 	String[] relative_strings = new String[]
