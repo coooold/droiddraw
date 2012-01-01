@@ -513,7 +513,7 @@ public class AndroidEditor {
 
 	@SuppressWarnings("unchecked")
 	public void generateWidget(Widget w, PrintWriter pw) {
-		pw.println("<"+w.getTagName());
+		pw.print("<"+w.getTagName());
 		Vector<Property> props = (Vector<Property>)w.getProperties().clone();
 		if (w != layout)
 			w.getParent().addOutputProperties(w, props);
@@ -528,16 +528,19 @@ public class AndroidEditor {
 				} else {
 					value = prop.getValue().toString();
 				}
-				pw.println(prop.getAtttributeName()+"=\""+ value +"\"");
+				pw.println();
+				pw.print("\t" + prop.getAtttributeName()+"=\""+ value +"\"");
 			}
 		}
-		pw.println(">");
 		if (w instanceof Layout) {
+			pw.println(">");
 			for (Widget wt : ((Layout)w).getWidgets()) {
 				generateWidget(wt, pw);
 			}
+			pw.println("</"+w.getTagName()+">");
+		} else {
+			pw.println(" />");
 		}
-		pw.println("</"+w.getTagName()+">");
 	}
 
 	public void setURLOpener(URLOpener open) {
