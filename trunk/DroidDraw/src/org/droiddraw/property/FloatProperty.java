@@ -5,8 +5,9 @@ public class FloatProperty extends Property {
 	float value;
 	
 	public FloatProperty(String englishName, String attName, float def) {
-		super(englishName, attName, false);
+		super(englishName, attName, true, true);
 		this.def = def;
+		this.value = def;
 	}
 
 	@Override

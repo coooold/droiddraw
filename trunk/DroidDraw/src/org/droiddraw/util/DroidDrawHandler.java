@@ -109,6 +109,9 @@ public class DroidDrawHandler extends DefaultHandler {
 				else {
 					l.setPropertyByAttName( "android:orientation", getValue(atts,  "android:orientation" ) );
 				}
+				if (getValue(atts, "android:weightSum") != null) {
+					l.setPropertyByAttName("android:weightSum", getValue(atts, "android:weightSum"));
+				}
 				l_props.add( "android:layout_gravity" );
 				l_props.add( "android:layout_weight" );
 			}

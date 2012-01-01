@@ -159,7 +159,9 @@ public abstract class AbstractWidget implements Widget {
 			p.setValue(value);
 		}
 		else {
-			props.add(new StringProperty(attName, attName, value));
+			StringProperty prop = new StringProperty(attName, attName, "");
+			prop.setValue(value);
+			props.add(prop);
 		}
 	}
 	
