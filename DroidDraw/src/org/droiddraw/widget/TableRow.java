@@ -42,21 +42,20 @@ public class TableRow extends LinearLayout {
 			}
 
 			StringProperty prop = (StringProperty)w.getPropertyByAttName("android:layout_weight");
-			if (prop != null && "1".equals(prop.getStringValue()))
+			if (prop != null)
 				with_weight.add(w);
 			if (vertical)
 				y +=w.getPadding(TOP)+w.getHeight()+w.getPadding(BOTTOM);
 			else
 				x += w.getPadding(LEFT)+w.getWidth()+w.getPadding(RIGHT);
 		}
+		extra = 0;
 		if (with_weight.size() > 0) {
 			if (vertical) {
-				int extra = getHeight()-y;
-				share = extra/with_weight.size();
+				extra = getHeight()-y;
 			}
 			else {
-				int extra = getWidth()-x;
-				share = extra/with_weight.size();
+				extra = getWidth()-x;
 			}
 		}
 		y=0;
