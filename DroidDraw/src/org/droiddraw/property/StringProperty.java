@@ -7,7 +7,7 @@ import org.droiddraw.AndroidEditor;
 public class StringProperty extends Property {
 	String value;
 	String defaultValue;
-	
+		
 	public StringProperty(String englishName, String attName, String defaultValue) {
 		this(englishName, attName, defaultValue, true);
 		this.defaultValue = defaultValue;

@@ -2,6 +2,7 @@ package org.droiddraw.widget;
 
 import java.util.Vector;
 
+import org.droiddraw.property.FloatProperty;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
@@ -12,6 +13,7 @@ public class LinearLayout extends AbstractLayout {
 	
 	SelectProperty orientation;
 	SelectProperty gravity;
+	FloatProperty weightSum;
 	
 	boolean vertical;
 	int max_base;
@@ -32,8 +34,10 @@ public class LinearLayout extends AbstractLayout {
 		this.orientation = new SelectProperty("Orientation", "android:orientation", new String[] {"horizontal", "vertical"}, 0);
 		this.orientation.setSelectedIndex(1);
 		this.gravity = new SelectProperty("Gravity", "android:gravity", new String[] {"top", "bottom", "left", "right", "center"}, 0);
+		this.weightSum = new FloatProperty("Weight Sum", "android:weightSum", 1.0f);
 		addProperty(orientation);
 		addProperty(gravity);
+		addProperty(weightSum);
 	}
 	
 	@Override
@@ -140,7 +144,6 @@ public class LinearLayout extends AbstractLayout {
 		}
 		if (with_weight.size() > 0) {
 			share = extra/with_weight.size();
-			System.err.println("Share: " + this + " " + share);
 		}
 		y=0;
 		x=0;
