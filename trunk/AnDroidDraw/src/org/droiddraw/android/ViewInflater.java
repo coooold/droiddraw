@@ -1,11 +1,13 @@
 package org.droiddraw.android;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Hashtable;
 import java.util.Stack;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -46,7 +48,19 @@ public class ViewInflater {
 		this.idg = 0;
 	}
 	
-	protected View inflate(XmlPullParser parse) 
+	public View inflate(String text) {
+		XmlPullParser parse;		
+		try {
+			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			parse = factory.newPullParser();
+			parse.setInput(new StringReader(text));
+			return inflate(parse);
+		}
+		catch (XmlPullParserException ex) { return null; }
+		catch (IOException ex) { return null; }
+	}
+	
+	public View inflate(XmlPullParser parse) 
 			throws XmlPullParserException, IOException
 			{
 		layoutStack.clear();
@@ -217,6 +231,24 @@ public class ViewInflater {
 			if (cid != null) {
 				rg.check(Integer.parseInt(cid));
 			}
+		}
+		
+		if (result instanceof View) {
+			View v = (View)result;
+			String visibility = findAttribute(atts, "android:visibility");
+		    if (visibility != null){
+		    	int code = -1;
+		    	if ("visible".equals(visibility)) {
+		    		code = 0;
+		    	} else if ("invisible".equals(visibility)) {
+		    		code = 1;
+		    	} else if ("gone".equals(visibility)) {
+		    		code = 2;
+		    	}
+		    	if (code != -1) {
+		    		v.setVisibility(code);
+		    	}
+		    }
 		}
 		
 		if (layoutStack.size() > 0) {
