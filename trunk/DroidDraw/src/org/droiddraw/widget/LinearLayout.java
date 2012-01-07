@@ -8,12 +8,6 @@ import org.droiddraw.property.SelectProperty;
 import org.droiddraw.property.StringProperty;
 
 public class LinearLayout extends AbstractLayout {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -7312596353183907497L;
-
 	public static final String TAG_NAME = "LinearLayout";
 	
 	SelectProperty orientation;

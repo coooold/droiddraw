@@ -5,7 +5,6 @@ import java.awt.Image;
 
 import org.droiddraw.gui.ImageResources;
 import org.droiddraw.property.BooleanProperty;
-import org.droiddraw.property.FloatProperty;
 import org.droiddraw.property.IntProperty;
 
 public class RatingBar extends ProgressBar {
@@ -21,11 +20,6 @@ public class RatingBar extends ProgressBar {
 																//"android:rating",
 																//"android:stepSize"
 															  };
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3214432742146876735L;
 
 	public RatingBar() {
 		setTagName(TAG_NAME);

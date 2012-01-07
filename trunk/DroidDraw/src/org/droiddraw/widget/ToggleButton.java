@@ -71,10 +71,4 @@ public class ToggleButton extends Button {
 		int l2 = (textOff == null ? 0 : stringLength(textOff.getStringValue()) + pad_x);
 		return Math.max(Math.max(l1,  l2), 40);
 	}
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1152130407386044383L;
-
 }
