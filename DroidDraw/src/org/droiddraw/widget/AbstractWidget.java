@@ -14,10 +14,6 @@ import org.droiddraw.util.DisplayMetrics;
 
 
 public abstract class AbstractWidget implements Widget {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 7133114664909292147L;
 	int x, y;
 	int[] padding;
 	
