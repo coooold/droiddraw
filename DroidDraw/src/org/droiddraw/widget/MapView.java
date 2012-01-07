@@ -9,10 +9,6 @@ import org.droiddraw.property.BooleanProperty;
 import org.droiddraw.property.StringProperty;
 
 public class MapView extends AbstractWidget {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1035959926394317677L;
 	static BufferedImage map = null;
 	public static final String TAG_NAME = "MapView";
 	
