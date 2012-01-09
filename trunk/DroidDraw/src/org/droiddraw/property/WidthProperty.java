@@ -1,8 +1,10 @@
 package org.droiddraw.property;
 
+import org.droiddraw.AndroidEditor;
+
 public class WidthProperty extends StringProperty {
 	public WidthProperty(String name, String attName, int defaultValue) {
-		this(name, attName, defaultValue + "dp");
+		this(name, attName, defaultValue + AndroidEditor.instance().getScreenUnit());
 	}
 	
 	public WidthProperty(String name, String attName, String defaultValue) {
@@ -24,7 +26,7 @@ public class WidthProperty extends StringProperty {
 		try {
 			// This is kind of hacky, try to parse into an int, if that works, append dp.
 			int value = Integer.parseInt(val);
-			return value + "dp";
+			return value + AndroidEditor.instance().getScreenUnit();
 		} catch (Exception ignore) {
 		}
 		return val;

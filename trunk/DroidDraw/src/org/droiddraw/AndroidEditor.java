@@ -601,6 +601,14 @@ public class AndroidEditor {
 		}
 		return prefs;
 	}
+	
+	public String getScreenUnit() {
+		Preferences prefs = getPreferences();
+		if (prefs == null) {
+			return "dp";
+		}
+		return prefs.getScreenUnit();
+	}
 
 	public void addWidget(Widget w, int x, int y) {
 		viewer.addWidget(w, layout, x, y);
