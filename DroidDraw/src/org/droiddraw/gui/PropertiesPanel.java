@@ -278,8 +278,8 @@ implements ActionListener, PropertyChangeListener, KeyListener
 						else if(prop.getAtttributeName().equals("android:layout_width") ||
 								prop.getAtttributeName().equals("android:layout_height")){
 							if(!isValidWidthMeasurement(jtf.getText()) && !isAbstractWidth(jtf.getText())){
-								AndroidEditor.instance().error("Incorrect Syntax for: " + prop.getEnglishName() + "\n\"(px | dp)\" is required after a width or height entry");
-								((StringProperty)prop).setStringValue(jtf.getText() + "px");
+								AndroidEditor.instance().error("Incorrect Syntax for: " + prop.getEnglishName() + "\n\"(px or dp)\" is required after a width or height entry");
+								((StringProperty)prop).setStringValue(jtf.getText() + AndroidEditor.instance().getScreenUnit());
 							}
 							else
 								((StringProperty)prop).setStringValue(jtf.getText());

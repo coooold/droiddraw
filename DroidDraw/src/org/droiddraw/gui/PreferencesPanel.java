@@ -20,6 +20,7 @@ public class PreferencesPanel extends JPanel {
 	protected JComboBox screen;
 	protected JComboBox defLayout;
 	protected JComboBox update;
+	protected JComboBox screenUnit;
 	
 	protected JButton ok;
 	protected JButton cancel;
@@ -43,6 +44,9 @@ public class PreferencesPanel extends JPanel {
 		this.update = new JComboBox(new String[] {"Always", "Ask me", "Never"});
 		this.update.setSelectedIndex(prefs.getUpdateCheck().ordinal());
 		
+		this.screenUnit = new JComboBox(new String[] {"dp", "px"});
+		this.screenUnit.setSelectedIndex(0);
+		
 		this.ok = new JButton("Apply");
 		this.ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -50,7 +54,7 @@ public class PreferencesPanel extends JPanel {
 				PreferencesPanel.this.prefs.setScreenMode(AndroidEditor.ScreenMode.values()[PreferencesPanel.this.screen.getSelectedIndex()]);
 				PreferencesPanel.this.prefs.setDefaultLayout(Preferences.Layout.values()[PreferencesPanel.this.defLayout.getSelectedIndex()]);
 				PreferencesPanel.this.prefs.setUpdateCheck(Preferences.Update.values()[PreferencesPanel.this.update.getSelectedIndex()]);
-				
+				PreferencesPanel.this.prefs.setScreenUnit((String)screenUnit.getSelectedItem());
 				PreferencesPanel.this.prefs.save();
 				PreferencesPanel.this.frame.setVisible(false);
 				PreferencesPanel.this.frame.dispose();

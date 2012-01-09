@@ -8,22 +8,25 @@ import org.droiddraw.AndroidEditor.ScreenMode;
 public class Preferences {
 	public static enum Layout {ABSOLUTE, LINEAR, RELATIVE}
 	public static enum Update {YES, ASK, NO}
-	
-	private static String SNAP = "snap";
-	private static String SCREEN = "screen";
-	private static String LAYOUT = "layout";
-	private static String UPDATE = "update";
+
+	private static final String SNAP = "snap";
+	private static final String SCREEN = "screen";
+	private static final String LAYOUT = "layout";
+	private static final String UPDATE = "update";
+	private static final String SCREEN_UNIT = "screen_unit";
 	
 	protected boolean snap;
 	protected ScreenMode screen;
 	protected Layout layout;
 	protected Update updateCheck;
+	private String screenUnit;
 	
 	public Preferences() {
 		this.snap = false;
 		this.screen = ScreenMode.HVGA_PORTRAIT;
 		this.layout = Layout.ABSOLUTE;
 		this.updateCheck = Update.ASK;
+		this.screenUnit = "dp";
 	}
 	
 	public void load() {
@@ -49,6 +52,7 @@ public class Preferences {
 			updatePref = 1;
 		}
 		updateCheck = Update.values()[updatePref];
+		screenUnit = prefs.get(SCREEN_UNIT, "dp");
 	}
 	
 	public void save() {
@@ -58,6 +62,7 @@ public class Preferences {
 		prefs.putInt(SCREEN, screen.ordinal());
 		prefs.putInt(LAYOUT, layout.ordinal());
 		prefs.putInt(UPDATE, updateCheck.ordinal());
+		prefs.put(SCREEN_UNIT, screenUnit);
 		try {
 			prefs.sync();
 		}
@@ -96,5 +101,16 @@ public class Preferences {
 	
 	public void setUpdateCheck(Update u) {
 	  this.updateCheck = u;
+	}
+
+	public String getScreenUnit() {
+		return screenUnit;
+	}
+	
+	public void setScreenUnit(String unit) {
+		if (!unit.equals("dp") && !unit.equals("dip") && !unit.equals("px")) {
+			throw new IllegalArgumentException("Unknown unit: " + unit);
+		}
+		this.screenUnit = unit;
 	}
 }

@@ -49,13 +49,13 @@ public abstract class AbstractWidget implements Widget {
 		this.heightProp = new WidthProperty("Height", "android:layout_height", "");
 		this.heightProp.setStringValue("wrap_content");
 		this.background = new ColorProperty("Background Color", "android:background", null);
-		this.pad = new StringProperty("Padding", "android:padding", "0px");
+		this.pad = new StringProperty("Padding", "android:padding", "0dp");
 		this.visibility = new SelectProperty("Visible", "android:visibility", new String[] {"visible", "invisible", "gone"}, 0);
 		
-		this.marginTop = new StringProperty("Top Margin", "android:layout_marginTop", "0px");
-		this.marginBottom = new StringProperty("Bottom Margin", "android:layout_marginBottom", "0px");
-		this.marginLeft = new StringProperty("Left Margin", "android:layout_marginLeft", "0px");
-		this.marginRight = new StringProperty("Right Margin", "android:layout_marginRight", "0px");
+		this.marginTop = new StringProperty("Top Margin", "android:layout_marginTop", "0dp");
+		this.marginBottom = new StringProperty("Bottom Margin", "android:layout_marginBottom", "0dp");
+		this.marginLeft = new StringProperty("Left Margin", "android:layout_marginLeft", "0dp");
+		this.marginRight = new StringProperty("Right Margin", "android:layout_marginRight", "0dp");
 		
 		
 		this.padding = new int[4];
