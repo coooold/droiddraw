@@ -10,6 +10,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 import org.droiddraw.AndroidEditor;
 
@@ -69,6 +71,7 @@ public class PreferencesPanel extends JPanel {
 			}
 		});
 		
+		this.setBorder(new TitledBorder(new EtchedBorder(), "Preferences"));
 		this.add(grid);
 		this.add(new JLabel(""));
 		this.add(new JLabel("Default Screen Size"));
@@ -77,6 +80,8 @@ public class PreferencesPanel extends JPanel {
 		this.add(defLayout);
 		this.add(new JLabel("Check for updates at startup?"));
 		this.add(update);
+		this.add(new JLabel("Default screen unit."));
+		this.add(screenUnit);
 		this.add(cancel);
 		this.add(ok);
 	}
