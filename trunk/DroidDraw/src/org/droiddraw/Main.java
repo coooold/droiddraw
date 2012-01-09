@@ -87,6 +87,8 @@ public class Main implements ApplicationListener, URLOpener {
 	protected static void doMacOSXIntegration() {
 		Application a = new DefaultApplication();
 		a.addApplicationListener( new Main() );
+		a.addPreferencesMenuItem();
+		a.addAboutMenuItem();
 	}
 
 	protected static void open( String file ) {
@@ -122,6 +124,7 @@ public class Main implements ApplicationListener, URLOpener {
 		JFrame jf = new JFrame();
 		jf.getContentPane().add( new PreferencesPanel( AndroidEditor.instance().getPreferences(), jf ) );
 		jf.pack();
+		jf.setResizable(false);
 		jf.setVisible( true );
 	}
 
