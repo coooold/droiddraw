@@ -3,6 +3,7 @@ package org.droiddraw.widget;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import org.droiddraw.AndroidEditor;
 import org.droiddraw.property.IntProperty;
 import org.droiddraw.property.StringProperty;
 import org.droiddraw.property.WidthProperty;
@@ -22,7 +23,7 @@ public class GridView extends AbstractWidget {
 		columnCount = new IntProperty("Columns", "android:numColumns", -1);
 		columnCount.setIntValue(5);
 		columnWidth = new StringProperty("Column Width", "android:columnWidth", "");
-		columnWidth.setStringValue("20px");
+		columnWidth.setStringValue("20" + AndroidEditor.instance().getScreenUnit());
 		hSpacing = new WidthProperty("Horiz. Spacing", "android:horizontalSpacing", 0);
 		vSpacing = new WidthProperty("Vert. Spacing", "android:verticalSpacing", 0);
 		
@@ -44,7 +45,7 @@ public class GridView extends AbstractWidget {
 	@Override
 	protected int getContentWidth() {
 		int cols = columnCount.getIntValue();
-		int w = removePX(columnWidth.getStringValue());
+		int w = removeUnit(columnWidth.getStringValue());
 		if (cols*w > 50) {
 			return cols*w;
 		}
@@ -59,7 +60,7 @@ public class GridView extends AbstractWidget {
 		
 		g.setColor(Color.lightGray);
 		for (int i=1;i<columnCount.getIntValue();i++) {
-			int x = getX()+i*removePX(columnWidth.getStringValue());
+			int x = getX()+i*removeUnit(columnWidth.getStringValue());
 			g.drawLine(x, getY(), x, getY()+getHeight());
 			if (hSpacing.getIntValue() > 0) {
 				x += hSpacing.getIntValue();
@@ -68,7 +69,17 @@ public class GridView extends AbstractWidget {
 		}
 	}
 	
-	private int removePX(String propertyValue){
-		return Integer.parseInt(propertyValue.substring(0, propertyValue.indexOf("px")));
+	private int removeUnit(String propertyValue){
+		int ix = propertyValue.indexOf("px");
+		if (ix == -1) {
+			ix = propertyValue.indexOf("dp");
+		}
+		if (ix == -1) {
+			ix = propertyValue.indexOf("dip");
+		}
+		if (ix != -1) {
+			propertyValue = propertyValue.substring(0, ix);
+		}
+		return Integer.parseInt(propertyValue);
 	}
 }

@@ -167,18 +167,18 @@ public abstract class AbstractWidget implements Widget {
 	}
 
 	public void setWidth(int width) {
-		this.widthProp.setStringValue(width+"px");
+		this.widthProp.setStringValue(width + AndroidEditor.instance().getScreenUnit());
 		apply();
 	}
 	
 	public void setHeight(int height) {
-		this.heightProp.setStringValue(height+"px");
+		this.heightProp.setStringValue(height + AndroidEditor.instance().getScreenUnit());
 		apply();
 	}
 	
 	public void setSize(int width, int height) {
-		this.widthProp.setStringValue(width+"px");
-		this.heightProp.setStringValue(height+"px");
+		this.widthProp.setStringValue(width + AndroidEditor.instance().getScreenUnit());
+		this.heightProp.setStringValue(height + AndroidEditor.instance().getScreenUnit());
 		apply();
 	}
 
