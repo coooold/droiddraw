@@ -2,7 +2,10 @@ package org.droiddraw;
 
 import java.awt.BorderLayout;
 import java.awt.FileDialog;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
@@ -91,6 +94,15 @@ public class Main implements ApplicationListener, URLOpener {
 		a.addAboutMenuItem();
 	}
 
+	protected static void fullscreen(Window w) {
+		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	    for (GraphicsDevice device : env.getScreenDevices()) {
+	    	if (device.isFullScreenSupported()) {
+	    		device.setFullScreenWindow(w);
+	    	}
+	    }
+	}
+	
 	protected static void open( String file ) {
 		open( new File( file ) );
 	}
@@ -722,6 +734,23 @@ public class Main implements ApplicationListener, URLOpener {
 		//it.setShortcut(new MenuShortcut(KeyEvent.VK_A, false));
 		menu.add( it );
 
+		menu.addSeparator();
+		
+		it = new JMenuItem( "Fullscreen");
+		it.addActionListener(new ActionListener() {
+			boolean isFullscreen = false;
+			public void actionPerformed(ActionEvent arg0) {
+				if (isFullscreen) {
+					fullscreen(null);
+					isFullscreen = false;
+				} else {
+					fullscreen(jf);
+					isFullscreen = true;
+				}
+			}
+		});
+		it.setAccelerator(KeyStroke.getKeyStroke( KeyEvent.VK_F, ctl_key ) );
+		menu.add(it);
 		menu.addSeparator();
 
 		it = new JMenuItem( "Clear Screen" );
