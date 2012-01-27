@@ -99,8 +99,10 @@ public class Main implements ApplicationListener, URLOpener {
 	    for (GraphicsDevice device : env.getScreenDevices()) {
 	    	if (device.isFullScreenSupported()) {
 	    		device.setFullScreenWindow(w);
+	    		return;
 	    	}
 	    }
+	    AndroidEditor.instance().error("No supported device for fullscreen mode.");
 	}
 	
 	protected static void open( String file ) {
