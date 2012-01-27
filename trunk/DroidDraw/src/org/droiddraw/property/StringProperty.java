@@ -28,6 +28,10 @@ public class StringProperty extends Property {
 		return getStringValue();
 	}
 	
+	public String getRawStringValue() {
+		return value;
+	}
+	
 	public String getStringValue() {
 		if (value != null && value.startsWith("@string") && AndroidEditor.instance().getStrings() != null) {
 			String key = value.substring(value.indexOf("/")+1);

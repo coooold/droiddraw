@@ -524,7 +524,7 @@ public class AndroidEditor {
 					continue;
 				String value;
 				if (prop instanceof StringProperty) {
-					value = StringEscapeUtils.escapeXml(((StringProperty)prop).getStringValue());
+					value = StringEscapeUtils.escapeXml(((StringProperty)prop).getRawStringValue());
 				} else {
 					value = prop.getValue().toString();
 				}
