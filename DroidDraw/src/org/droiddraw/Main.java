@@ -114,24 +114,28 @@ public class Main implements ApplicationListener, URLOpener {
 		saveFile = f;
 	}
 
-	protected static void quit() {
-		quit( true );
+	protected static boolean quit() {
+		return quit( true );
 	}
 
-	protected static void quit( boolean cancelable ) {
+	protected static boolean quit( boolean cancelable ) {
 		if ( AndroidEditor.instance().isChanged() ) {
 			int opt = JOptionPane.showConfirmDialog( ddp, "Do you wish to save changes to your layout?", "Unsaved Changes", cancelable ? JOptionPane.YES_NO_CANCEL_OPTION : JOptionPane.YES_NO_OPTION );
 			switch ( opt ) {
 			case JOptionPane.CANCEL_OPTION:
-				return;
+				return false;
 			case JOptionPane.YES_OPTION:
 				if ( doSave() ) break;
-				else return;
+				else return false;
 			case JOptionPane.NO_OPTION:
 				break;
+			default:
+				// I guess this happens if you close the dialog?
+				return false;
 			}
 		}
 		System.exit( 0 );
+		return true;
 	}
 
 	protected static void preferences() {
@@ -503,12 +507,13 @@ public class Main implements ApplicationListener, URLOpener {
 		loadImage("def/btn_toggle_on.9");
 		
 		jf = new JFrame( "DroidDraw" );
+		jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jf.addWindowListener( new WindowAdapter() {
 			@Override
 			public void windowClosing( WindowEvent e ) {
-				quit( false );
+				quit( true );
 			}
-		} );
+		});
 
 		WidgetRegistry.registerPainter( ScrollView.class, new ScrollViewPainter() );
 		WidgetRegistry.registerPainter( AbstractLayout.class, new LayoutPainter() );
