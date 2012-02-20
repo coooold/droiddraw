@@ -115,12 +115,8 @@ public class Main implements ApplicationListener, URLOpener {
 	}
 
 	protected static boolean quit() {
-		return quit( true );
-	}
-
-	protected static boolean quit( boolean cancelable ) {
 		if ( AndroidEditor.instance().isChanged() ) {
-			int opt = JOptionPane.showConfirmDialog( ddp, "Do you wish to save changes to your layout?", "Unsaved Changes", cancelable ? JOptionPane.YES_NO_CANCEL_OPTION : JOptionPane.YES_NO_OPTION );
+			int opt = JOptionPane.showConfirmDialog( ddp, "Do you wish to save changes to your layout?", "Unsaved Changes", JOptionPane.YES_NO_CANCEL_OPTION );
 			switch ( opt ) {
 			case JOptionPane.CANCEL_OPTION:
 				return false;
@@ -511,7 +507,7 @@ public class Main implements ApplicationListener, URLOpener {
 		jf.addWindowListener( new WindowAdapter() {
 			@Override
 			public void windowClosing( WindowEvent e ) {
-				quit( true );
+				quit();
 			}
 		});
 
