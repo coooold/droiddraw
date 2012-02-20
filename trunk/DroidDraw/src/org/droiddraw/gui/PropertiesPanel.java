@@ -166,7 +166,7 @@ implements ActionListener, PropertyChangeListener, KeyListener
 						jc = jcb;
 					}
 					else if (prop instanceof ColorProperty) {
-						jc = new ColorPanel(((ColorProperty)prop).getColorValue());
+						jc = new ColorPanel((ColorProperty)prop);
 					}
 					else {
 						if (prop.getAtttributeName().equals("android:layout_width") ||
@@ -268,7 +268,6 @@ implements ActionListener, PropertyChangeListener, KeyListener
 					}
 					else if (prop instanceof ColorProperty) {
 						ColorPanel cp = (ColorPanel)components.get(prop);
-						//((ColorProperty)prop).setColorValue(cp.getColor());
 						((ColorProperty)prop).setStringValue(cp.getString());
 					}
 					else {
