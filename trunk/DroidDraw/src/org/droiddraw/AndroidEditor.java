@@ -393,6 +393,10 @@ public class AndroidEditor {
 			pp.setProperties(l.getProperties(), l);
 		}
 	}
+	
+	public boolean canSelect() {
+		return (layout != null && layout.getWidgets().size() > 0);
+	}
 
 	public Layout getLayout() {
 		return layout;

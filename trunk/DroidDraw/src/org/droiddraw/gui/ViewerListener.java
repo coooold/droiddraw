@@ -51,14 +51,11 @@ import org.droiddraw.widget.TimePicker;
 import org.droiddraw.widget.ToggleButton;
 import org.droiddraw.widget.Widget;
 
-
-
 public class ViewerListener implements MouseListener, MouseMotionListener, KeyListener {
 	int off_x, off_y;
 	int sx, sy;
 	int grid_x = 10;
 	int grid_y = 10;
-	boolean select;
 	boolean shift;
 
 	int mode;
@@ -173,7 +170,7 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 		
 		final MouseEvent ev = e;
 
-		if (select) {
+		if (app.canSelect()) {
 			final Vector<Widget> ws = app.findWidgets(x, y);
 			Widget w = null;
 			if (ws.contains(app.getSelected())) {
@@ -365,7 +362,6 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 		AndroidEditor.instance().queueUndoRecord(new WidgetAddRecord(l, w));
 		l.apply();
 		app.select(w);
-		select = true;
 		viewer.requestFocus();
 		viewer.repaint();
 	}
