@@ -10,6 +10,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
@@ -23,6 +24,7 @@ public class PreferencesPanel extends JPanel {
 	protected JComboBox defLayout;
 	protected JComboBox update;
 	protected JComboBox screenUnit;
+	protected JTextField defaultDirectory;
 	
 	protected JButton ok;
 	protected JButton cancel;
@@ -49,6 +51,9 @@ public class PreferencesPanel extends JPanel {
 		this.screenUnit = new JComboBox(new String[] {"dp", "px"});
 		this.screenUnit.setSelectedIndex(0);
 		
+		this.defaultDirectory = new JTextField("");
+		this.defaultDirectory.setText(prefs.getDefaultDirectory());
+		
 		this.ok = new JButton("Apply");
 		this.ok.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -57,6 +62,7 @@ public class PreferencesPanel extends JPanel {
 				PreferencesPanel.this.prefs.setDefaultLayout(Preferences.Layout.values()[PreferencesPanel.this.defLayout.getSelectedIndex()]);
 				PreferencesPanel.this.prefs.setUpdateCheck(Preferences.Update.values()[PreferencesPanel.this.update.getSelectedIndex()]);
 				PreferencesPanel.this.prefs.setScreenUnit((String)screenUnit.getSelectedItem());
+				PreferencesPanel.this.prefs.setDefaultDirectory(defaultDirectory.getText());
 				PreferencesPanel.this.prefs.save();
 				PreferencesPanel.this.frame.setVisible(false);
 				PreferencesPanel.this.frame.dispose();
@@ -82,6 +88,8 @@ public class PreferencesPanel extends JPanel {
 		this.add(update);
 		this.add(new JLabel("Default screen unit."));
 		this.add(screenUnit);
+		this.add(new JLabel("Default location for saving files"));
+		this.add(defaultDirectory);
 		this.add(cancel);
 		this.add(ok);
 	}
