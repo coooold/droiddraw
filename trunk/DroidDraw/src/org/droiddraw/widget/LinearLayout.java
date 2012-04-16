@@ -48,8 +48,6 @@ public class LinearLayout extends AbstractLayout {
 			vertical = "vertical".equals(orientation.getStringValue());
 	}
 
-	
-	
 	@Override
 	public void addWidget(Widget w) {
 		if (!vertical) {
@@ -89,7 +87,6 @@ public class LinearLayout extends AbstractLayout {
 		}
 		repositionAllWidgets();
 	}
-
 	
 	@Override
 	public void repositionAllWidgets() {
@@ -226,9 +223,22 @@ public class LinearLayout extends AbstractLayout {
 	}
 
 	private int calculateShare(StringProperty prop) {
+		String weightString = null;
+		if (prop != null) {
+			weightString = prop.getStringValue();
+		}
+		if (weightString == null) {
+			System.err.println("Property is ill-defined!");
+			return 0;
+		}
 		try {
-			float share = Float.parseFloat(prop.getStringValue());
-			float total = (Float)weightSum.getValue();
+			float share = Float.parseFloat(weightString);
+			Float value = (Float)weightSum.getValue();
+			if (value == null) {
+				System.err.println("No weight!");
+				return 0;
+			}
+			float total = value.floatValue();
 			if (total == -1) {
 				total = sumWeights();
 			}
