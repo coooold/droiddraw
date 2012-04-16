@@ -192,6 +192,8 @@ public class Main implements ApplicationListener, URLOpener {
 					jfc.setCurrentDirectory( file );
 				else
 					jfc.setCurrentDirectory( file.getParentFile() );
+			} else {
+				maybeSetCurrentFileDir();
 			}
 			int res = jfc.showOpenDialog( ddp );
 			if ( res == JFileChooser.APPROVE_OPTION ) {
@@ -210,6 +212,8 @@ public class Main implements ApplicationListener, URLOpener {
 				catch ( IOException ex ) {
 					AndroidEditor.instance().error( ex );
 				}
+			} else {
+				maybeSetCurrentFileDir();
 			}
 
 			fd.setVisible( true );
@@ -242,8 +246,26 @@ public class Main implements ApplicationListener, URLOpener {
 			return null;
 	}
 
+	public static void maybeSetCurrentFileDir() {
+		String dir = AndroidEditor.instance().getPreferences().getDefaultDirectory();
+		if (dir.length() > 0) {
+			File dirFile = new File(dir);
+			if (dirFile.exists()) {
+				if (!osx) {
+					jfc.setCurrentDirectory(dirFile);
+				} else {
+					fd.setDirectory(dir);
+				}
+			} else {
+				System.err.println(dir + " doesn't exist!");
+			}
+		}
+	}
+	
 	public static File doSaveBasic() {
 		File f = null;
+		maybeSetCurrentFileDir();
+		
 		if ( !osx ) {
 			int res = jfc.showSaveDialog( ddp );
 			if ( res == JFileChooser.APPROVE_OPTION ) {

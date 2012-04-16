@@ -14,12 +14,14 @@ public class Preferences {
 	private static final String LAYOUT = "layout";
 	private static final String UPDATE = "update";
 	private static final String SCREEN_UNIT = "screen_unit";
+	private static final String DEFAULT_DIR = "default_directory";
 	
 	protected boolean snap;
 	protected ScreenMode screen;
 	protected Layout layout;
 	protected Update updateCheck;
 	private String screenUnit;
+	private String defaultDirectory;
 	
 	public Preferences() {
 		this.snap = false;
@@ -27,6 +29,7 @@ public class Preferences {
 		this.layout = Layout.ABSOLUTE;
 		this.updateCheck = Update.ASK;
 		this.screenUnit = "dp";
+		this.defaultDirectory = "";
 	}
 	
 	public void load() {
@@ -53,6 +56,7 @@ public class Preferences {
 		}
 		updateCheck = Update.values()[updatePref];
 		screenUnit = prefs.get(SCREEN_UNIT, "dp");
+		defaultDirectory = prefs.get(DEFAULT_DIR, "");
 	}
 	
 	public void save() {
@@ -63,6 +67,7 @@ public class Preferences {
 		prefs.putInt(LAYOUT, layout.ordinal());
 		prefs.putInt(UPDATE, updateCheck.ordinal());
 		prefs.put(SCREEN_UNIT, screenUnit);
+		prefs.put(DEFAULT_DIR, defaultDirectory);
 		try {
 			prefs.sync();
 		}
@@ -112,5 +117,13 @@ public class Preferences {
 			throw new IllegalArgumentException("Unknown unit: " + unit);
 		}
 		this.screenUnit = unit;
+	}
+	
+	public void setDefaultDirectory(String dir) {
+		this.defaultDirectory = dir;
+	}
+	
+	public String getDefaultDirectory() {
+		return defaultDirectory;
 	}
 }
