@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -641,6 +642,8 @@ public class DroidDrawPanel extends JPanel {
 		gp.addSeparator();
 		gp.add(undo);
 		gp.add(redo);
+		gp.addSeparator();
+		gp.add(new ClearAction());
 		
 		JSplitPane ctl = new JSplitPane(JSplitPane.VERTICAL_SPLIT, jtb, out);
 		final JSplitPane jsp = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, jp, ctl);
@@ -701,6 +704,19 @@ public class DroidDrawPanel extends JPanel {
 			text.setText("");
 		} else {
 			jtext.setText("");
+		}
+	}
+	
+	class ClearAction extends AbstractAction {
+		private static final long serialVersionUID = 5831210554019337455L;
+
+		public ClearAction() {
+			super("Clear");
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			clear();
+			repaint();
 		}
 	}
 }
