@@ -364,4 +364,25 @@ public abstract class AbstractWidget implements Widget {
 			return null;
 		}
 	}
+	
+	void addOrUpdateProperty(Vector<Property> properties, StringProperty prop) {
+		Property found = null;
+		for (Property p : properties) {
+			if (p.getAtttributeName().equals(prop.getAtttributeName())) {
+				found = p;
+				break;
+			}
+		}
+		if (found == null) {
+			properties.add(prop);
+		} else {
+			try {
+				((StringProperty)found).setStringValue(prop.getStringValue());
+			} catch (ClassCastException ex) {
+				properties.remove(found);
+				properties.add(prop);
+				ex.printStackTrace();
+			}
+		}
+	}
 }
