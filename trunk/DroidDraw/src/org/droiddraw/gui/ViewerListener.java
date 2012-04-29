@@ -360,10 +360,9 @@ public class ViewerListener implements MouseListener, MouseMotionListener, KeyLi
 			w.setPosition(x-l.getScreenX(), y-l.getScreenY());
 		l.addWidget(w);
 		AndroidEditor.instance().queueUndoRecord(new WidgetAddRecord(l, w));
+		AndroidEditor.instance().getTreeModel().addWidget(w);
 		l.apply();
 		app.select(w);
-		viewer.requestFocus();
-		viewer.repaint();
 	}
 
 	public void mouseReleased(MouseEvent e) {

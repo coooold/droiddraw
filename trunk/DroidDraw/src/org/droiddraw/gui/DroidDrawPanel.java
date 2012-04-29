@@ -37,9 +37,12 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
+import javax.swing.JTree;
 import javax.swing.SpringLayout;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.event.UndoableEditListener;
 import javax.xml.parsers.ParserConfigurationException;
@@ -91,8 +94,9 @@ public class DroidDrawPanel extends JPanel {
 	JTabbedPane jtb = new JTabbedPane();
 	TextArea text;
 	JTextArea jtext;
-	private JPopupMenu popup;
-	
+	JPopupMenu popup;
+	JTree tree;
+
 	public String getSelectedText() {
 		if (text != null) {
 			return text.getSelectedText();
@@ -619,7 +623,14 @@ public class DroidDrawPanel extends JPanel {
 			jtb.addTab("Colors", new ColorsPanel());
 			jtb.addTab("Arrays", new ArrayPanel());
 		}
-		
+		tree = new JTree(AndroidEditor.instance().getLayoutTreeModel());
+		tree.setShowsRootHandles(true);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent arg0) {
+				Widget w = (Widget)tree.getLastSelectedPathComponent();
+				AndroidEditor.instance().select(w);
+			}			
+		});
 		jtb.addTab("Support", new DonatePanel());
 	
 		//add(out, BorderLayout.CENTER);
@@ -653,6 +664,12 @@ public class DroidDrawPanel extends JPanel {
 		//p.add(tb);
 		//add(p, BorderLayout.NORTH);
 		add(gp, BorderLayout.NORTH);
+		
+		tree.setBorder(BorderFactory.createTitledBorder("Layout Explorer"));
+		tree.setMinimumSize(new Dimension(200, 400));
+		JScrollPane treeScroll = new JScrollPane(tree);
+		treeScroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		add(treeScroll, BorderLayout.WEST);
 		add(jsp, BorderLayout.CENTER);
 		screen_size.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -698,7 +715,7 @@ public class DroidDrawPanel extends JPanel {
 	}
 
 	public void clear() {
-		AndroidEditor.instance().getLayout().removeAllWidgets();
+		AndroidEditor.instance().removeAllWidgets();
 		AndroidEditor.instance().select( AndroidEditor.instance().getLayout() );
 		if (text != null) {
 			text.setText("");

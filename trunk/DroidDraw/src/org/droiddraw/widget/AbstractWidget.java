@@ -385,4 +385,8 @@ public abstract class AbstractWidget implements Widget {
 			}
 		}
 	}
+	
+	public String toString() {
+		return tagName + " - " + getId();
+	}
 }

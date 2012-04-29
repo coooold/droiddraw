@@ -18,7 +18,7 @@ import org.droiddraw.widget.AbstractLayout;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.ScrollView;
 
-public class DroidDraw extends JApplet implements URLOpener {
+public class DroidDraw extends JApplet implements URLOpener, ImageLoader.ImageLoaderInterface {
 	private static final long serialVersionUID = 1L;
 	
 	protected static final void switchToLookAndFeel(String clazz) {
@@ -48,7 +48,7 @@ public class DroidDraw extends JApplet implements URLOpener {
 	MediaTracker md;
 	int ix;
 	
-	protected void loadImage(String name) {
+	public void loadImage(String name) {
 		Image img = getImage(getCodeBase(), "ui/"+name+".png");
 		md.addImage(img, ix++);
 		ImageResources.instance().addImage(img, name);
@@ -81,72 +81,7 @@ public class DroidDraw extends JApplet implements URLOpener {
 		md = new MediaTracker(this);
 		ix = 0;
 		
-		loadImage("emu1");
-		loadImage("emu2");
-		loadImage("emu3");
-		loadImage("emu4");
-		loadImage("emu5");
-		loadImage("emu6");
-		loadImage("paint");
-		loadImage("droiddraw_small");
-		loadImage("paypal");
-		
-		loadImage("background_01p");
-		loadImage("background_01l");
-		
-		loadImage("statusbar_background_p");
-		loadImage("statusbar_background_l");
-		
-		loadImage("rate_star_big_on");
-		loadImage("rate_star_med_on");
-		loadImage("rate_star_small_on");
-		
-		loadImage("title_bar.9");
-		loadImage("stat_sys_data_connected");
-		loadImage("stat_sys_battery_charge_100");
-		loadImage("stat_sys_signal_3");
-		
-		loadImage("mapview");
-		
-		loadImage("scrollbar.9");
-		loadImage("scrollfield.9");
-		
-		loadImage("light/checkbox_off_background");
-		loadImage("light/checkbox_on_background");
-		loadImage("light/clock_dial");
-		loadImage("light/clock_hand_hour");
-		loadImage("light/clock_hand_minute");
-		loadImage("light/radiobutton_off_background");
-		loadImage("light/radiobutton_on_background");
-		loadImage("light/button_background_normal.9");
-		loadImage("light/editbox_background_normal.9");
-		loadImage("light/progress_circular_background");
-		loadImage("light/progress_particle");
-		loadImage("light/progress_circular_indeterminate");
-		loadImage("light/arrow_up_float");
-		loadImage("light/arrow_down_float");
-		loadImage("light/spinnerbox_background_focus_yellow.9");
-		loadImage("light/spinnerbox_arrow_middle.9");
-		
-		loadImage("def/btn_check_off");
-		loadImage("def/btn_check_on");
-		
-		loadImage("def/btn_radio_off");
-		loadImage("def/btn_radio_on");
-		
-		loadImage("def/textfield.9");
-		loadImage("def/btn_default_normal.9");
-		loadImage("def/progress_wheel_medium");
-		
-		loadImage("def/spinner_normal.9");
-		loadImage("def/tab_selected.9");
-		loadImage("def/btn_dropdown_neither.9");
-		
-		loadImage( "mdpi/textfield_default.9");
-		
-		loadImage("def/btn_toggle_off.9");
-		loadImage("def/btn_toggle_on.9");
-
+		ImageLoader.loadImages(this);
 		
 		for (int i=0;i<ix;i++) {
 			try {

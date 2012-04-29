@@ -18,6 +18,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.tree.TreeModel;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
 import javax.xml.parsers.ParserConfigurationException;
@@ -26,7 +27,6 @@ import org.apache.commons.lang.StringEscapeUtils;
 import org.droiddraw.gui.Preferences;
 import org.droiddraw.gui.PropertiesPanel;
 import org.droiddraw.gui.Viewer;
-import org.droiddraw.gui.WidgetAddRecord;
 import org.droiddraw.property.Property;
 import org.droiddraw.property.StringProperty;
 import org.droiddraw.util.ArrayHandler;
@@ -37,6 +37,7 @@ import org.droiddraw.widget.Button;
 import org.droiddraw.widget.CheckBox;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.Widget;
+import org.droiddraw.widget.WidgetTreeModel;
 import org.xml.sax.SAXException;
 
 
@@ -70,8 +71,8 @@ public class AndroidEditor {
 	URLOpener opener;
 
 	String theme;
-
-
+	WidgetTreeModel treeModel;
+	
 	public static int OFFSET_X = 0;
 	public static int OFFSET_Y = 48;
 
@@ -81,6 +82,10 @@ public class AndroidEditor {
 		this(ScreenMode.HVGA_PORTRAIT);
 	}
 
+	public TreeModel getLayoutTreeModel() {
+		return treeModel;
+	}
+	
 	public boolean isLatestVersion() {
 		try {
 			URL u = new URL("http://www.droiddraw.org/version.txt");
@@ -102,7 +107,6 @@ public class AndroidEditor {
 		}
 	}
 
-
 	private AndroidEditor(ScreenMode mode) {
 		setScreenMode(mode);
 		this.pp = new PropertiesPanel(false);
@@ -111,6 +115,7 @@ public class AndroidEditor {
 		this.arrays = new Hashtable<String, Vector<String>>();
 		this.undo = new UndoManager();
 		this.changeListeners = new Vector<ChangeListener>();
+		this.treeModel = new WidgetTreeModel();
 
 		colors.put("black", Color.black);
 		colors.put("darkgray", Color.darkGray);
@@ -392,6 +397,7 @@ public class AndroidEditor {
 		if (selected == null) {
 			pp.setProperties(l.getProperties(), l);
 		}
+		treeModel.setRoot(this.layout);
 	}
 	
 	public boolean canSelect() {
@@ -419,22 +425,9 @@ public class AndroidEditor {
 		}
 		pp.validate();
 		pp.repaint();
-	}
-
-	public void removeWidget(Widget w) {
-		if (w != null) {
-			w.getParent().removeWidget(w);
-			if (selected == w) {
-				selected = null;
-			}
-			changed = true;
-		}
-	}
-
-	public void removeAllWidgets() {
-		layout.removeAllWidgets();
-		selected = null;
-		changed = true;
+		
+		viewer.requestFocus();
+		viewer.repaint();
 	}
 
 	public Vector<Layout> findLayouts(int x, int y) {
@@ -616,6 +609,27 @@ public class AndroidEditor {
 
 	public void addWidget(Widget w, int x, int y) {
 		viewer.addWidget(w, layout, x, y);
-		queueUndoRecord(new WidgetAddRecord(layout, w));
+	}
+	
+	public void removeWidget(Widget w) {
+		if (w != null) {
+			treeModel.removeWidget(w);
+			w.getParent().removeWidget(w);
+			if (selected == w) {
+				selected = null;
+			}
+			changed = true;
+		}
+	}
+
+	public void removeAllWidgets() {
+		treeModel.removeAllWidgets(layout);
+		layout.removeAllWidgets();
+		selected = null;
+		changed = true;
+	}
+	
+	public WidgetTreeModel getTreeModel() {
+		return treeModel;
 	}
 }

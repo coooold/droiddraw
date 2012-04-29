@@ -62,7 +62,6 @@ import org.droiddraw.util.LayoutUploader;
 import org.droiddraw.widget.AbstractLayout;
 import org.droiddraw.widget.Layout;
 import org.droiddraw.widget.ScrollView;
-import org.droiddraw.widget.TabWidget;
 import org.droiddraw.widget.Widget;
 import org.droiddraw.widget.WidgetTransferable;
 import org.simplericity.macify.eawt.Application;
@@ -322,16 +321,21 @@ public class Main implements ApplicationListener, URLOpener {
 		else return false;
 	}
 
-	protected static void loadImage( String name )
-	throws IOException {
-		URL u = ClassLoader.getSystemClassLoader().getResource( "ui/" + name + ".png" );
-		if ( u == null ) {
-			AndroidEditor.instance().error( "Couldn't open image : " + name );
-			return;
+	public static class MainImageLoader implements ImageLoader.ImageLoaderInterface {
+		public void loadImage( String name ) {
+			URL u = ClassLoader.getSystemClassLoader().getResource( "ui/" + name + ".png" );
+			if ( u == null ) {
+				AndroidEditor.instance().error( "Couldn't open image : " + name );
+				return;
+			}
+			try {
+				InputStream is = u.openStream();
+				BufferedImage img = ImageIO.read( is );
+				ImageResources.instance().addImage( img, name );
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
 		}
-		InputStream is = u.openStream();
-		BufferedImage img = ImageIO.read( is );
-		ImageResources.instance().addImage( img, name );
 	}
 
 	public static final int BUFFER = 4096;
@@ -460,69 +464,7 @@ public class Main implements ApplicationListener, URLOpener {
 			}
 		}
 
-
-		loadImage( "emu1" );
-		loadImage( "emu2" );
-		loadImage( "emu3" );
-		loadImage( "emu4" );
-		loadImage( "paint" );
-		loadImage( "droiddraw_small" );
-		loadImage( "paypal" );
-
-		loadImage( "background_01p" );
-		loadImage( "background_01l" );
-
-		loadImage( "statusbar_background_p" );
-		loadImage( "statusbar_background_l" );
-
-		loadImage( "title_bar.9" );
-		loadImage( "stat_sys_data_connected" );
-		loadImage( "stat_sys_battery_charge_100" );
-		loadImage( "stat_sys_signal_3" );
-
-		loadImage( "scrollbar.9" );
-		loadImage( "scrollfield.9" );
-		
-		loadImage("mapview");
-
-		loadImage("rate_star_big_on");
-		loadImage("rate_star_med_on");
-		loadImage("rate_star_small_on");
-
-		loadImage( "light/checkbox_off_background" );
-		loadImage( "light/checkbox_on_background" );
-		loadImage( "light/clock_dial" );
-		loadImage( "light/clock_hand_hour" );
-		loadImage( "light/clock_hand_minute" );
-		loadImage( "light/radiobutton_off_background" );
-		loadImage( "light/radiobutton_on_background" );
-		loadImage( "light/button_background_normal.9" );
-		loadImage( "light/editbox_background_normal.9" );
-		loadImage( "light/progress_circular_background" );
-		loadImage( "light/progress_particle" );
-		loadImage( "light/progress_circular_indeterminate" );
-		loadImage( "light/arrow_up_float" );
-		loadImage( "light/arrow_down_float" );
-		loadImage( "light/spinnerbox_background_focus_yellow.9" );
-		loadImage( "light/spinnerbox_arrow_middle.9" );
-
-		loadImage( "def/btn_check_off" );
-		loadImage( "def/btn_check_on" );
-
-		loadImage( "def/btn_radio_off" );
-		loadImage( "def/btn_radio_on" );
-
-		loadImage( "def/textfield.9" );
-		loadImage( "def/btn_default_normal.9" );
-		loadImage( "def/progress_wheel_medium" );
-
-		loadImage( "def/spinner_normal.9" );
-		loadImage( "def/btn_dropdown_neither.9" );
-		loadImage( TabWidget.IMAGE_NAME );
-		loadImage( "mdpi/textfield_default.9");
-		
-		loadImage("def/btn_toggle_off.9");
-		loadImage("def/btn_toggle_on.9");
+		ImageLoader.loadImages(new MainImageLoader());
 		
 		jf = new JFrame( "DroidDraw" );
 		jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
