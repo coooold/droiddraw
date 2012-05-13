@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.security.AccessControlException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -95,15 +96,15 @@ public class Main implements ApplicationListener, URLOpener {
 
 	protected static void fullscreen(Window w) {
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-	    for (GraphicsDevice device : env.getScreenDevices()) {
-	    	if (device.isFullScreenSupported()) {
-	    		device.setFullScreenWindow(w);
-	    		return;
-	    	}
-	    }
-	    AndroidEditor.instance().error("No supported device for fullscreen mode.");
+		for (GraphicsDevice device : env.getScreenDevices()) {
+			if (device.isFullScreenSupported()) {
+				device.setFullScreenWindow(w);
+				return;
+			}
+		}
+		AndroidEditor.instance().error("No supported device for fullscreen mode.");
 	}
-	
+
 	protected static void open( String file ) {
 		open( new File( file ) );
 	}
@@ -169,7 +170,7 @@ public class Main implements ApplicationListener, URLOpener {
 			ddp.repaint();
 		}
 	}
-	
+
 	public static File doOpen() {
 		return doOpen( null );
 	}
@@ -225,24 +226,24 @@ public class Main implements ApplicationListener, URLOpener {
 
 	public static File doOpenDir() {
 		//if (!osx) {
-			jfc.setFileFilter( dirFilter );
-			jfc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
-			int res = jfc.showOpenDialog( ddp );
-			if ( res == JFileChooser.APPROVE_OPTION ) {
-				return jfc.getSelectedFile();
-			}
-			//}
-			//else {
-			//	fd.setMode(FileDialog.LOAD);
-			//	fd.setFilenameFilter(new FilenameFilter() {
-			//		public boolean accept(File arg0, String arg1) {
-			//			return arg0.isDirectory();
-			//		}
-			//	});
-			//	fd.setVisible(true);
-			//	return new File(fd.getDirectory()+"/"+fd.getFile());
-			//}
-			return null;
+		jfc.setFileFilter( dirFilter );
+		jfc.setFileSelectionMode( JFileChooser.DIRECTORIES_ONLY );
+		int res = jfc.showOpenDialog( ddp );
+		if ( res == JFileChooser.APPROVE_OPTION ) {
+			return jfc.getSelectedFile();
+		}
+		//}
+		//else {
+		//	fd.setMode(FileDialog.LOAD);
+		//	fd.setFilenameFilter(new FilenameFilter() {
+		//		public boolean accept(File arg0, String arg1) {
+		//			return arg0.isDirectory();
+		//		}
+		//	});
+		//	fd.setVisible(true);
+		//	return new File(fd.getDirectory()+"/"+fd.getFile());
+		//}
+		return null;
 	}
 
 	public static void maybeSetCurrentFileDir() {
@@ -260,11 +261,11 @@ public class Main implements ApplicationListener, URLOpener {
 			}
 		}
 	}
-	
+
 	public static File doSaveBasic() {
 		File f = null;
 		maybeSetCurrentFileDir();
-		
+
 		if ( !osx ) {
 			int res = jfc.showSaveDialog( ddp );
 			if ( res == JFileChooser.APPROVE_OPTION ) {
@@ -301,29 +302,29 @@ public class Main implements ApplicationListener, URLOpener {
 			saveFile = f;
 			return true;	/* 2010/10/16: Added this line of code as a result of commenting out the code block at line 263. */
 
-/*	2010/10/16: Disabled this code block, as per email conversation with Brendan Burns */
-//			File src = new File( f.getParentFile(), "Foo.java" );
-//			try {
-//				FileWriter fw = new FileWriter( src );
-//				PrintWriter pw = new PrintWriter( fw );
-//				AndroidEditor.instance().generateSource( pw, "foo.bar" );
-//				pw.flush();
-//				fw.flush();
-//				pw.close();
-//				fw.close();
-//				return true;
-//			}
-//			catch ( IOException ex ) {
-//				ex.printStackTrace();
-//				return false;
-//			}
+			/*	2010/10/16: Disabled this code block, as per email conversation with Brendan Burns */
+			//			File src = new File( f.getParentFile(), "Foo.java" );
+			//			try {
+			//				FileWriter fw = new FileWriter( src );
+			//				PrintWriter pw = new PrintWriter( fw );
+			//				AndroidEditor.instance().generateSource( pw, "foo.bar" );
+			//				pw.flush();
+			//				fw.flush();
+			//				pw.close();
+			//				fw.close();
+			//				return true;
+			//			}
+			//			catch ( IOException ex ) {
+			//				ex.printStackTrace();
+			//				return false;
+			//			}
 		}
 		else return false;
 	}
 
 	public static class MainImageLoader implements ImageLoader.ImageLoaderInterface {
 		public void loadImage( String name ) {
-			URL u = ClassLoader.getSystemClassLoader().getResource( "ui/" + name + ".png" );
+			URL u = this.getClass().getClassLoader().getResource( "ui/" + name + ".png" );
 			if ( u == null ) {
 				AndroidEditor.instance().error( "Couldn't open image : " + name );
 				return;
@@ -339,9 +340,9 @@ public class Main implements ApplicationListener, URLOpener {
 	}
 
 	public static final int BUFFER = 4096;
-	
+
 	protected static void makeAPK( File dir, boolean install )
-	throws IOException {
+			throws IOException {
 		URL u = ClassLoader.getSystemClassLoader().getResource( "data/activity.zip" );
 		if ( u == null ) {
 			AndroidEditor.instance().error( "Couldn't open activity.zip" );
@@ -375,7 +376,7 @@ public class Main implements ApplicationListener, URLOpener {
 		String[] cmd = install ? new String[]{"ant", "install"} : new String[]{"ant"};
 		File wd = new File( dir, "activity" );
 		run(cmd, wd);
-		
+
 		File res = new File( wd, "res" );
 		res = new File( res, "layout" );
 		res = new File( res, "main.xml" );
@@ -407,9 +408,9 @@ public class Main implements ApplicationListener, URLOpener {
 		}
 		return true;
 	}
-	
+
 	public static void copy( File from, File to )
-	throws IOException {
+			throws IOException {
 		FileInputStream fis = new FileInputStream( from );
 		FileOutputStream fos = new FileOutputStream( to );
 
@@ -423,9 +424,16 @@ public class Main implements ApplicationListener, URLOpener {
 		fos.close();
 	}
 
-	public static void main( String[] args )
-	throws IOException {
-
+	public static void main( String[] args ) throws IOException {
+		String file = null;
+		boolean isJNLP = false;
+		if (args.length > 0) {
+			if (args[0].endsWith("xml")) {
+				file = args[0];
+			} if ("--is_jnlp".equals(args[0])) {
+				isJNLP = true;
+			}
+		}
 		// This is so that I can test out the Google examples...
 		// START
 		/*if (args.length > 0) {
@@ -441,31 +449,32 @@ public class Main implements ApplicationListener, URLOpener {
 		AndroidEditor.instance().setURLOpener( new Main() );
 
 		osx = ( System.getProperty( "os.name" ).toLowerCase().contains( "mac os x" ) );
-		if ( osx ) {
+		if ( osx && !isJNLP) {
 			doMacOSXIntegration();
 		}
 
-		final Preferences prefs = AndroidEditor.instance().getPreferences();
 
-		boolean checkUpdate = false;
-		if ( prefs.getUpdateCheck() == Preferences.Update.YES ) {
-			checkUpdate = true;
-		}
-		else if ( prefs.getUpdateCheck() == Preferences.Update.ASK ) {
-			int res = JOptionPane.showConfirmDialog( null, "Check for updates to DroidDraw?", "Update?", JOptionPane.YES_NO_OPTION );
-			checkUpdate = res == JOptionPane.YES_OPTION;
-		}
-		if ( checkUpdate ) {
-			if ( !AndroidEditor.instance().isLatestVersion() ) {
-				int res = JOptionPane.showConfirmDialog( ddp, "There is a new DroidDraw version available. Do you wish to download it?", "DroidDraw Update", JOptionPane.YES_NO_OPTION );
-				if ( res == JOptionPane.YES_OPTION ) {
-					AndroidEditor.instance().getURLOpener().openURL( "http://code.google.com/p/droiddraw/downloads/list" );
+		final Preferences prefs = AndroidEditor.instance().getPreferences();
+		if (!isJNLP) {
+			boolean checkUpdate = false;
+			if ( prefs.getUpdateCheck() == Preferences.Update.YES ) {
+				checkUpdate = true;
+			}
+			else if ( prefs.getUpdateCheck() == Preferences.Update.ASK ) {
+				int res = JOptionPane.showConfirmDialog( null, "Check for updates to DroidDraw?", "Update?", JOptionPane.YES_NO_OPTION );
+				checkUpdate = res == JOptionPane.YES_OPTION;
+			}
+			if ( checkUpdate ) {
+				if ( !AndroidEditor.instance().isLatestVersion() ) {
+					int res = JOptionPane.showConfirmDialog( ddp, "There is a new DroidDraw version available. Do you wish to download it?", "DroidDraw Update", JOptionPane.YES_NO_OPTION );
+					if ( res == JOptionPane.YES_OPTION ) {
+						AndroidEditor.instance().getURLOpener().openURL( "http://code.google.com/p/droiddraw/downloads/list" );
+					}
 				}
 			}
 		}
-
 		ImageLoader.loadImages(new MainImageLoader());
-		
+
 		jf = new JFrame( "DroidDraw" );
 		jf.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jf.addWindowListener( new WindowAdapter() {
@@ -496,47 +505,64 @@ public class Main implements ApplicationListener, URLOpener {
 		ddp = new DroidDrawPanel( screen, false );
 		AndroidEditor.instance().setScreenMode( prefs.getScreenMode() );
 		fd = new FileDialog( jf );
-		jfc = new JFileChooser();
+		if (!isJNLP) {
+			jfc = new JFileChooser();
+			xmlFilter = new FileFilterExtension("xml", "Android Layout file (.xml)");
 
-		xmlFilter = new FileFilterExtension("xml", "Android Layout file (.xml)");
-
-		dirFilter = new FileFilter() {
-			@Override
-			public boolean accept( File arg ) {
-				return arg.isDirectory();
-			}
-
-			@Override
-			public String getDescription() {
-				return "Directory";
-			}
-		};
-
-		imgFilter = new FileFilter() {
-			@Override
-			public boolean accept( File f ) {
-				if ( f.isDirectory() ) {
-					return true;
+			dirFilter = new FileFilter() {
+				@Override
+				public boolean accept( File arg ) {
+					return arg.isDirectory();
 				}
-				return f.getName().endsWith( ".png" ) ||
-				f.getName().endsWith( ".jpg" ) ||
-				f.getName().endsWith( ".jpeg" ) ||
-				f.getName().endsWith( ".gif" );
-			}
 
-			@Override
-			public String getDescription() {
-				return "Image file (*.png, *.jpg, *.jpeg, *.gif)";
-			}
-		};
+				@Override
+				public String getDescription() {
+					return "Directory";
+				}
+			};
 
-		jfc.setFileFilter( xmlFilter );
+			imgFilter = new FileFilter() {
+				@Override
+				public boolean accept( File f ) {
+					if ( f.isDirectory() ) {
+						return true;
+					}
+					return f.getName().endsWith( ".png" ) ||
+							f.getName().endsWith( ".jpg" ) ||
+							f.getName().endsWith( ".jpeg" ) ||
+							f.getName().endsWith( ".gif" );
+				}
 
+				@Override
+				public String getDescription() {
+					return "Image file (*.png, *.jpg, *.jpeg, *.gif)";
+				}
+			};
+
+			jfc.setFileFilter( xmlFilter );
+		}
 		int ctl_key = InputEvent.CTRL_MASK;
 		if ( osx )
 			ctl_key = InputEvent.META_MASK;
 
-		JMenuBar mb = new JMenuBar();
+		if (!isJNLP) {
+			JMenuBar mb = new JMenuBar();
+			createMenus(ctl_key, mb);
+			jf.setJMenuBar( mb );
+		}
+
+		jf.getContentPane().add( ddp );
+		jf.pack();
+		jf.setVisible( true );
+
+		if (file != null) {
+			if (file.endsWith(".xml")) {
+				open(new File(file));
+			}
+		}
+	}
+
+	private static void createMenus(int ctl_key, JMenuBar mb) {
 		JMenu menu = new JMenu( "File" );
 		JMenuItem it;
 		it = new JMenuItem("New");
@@ -702,7 +728,7 @@ public class Main implements ApplicationListener, URLOpener {
 		menu.add( it );
 
 		menu.addSeparator();
-		
+
 		it = new JMenuItem( "Fullscreen");
 		it.addActionListener(new ActionListener() {
 			boolean isFullscreen = false;
@@ -887,18 +913,6 @@ public class Main implements ApplicationListener, URLOpener {
 		menu.add( it );
 
 		mb.add( menu );
-		jf.setJMenuBar( mb );
-
-		jf.getContentPane().add( ddp );
-		jf.pack();
-		jf.setVisible( true );
-		
-		if (args.length > 0) {
-			String file = args[0];
-			if (file.endsWith(".xml")) {
-				open(new File(file));
-			}
-		}
 	}
 
 	public static void addPasteAction(JMenuItem it) {
