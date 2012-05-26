@@ -244,8 +244,11 @@ public abstract class AbstractWidget implements Widget {
 				StringProperty prop = (StringProperty)parent.getPropertyByAttName("android:layout_width");
 				if (prop.getStringValue().equals("wrap_content"))
 					w = getContentWidth();
-				else
-					w = getParent().getWidth();
+				else {
+					// TODO(bburns) This is a little wonky, but we apply the left margin
+					// in the layout.
+					w = getParent().getWidth() - getMargin(RIGHT);
+				}
 			}
 			else {
 				w = AndroidEditor.instance().getScreenX()-AndroidEditor.OFFSET_X;
@@ -258,8 +261,11 @@ public abstract class AbstractWidget implements Widget {
 				StringProperty prop = (StringProperty)parent.getPropertyByAttName("android:layout_height");
 				if (prop.getStringValue().equals("wrap_content"))
 					h = getContentHeight();
-				else
-					h = getParent().getHeight();
+				else {
+					// TODO(bburns) This is a little wonky, but we apply the top margin
+					// in the layout.
+					h = getParent().getHeight() - getMargin(BOTTOM);
+				}
 			}
 			else {
 				h = AndroidEditor.instance().getScreenY();
