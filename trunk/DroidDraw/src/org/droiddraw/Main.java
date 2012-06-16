@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
-import java.security.AccessControlException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -77,6 +76,8 @@ import edu.stanford.ejalbert.exception.UnsupportedOperatingSystemException;
 
 
 public class Main implements ApplicationListener, URLOpener {
+	private final static String ANT_EXEC;
+
 	static File saveFile = null;
 	static JFrame jf;
 	static DroidDrawPanel ddp;
@@ -87,6 +88,14 @@ public class Main implements ApplicationListener, URLOpener {
 	static FileFilter dirFilter = null;
 	static FileFilter imgFilter = null;
 
+	static {
+		if (System.getProperty("os.name").toLowerCase().indexOf("windows") != -1) {
+			ANT_EXEC = "ant.bat";
+		} else {
+			ANT_EXEC = "ant";
+		}
+	}
+	
 	protected static void doMacOSXIntegration() {
 		Application a = new DefaultApplication();
 		a.addApplicationListener( new Main() );
@@ -373,7 +382,7 @@ public class Main implements ApplicationListener, URLOpener {
 		zis.close();
 
 
-		String[] cmd = install ? new String[]{"ant", "install"} : new String[]{"ant"};
+		String[] cmd = install ? new String[]{ANT_EXEC, "install"} : new String[]{ANT_EXEC};
 		File wd = new File( dir, "activity" );
 		run(cmd, wd);
 
